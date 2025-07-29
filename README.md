@@ -1,13 +1,13 @@
 # 프론트엔드 레포
 
-환영합니다!
+프론트엔드 레포입니당
 
 ## 초기세팅에 사용한 명령어
 
-npm i styled-components
-npm i react-router-dom
-npm i axios
-npx create-react-app
+- npm i styled-components
+- npm i react-router-dom
+- npm i axios
+- npx create-react-app
 
 자세한 내용은 package.json 참고
 

@@ -1,0 +1,8 @@
+# Rest Client 확장 프로그램이 깔려 있어야합니다.
+
+#POST 링크기입
+#Content-Type: application/json
+
+
+# GET 링크기입
+# Accept: application/json

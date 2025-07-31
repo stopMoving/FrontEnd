@@ -4,5 +4,5 @@
 #Content-Type: application/json
 
 
-# GET 링크기입
-# Accept: application/json
+GET http://13.125.28.164:8000/posts/ping/
+Accept: application/json

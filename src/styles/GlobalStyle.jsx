@@ -8,7 +8,7 @@ const GlobalStyle = createGlobalStyle`
 
   body, h1, p, ul, li {
     margin: 0;
-    paading: 0;
+    padding: 0;
   }
 `;
 

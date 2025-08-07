@@ -4,5 +4,5 @@
 #Content-Type: application/json
 
 
-# GET http://13.125.28.164:8000/bookinfo/lookup/isbn=9791196834005
-# Accept: application/json
+GET https://stopmoving.p-e.kr/bookinfo/lookup/?isbn=9791196834005
+Accept: application/json

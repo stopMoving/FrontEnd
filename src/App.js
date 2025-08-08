@@ -1,21 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
 import GlobalStyle from "./Globalstyles/GlobalStyle";
 import { Route, Routes } from "react-router-dom";
 import Map from "./pages/Map";
 import BarcodeScanner from "./components/BarcodeScanner";
 import MainPage from "./pages/MainPage";
 import styled from "styled-components";
+import LoginPage from "./pages/LoginPage/LoginPage";
+import RegisterPage from "./pages/RegisterPage/RegitserPage";
+import WelcomePage from "./pages/RegisterPage/WelcomePage";
+import useUserStore from "./store/useUserStore";
+import { Toaster } from "./store/useToasterStore";
 
 const App = () => {
+  // ✅ 스토어에서 initializeAuth 함수와 상태를 가져옵니다.
+  const { initializeAuth, isInitialized } = useUserStore();
+
+  // ✅ 앱이 처음 마운트될 때 딱 한 번만 실행합니다.
+  useEffect(() => {
+    initializeAuth();
+  }, [initializeAuth]);
+
+  if (!isInitialized) {
+    return <div>로딩 중...</div>;
+  }
+
   return (
     <>
       <GlobalStyle />
       <Routes>
-        {/* <Route path="login" element={<Login />} /> */}
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
+        <Route path="welcome" element={<WelcomePage />} />
+        <Route path="main" element={<MainPage />} />
         <Route path="map" element={<Map />} />
         <Route path="scan" element={<BarcodeScanner />} />
         <Route path="/" element={<MainPage />} />
       </Routes>
+      <Toaster />
     </>
   );
 };

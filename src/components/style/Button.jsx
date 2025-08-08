@@ -8,6 +8,8 @@ const Button = styled.button`
   cursor: pointer;
   font-size: 18px;
   padding: 16px;
+  margin: 16px;
+  transition: background-color 0.2s ease-in-out;
 
   &:hover,
   &:active {

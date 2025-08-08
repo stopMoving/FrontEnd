@@ -11,6 +11,7 @@ const Input = styled.input`
 
   &:focus {
     border-bottom: 2px solid #7760b4;
+    transition: 0.1s ease-in-out;
   }
 
   &::placeholder {

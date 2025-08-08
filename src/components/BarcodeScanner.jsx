@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
-import { BrowserMultiFormatReader } from "@zxing/library"; // ✅ 이미지용
+import { BrowserMultiFormatReader } from "@zxing/library";
 
 const BarcodeScanner = () => {
   const [cameras, setCameras] = useState([]);
   const [selectedCameraId, setSelectedCameraId] = useState("");
   const [isScanning, setIsScanning] = useState(false);
   const [result, setResult] = useState("스캔 결과: 없음");
+  const [manualIsbn, setManualIsbn] = useState("");          // ✅ 수동 입력 상태
   const html5QrCodeRef = useRef(null);
   const lastScannedRef = useRef("");
 
@@ -22,14 +23,10 @@ const BarcodeScanner = () => {
     Html5Qrcode.getCameras()
       .then((devices) => {
         setCameras(devices);
-        const backCam = devices.find((d) =>
-          d.label.toLowerCase().includes("back")
-        );
+        const backCam = devices.find(d => d.label.toLowerCase().includes("back"));
         setSelectedCameraId(backCam ? backCam.id : devices[0]?.id || "");
       })
-      .catch((err) => {
-        console.error("카메라 목록 로딩 실패:", err);
-      });
+      .catch((err) => console.error("카메라 목록 로딩 실패:", err));
 
     return () => {
       if (html5QrCodeRef.current) {
@@ -45,13 +42,23 @@ const BarcodeScanner = () => {
     handleISBN(decodedText);
   };
 
+  // (옵션) EAN-13 체크섬 검증
+  const isValidEan13 = (digits) => {
+    if (!/^\d{13}$/.test(digits)) return false;
+    const arr = digits.split("").map(Number);
+    const sum = arr.slice(0, 12).reduce((acc, n, i) => acc + n * (i % 2 ? 3 : 1), 0);
+    const check = (10 - (sum % 10)) % 10;
+    return check === arr[12];
+  };
+
   const handleISBN = (text) => {
-    if (/^97[89]\d{10}$/.test(text)) {
-      setResult(`✅ ISBN: ${text}`);
-      fetch(`https://stopmoving.p-e.kr/bookinfo/lookup/?isbn=${text}`)
-        .then((res) => res.json())
-        .then((data) => console.log("서버 응답:", data))
-        .catch((err) => console.error("전송 실패:", err));
+    const digits = String(text).replace(/[^0-9]/g, "");
+    if (/^97[89]\d{10}$/.test(digits) && isValidEan13(digits)) {
+      setResult(`✅ ISBN: ${digits}`);
+      fetch(`https://stopmoving.p-e.kr/bookinfo/lookup/?isbn=${digits}`)
+        .then(res => res.json())
+        .then(data => console.log("서버 응답:", data))
+        .catch(err => console.error("전송 실패:", err));
     } else {
       setResult(`❌ ISBN 형식이 아닙니다: ${text}`);
     }
@@ -92,23 +99,25 @@ const BarcodeScanner = () => {
     const reader = new FileReader();
     const img = new Image();
 
-    reader.onload = () => {
-      img.src = reader.result;
-    };
-
+    reader.onload = () => { img.src = reader.result; };
     img.onload = async () => {
       const codeReader = new BrowserMultiFormatReader();
       try {
-        const result = await codeReader.decodeFromImageElement(img);
-        console.log("✅ 이미지 인식:", result.text);
-        handleISBN(result.text);
+        const res = await codeReader.decodeFromImageElement(img);
+        console.log("✅ 이미지 인식:", res.text);
+        handleISBN(res.text);
       } catch (err) {
         console.error("❌ 이미지 인식 실패:", err);
         setResult("❌ 이미지에서 바코드 인식 실패");
       }
     };
-
     reader.readAsDataURL(file);
+  };
+
+  // ✅ 수동 입력 제출
+  const submitManual = () => {
+    const cleaned = manualIsbn.replace(/[^0-9]/g, "");
+    handleISBN(cleaned);
   };
 
   return (
@@ -117,7 +126,6 @@ const BarcodeScanner = () => {
 
       {/* 🔹 실시간 카메라 */}
       <div id="reader" style={{ width: 360, margin: "1rem auto" }} />
-
       <select
         disabled={isScanning}
         value={selectedCameraId}
@@ -130,16 +138,9 @@ const BarcodeScanner = () => {
           </option>
         ))}
       </select>
-
       <div style={{ marginTop: "1rem" }}>
-        <button onClick={startScan} disabled={isScanning}>
-          카메라 시작
-        </button>
-        <button
-          onClick={stopScan}
-          disabled={!isScanning}
-          style={{ marginLeft: "1rem" }}
-        >
+        <button onClick={startScan} disabled={isScanning}>카메라 시작</button>
+        <button onClick={stopScan} disabled={!isScanning} style={{ marginLeft: "1rem" }}>
           카메라 정지
         </button>
       </div>
@@ -147,12 +148,28 @@ const BarcodeScanner = () => {
       <hr style={{ margin: "2rem 0" }} />
 
       {/* 🔸 이미지 업로드 */}
-      <div>
-        <label htmlFor="upload">또는 이미지 업로드:</label>
-        <input type="file" accept="image/*" onChange={handleImageUpload} />
+      <div style={{ marginBottom: "1rem" }}>
+        <label htmlFor="upload">또는 이미지 업로드: </label>
+        <input id="upload" type="file" accept="image/*" onChange={handleImageUpload} />
       </div>
 
-      <div id="result" style={{ marginTop: "1.5rem", fontSize: "18px" }}>
+      {/* ✍️ 수동 입력 */}
+      <div style={{ marginTop: "1rem" }}>
+        <div style={{ marginBottom: 8 }}>또는 직접 입력:</div>
+        <input
+          type="text"
+          value={manualIsbn}
+          onChange={(e) => setManualIsbn(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && submitManual()}
+          placeholder="ISBN-13 (숫자 13자리)"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          style={{ width: 240, padding: 8, fontSize: 16 }}
+        />
+        <button onClick={submitManual} style={{ marginLeft: 8 }}>조회</button>
+      </div>
+
+      <div id="result" style={{ marginTop: "1.5rem", fontSize: 18 }}>
         {result}
       </div>
     </div>

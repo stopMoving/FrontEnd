@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import GlobalStyle from "./Globalstyles/GlobalStyle";
 import { Route, Routes } from "react-router-dom";
 import Map from "./pages/Map";
+import BarcodeScanner from "./components/BarcodeScanner";
 import MainPage from "./pages/MainPage";
 import styled from "styled-components";
 import LoginPage from "./pages/LoginPage/LoginPage";
@@ -32,6 +33,7 @@ const App = () => {
         <Route path="welcome" element={<WelcomePage />} />
         <Route path="main" element={<MainPage />} />
         <Route path="map" element={<Map />} />
+        <Route path="scan" element={<BarcodeScanner />} />
         <Route path="/" element={<MainPage />} />
       </Routes>
       <Toaster />

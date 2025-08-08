@@ -2,6 +2,7 @@ import React from "react";
 import GlobalStyle from "./Globalstyles/GlobalStyle";
 import { Route, Routes } from "react-router-dom";
 import Map from "./pages/Map";
+import BarcodeScanner from "./components/BarcodeScanner";
 import MainPage from "./pages/MainPage";
 import styled from "styled-components";
 
@@ -12,6 +13,7 @@ const App = () => {
       <Routes>
         {/* <Route path="login" element={<Login />} /> */}
         <Route path="map" element={<Map />} />
+        <Route path="scan" element={<BarcodeScanner />} />
         <Route path="/" element={<MainPage />} />
       </Routes>
     </>

@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import GlobalStyle from "./Globalstyles/GlobalStyle";
 import { Route, Routes } from "react-router-dom";
 import Map from "./pages/Map";
-import BarcodeScanner from "./components/BarcodeScanner";
 import MainPage from "./pages/MainPage";
 import styled from "styled-components";
 import LoginPage from "./pages/LoginPage/LoginPage";
@@ -10,6 +9,8 @@ import RegisterPage from "./pages/RegisterPage/RegitserPage";
 import WelcomePage from "./pages/RegisterPage/WelcomePage";
 import useUserStore from "./store/useUserStore";
 import { Toaster } from "./store/useToasterStore";
+import SelectPage from "./pages/BarcodePage/SelectPage";
+import ScanPage from "./pages/BarcodePage/ScanPage";
 
 const App = () => {
   // ✅ 스토어에서 initializeAuth 함수와 상태를 가져옵니다.
@@ -33,7 +34,8 @@ const App = () => {
         <Route path="welcome" element={<WelcomePage />} />
         <Route path="main" element={<MainPage />} />
         <Route path="map" element={<Map />} />
-        <Route path="scan" element={<BarcodeScanner />} />
+        <Route path="barcode/select/:mode" element={<SelectPage />} />
+        <Route path="barcode/scan" element={<ScanPage />} />
         <Route path="/" element={<MainPage />} />
       </Routes>
       <Toaster />

@@ -5,7 +5,7 @@ export default function CameraScan({
   onDetected,
   autoStart = false,
   hideControls = false,
-  fullScreen = false,   // ✅ 추가: 비디오를 컨테이너 꽉 채우기
+  fullScreen = false,   // 컨테이너 꽉 채우기
 }) {
   const [isScanning, setIsScanning] = useState(false);
   const html5QrCodeRef = useRef(null);
@@ -14,31 +14,67 @@ export default function CameraScan({
 
   const config = {
     fps: 15,
-    qrbox: { width: 360, height: 240 }, // ✅ qrbox 유지
+    qrbox: { width: 360, height: 240 }, // 스캔 박스 유지
     formatsToSupport: [Html5QrcodeSupportedFormats.EAN_13],
     disableFlip: true,
     experimentalFeatures: { useBarCodeDetectorIfSupported: true },
   };
 
+  // 간단한 모바일 판별
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  const tryStartWith = async (cameraConfig) => {
+    if (!html5QrCodeRef.current) {
+      html5QrCodeRef.current = new Html5Qrcode("reader");
+    }
+    await html5QrCodeRef.current.start(
+      cameraConfig,
+      config,
+      (decodedText) => {
+        if (decodedText === lastScannedRef.current) return;
+        lastScannedRef.current = decodedText;
+        onDetected?.(decodedText);
+      }
+    );
+  };
+
   const startScan = async () => {
     if (startedRef.current) return;
-    try {
-      if (!html5QrCodeRef.current) {
-        html5QrCodeRef.current = new Html5Qrcode("reader");
+
+    // 모바일: 후면 우선 → (실패 시) 전면
+    // 노트북/데스크탑: 전면 우선 → (실패 시) 후면
+    const candidates = isMobile
+      ? [
+          { facingMode: { exact: "environment" } },
+          { facingMode: "environment" },
+          { facingMode: { exact: "user" } },
+          { facingMode: "user" },
+        ]
+      : [
+          { facingMode: { exact: "user" } },
+          { facingMode: "user" },
+          { facingMode: { exact: "environment" } },
+          { facingMode: "environment" },
+        ];
+
+    // 순차 시도
+    let started = false;
+    for (const cfg of candidates) {
+      try {
+        await tryStartWith(cfg);
+        started = true;
+        break;
+      } catch (e) {
+        // 다음 후보로 계속
+        // console.warn("카메라 시도 실패, 다음 후보 진행:", cfg, e);
       }
-      await html5QrCodeRef.current.start(
-        { facingMode: { exact: "environment" } },
-        config,
-        (decodedText) => {
-          if (decodedText === lastScannedRef.current) return;
-          lastScannedRef.current = decodedText;
-          onDetected?.(decodedText);
-        }
-      );
+    }
+
+    if (started) {
       startedRef.current = true;
       setIsScanning(true);
-    } catch (err) {
-      console.error("카메라 시작 실패:", err);
+    } else {
+      console.error("모든 카메라 시작 시도가 실패했어요. 권한/HTTPS/다른 앱 점유 여부를 확인해 주세요.");
     }
   };
 
@@ -47,8 +83,9 @@ export default function CameraScan({
     try {
       await html5QrCodeRef.current.stop();
       await html5QrCodeRef.current.clear();
-    } catch {}
-    finally {
+    } catch {
+      // 이미 멈춰있으면 무시
+    } finally {
       startedRef.current = false;
       setIsScanning(false);
       lastScannedRef.current = "";
@@ -62,11 +99,11 @@ export default function CameraScan({
   }, [autoStart]);
 
   const wrapStyle = fullScreen
-    ? { position: "absolute", inset: 0 }          // ✅ 페이지를 꽉 채우는 컨테이너 안에서 absolute
+    ? { position: "absolute", inset: 0 }
     : { textAlign: "center" };
 
   const readerStyle = fullScreen
-    ? { position: "absolute", inset: 0 }          // ✅ html5-qrcode 비디오를 꽉 채움
+    ? { position: "absolute", inset: 0 }
     : { width: 360, margin: "1rem auto" };
 
   return (

@@ -1,51 +1,41 @@
 import { useEffect, useRef, useState } from "react";
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
 
-export default function CameraScan({ onDetected }) {
-  const [cameras, setCameras] = useState([]);
-  const [selectedCameraId, setSelectedCameraId] = useState("");
+export default function CameraScan({
+  onDetected,
+  autoStart = false,
+  hideControls = false,
+  fullScreen = false,   // ✅ 추가: 비디오를 컨테이너 꽉 채우기
+}) {
   const [isScanning, setIsScanning] = useState(false);
   const html5QrCodeRef = useRef(null);
+  const startedRef = useRef(false);
   const lastScannedRef = useRef("");
 
   const config = {
     fps: 15,
-    qrbox: { width: 360, height: 240 },
+    qrbox: { width: 360, height: 240 }, // ✅ qrbox 유지
     formatsToSupport: [Html5QrcodeSupportedFormats.EAN_13],
     disableFlip: true,
-    experimentalFeatures: { useBarCodeDetectorIfSupported: true }
+    experimentalFeatures: { useBarCodeDetectorIfSupported: true },
   };
 
-  useEffect(() => {
-    Html5Qrcode.getCameras()
-      .then((devices) => {
-        setCameras(devices);
-        const backCam = devices.find(d => d.label.toLowerCase().includes("back"));
-        setSelectedCameraId(backCam ? backCam.id : devices[0]?.id || "");
-      })
-      .catch((err) => console.error("카메라 목록 로딩 실패:", err));
-
-    return () => {
-      if (html5QrCodeRef.current) {
-        html5QrCodeRef.current.stop().catch(() => {});
-        html5QrCodeRef.current.clear().catch(() => {});
-      }
-    };
-  }, []);
-
   const startScan = async () => {
-    if (!selectedCameraId) return;
+    if (startedRef.current) return;
     try {
-      html5QrCodeRef.current = new Html5Qrcode("reader");
+      if (!html5QrCodeRef.current) {
+        html5QrCodeRef.current = new Html5Qrcode("reader");
+      }
       await html5QrCodeRef.current.start(
-        { deviceId: { exact: selectedCameraId } },
+        { facingMode: { exact: "environment" } },
         config,
         (decodedText) => {
           if (decodedText === lastScannedRef.current) return;
           lastScannedRef.current = decodedText;
-          onDetected(decodedText);
+          onDetected?.(decodedText);
         }
       );
+      startedRef.current = true;
       setIsScanning(true);
     } catch (err) {
       console.error("카메라 시작 실패:", err);
@@ -53,37 +43,43 @@ export default function CameraScan({ onDetected }) {
   };
 
   const stopScan = async () => {
+    if (!startedRef.current || !html5QrCodeRef.current) return;
     try {
       await html5QrCodeRef.current.stop();
       await html5QrCodeRef.current.clear();
+    } catch {}
+    finally {
+      startedRef.current = false;
       setIsScanning(false);
       lastScannedRef.current = "";
-    } catch (err) {
-      console.error("카메라 정지 실패:", err);
     }
   };
 
+  useEffect(() => {
+    if (autoStart) startScan();
+    return () => { if (startedRef.current) stopScan(); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoStart]);
+
+  const wrapStyle = fullScreen
+    ? { position: "absolute", inset: 0 }          // ✅ 페이지를 꽉 채우는 컨테이너 안에서 absolute
+    : { textAlign: "center" };
+
+  const readerStyle = fullScreen
+    ? { position: "absolute", inset: 0 }          // ✅ html5-qrcode 비디오를 꽉 채움
+    : { width: 360, margin: "1rem auto" };
+
   return (
-    <div style={{ textAlign: "center" }}>
-      <div id="reader" style={{ width: 360, margin: "1rem auto" }} />
-      <select
-        disabled={isScanning}
-        value={selectedCameraId}
-        onChange={(e) => setSelectedCameraId(e.target.value)}
-        style={{ marginTop: "1rem" }}
-      >
-        {cameras.map((cam, idx) => (
-          <option key={cam.id} value={cam.id}>
-            {cam.label || `Camera ${idx + 1}`}
-          </option>
-        ))}
-      </select>
-      <div style={{ marginTop: "1rem" }}>
-        <button onClick={startScan} disabled={isScanning}>카메라 시작</button>
-        <button onClick={stopScan} disabled={!isScanning} style={{ marginLeft: "1rem" }}>
-          카메라 정지
-        </button>
-      </div>
+    <div style={wrapStyle}>
+      <div id="reader" style={readerStyle} />
+      {!hideControls && (
+        <div style={{ marginTop: "1rem", textAlign: "center" }}>
+          <button onClick={startScan} disabled={isScanning}>카메라 시작</button>
+          <button onClick={stopScan} disabled={!isScanning} style={{ marginLeft: "1rem" }}>
+            카메라 정지
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -79,8 +79,8 @@ const useUserStore = create((set, get) => ({
    * 앱 시작 시, 로그인 상태를 복구하는 함수
    */
   initializeAuth: async () => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
+    const storedToken = localStorage.getItem("authToken");
+    if (storedToken) {
       try {
         const token = JSON.parse(storedToken); // 저장된 문자열을 다시 객체로 변환
         axios.defaults.headers.common[

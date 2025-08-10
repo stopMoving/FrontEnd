@@ -11,7 +11,7 @@ export default function SelectPanel({ title, description }) {
 
       <Title>| 바코드 인식</Title>
       <Desc>{description}</Desc>
-      
+
       <Buttons>
         <BtnPrimary onClick={() => navigate("/barcode/scan")}>
           📷 카메라로 바코드 인식
@@ -23,11 +23,6 @@ export default function SelectPanel({ title, description }) {
           ✍️ ISBN 코드 직접 입력
         </Btn>
       </Buttons>
-
-      <Hint>
-        인식이 어려우면 조명을 밝히고, 바코드와 카메라를 평행하게 맞춘 뒤
-        프레임 안에 꽉 차게 맞춰보세요.
-      </Hint>
     </Wrap>
   );
 }

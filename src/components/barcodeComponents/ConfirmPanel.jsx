@@ -1,127 +1,192 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export default function ConfirmPanel({
+  mode = "give",
   step = 1,
-  copy,
   book,
   loading = false,
   onPrimary,   // step1: 다시 찍기, step2: 아니오(완료)
   onSecondary, // step1: 확인 → step2로, step2: 네(추가)
 }) {
+  const STEP1_TITLE = "이 책이 맞는지 확인해주세요!";
+  const STEP1_PRIMARY = "다시 찍기";
+  const STEP1_SECONDARY = "확인";
+  const STEP2_PRIMARY = "아니오, 완료";
+  const STEP2_SECONDARY = "네, 추가";
+
+  const step2 = mode === "take"
+  ? { title: "책 데려가기가 완료되었습니다!", desc: "다른 책도 데려가시겠어요?" }
+  : { title: "책 등록이 완료되었습니다!",     desc: "다른 책도 나눔하시겠어요?" };
+
   return (
     <Wrap>
       {step === 1 ? (
         <>
-          <Title>{copy.step1Title}</Title>
+          <Title>{STEP1_TITLE}</Title>
 
-          <BookRow>
-            <Cover src={book?.image} alt="" />
-            <Meta>
-              <Main>{book?.title || "제목 없음"}</Main>
-              <Sub>{book?.author || "-"}</Sub>
-              <Isbn>ISBN {book?.isbn || "-"}</Isbn>
-            </Meta>
-          </BookRow>
+          <BookWrap>
+            {book?.image
+              ? <Cover src={book?.image} alt="" />
+              : <CoverFallback />}
+          </BookWrap>
 
-          <Actions>
-            {/* step1: 첫 번째 버튼이 "다시 찍기" */}
+          <BookTitle>{book?.title || "제목 없음"}</BookTitle>
+
+          <Meta>
+            <Sub>저자 | {book?.author || "-"}</Sub>
+            <Sub>출판사 | {book?.publisher || "-"}</Sub>
+            {/* 취소선 넣기 */}
+            <Sub>가격 | {book?.regular_price || "-"}원</Sub>
+          </Meta>
+            <Price>{book?.price || "-"}원</Price>
+            <Isbn>ISBN 코드: {book?.isbn || "-"}</Isbn>
+            
+          <Buttons>
             <Btn onClick={onPrimary} disabled={loading}>
-              {loading ? "처리 중..." : copy.step1Primary}
+              {STEP1_PRIMARY}
             </Btn>
-            {/* step1: 두 번째 버튼이 "확인" (→ step2로) */}
             <Btn ghost onClick={onSecondary} disabled={loading}>
-              {copy.step1Secondary}
+              {STEP1_SECONDARY}
             </Btn>
-          </Actions>
+          </Buttons>
         </>
       ) : (
         <>
-          <Title>{copy.step2Title}</Title>
-          <Desc>{copy.step2Desc}</Desc>
-          <Actions>
-            {/* step2: 첫 번째 버튼은 "아니오, 완료" */}
-            <Btn onClick={onPrimary}>{copy.step2Primary}</Btn>
-            {/* step2: 두 번째 버튼은 "네, 추가" */}
-            <Btn ghost onClick={onSecondary}>{copy.step2Secondary}</Btn>
-          </Actions>
+          <Title>{step2.title}</Title>
+          <Desc>{step2.desc}</Desc>
+          <Buttons>
+            <Btn onClick={onPrimary}>{STEP2_PRIMARY}</Btn>
+            <Btn ghost onClick={onSecondary}>{STEP2_SECONDARY}</Btn>
+          </Buttons>
         </>
       )}
     </Wrap>
   );
 }
 
+// ConfirmPanel.jsx (스타일 부분만 교체)
 const Wrap = styled.div`
-  width: min(520px, 92vw);
-  border-radius: 16px;
-  background: #fff;
-  padding: 20px;
-  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  width: 335px;
+  height: 560px;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 40px 16px;
+  gap: 40px;
 `;
 
-const Title = styled.h3`
+const Title = styled.div`
+  display: flex;
+  font-size: 24px;
+  font-weight: 600;
   margin: 4px 0 16px;
+  line-height: 1;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+`;
+
+const BookWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 139px;
+  height: 177px;
+  border-radius: 5px;
+  margin: 0 auto;
+  margin-top: 40px;
+  margin-bottom: 15px;
+  gap: 10px;
+`;
+
+const Cover = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+const CoverFallback = styled.div`
+  width: 100%;
+  height: 100%;
+  background: #575757;
+`;
+
+const BookTitle = styled.div`
+  display: flex;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 4px 0 16px;
+  line-height: 1;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+`
+
+const Meta = styled.div`
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  width: max-content;
+  text-align: left;
+  margin: 0 auto;
+  gap: 4px;
+`;
+
+const Sub = styled.div`
+  font-size: 12px;
+  font-weight: 400;
+  color: #868686;
+`
+
+const Price = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  line-height: 1;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000000;
+  margin: 8px;
+`;
+
+const Isbn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  line-height: 1;
   font-size: 18px;
+  font-weight: 600;
+  color: #000000;
+  margin: 16px;
 `;
 
 const Desc = styled.p`
   margin: 6px 0 16px;
   color: #6b7280;
-`;
-
-const BookRow = styled.div`
-  display: grid;
-  grid-template-columns: 88px 1fr;
-  gap: 14px;
-  align-items: center;
-`;
-
-const Cover = styled.img`
-  width: 88px;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 8px;
-  background: #f1f2f4;
-`;
-
-const Meta = styled.div``;
-
-const Main = styled.div`
-  font-weight: 700;
-  line-height: 1.3;
-`;
-
-const Sub = styled.div`
-  margin-top: 4px;
   font-size: 14px;
-  color: #6b7280;
+  line-height: 1.4;
+  text-align: center;
 `;
 
-const Isbn = styled.div`
-  margin-top: 6px;
-  font-size: 13px;
-  color: #9ca3af;
-`;
-
-const Actions = styled.div`
+const Buttons = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 18px;
+  gap: 16px;
+  margin-top: 30px;
 `;
 
 const Btn = styled.button`
+  font-size: 18px;
+  font-weight: 500;
   padding: 12px 16px;
-  border-radius: 12px;
-  font-weight: 700;
-  border: 1px solid transparent;
-  color: #fff;
-  background: #111;
+  border-radius: 10px;
+  line-height: 1;
+  border: 1px solid #000000;
+  color: #000000;
+  background: #ffffff;
+  transition: transform .02s ease;
 
-  ${({ ghost }) =>
-    ghost &&
-    `
-    background:#fff;
-    color:#111;
-    border-color:#e6e8ec;
-  `}
+  &:active { transform: translateY(1px); }
 `;

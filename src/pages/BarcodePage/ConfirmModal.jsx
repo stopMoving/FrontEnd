@@ -1,32 +1,10 @@
 import styled from "styled-components";
 import ConfirmPanel from "../../components/barcodeComponents/ConfirmPanel";
 
-const DEFAULT_COPY = {
-  give: {
-    step1Title: "이 책이 맞는지 확인해주세요!",
-    step1Primary: "다시 찍기",
-    step1Secondary: "확인",
-    step2Title: "책 등록이 완료되었습니다!",
-    step2Desc: "다른 책도 나눔하시겠어요?",
-    step2Primary: "아니오, 완료",
-    step2Secondary: "네, 추가",
-  },
-  take: {
-    step1Title: "이 책이 맞는지 확인해주세요!",
-    step1Primary: "다시 찍기",
-    step1Secondary: "확인",
-    step2Title: "책 데려가기가 완료되었습니다!",
-    step2Desc: "다른 책도 데려가시겠어요?",
-    step2Primary: "아니오, 완료",
-    step2Secondary: "네, 추가",
-  },
-};
-
 export default function ConfirmModal({
   open,
   step,
-  mode = "give",       // ← give/take
-  copy,                 // ← 있으면 이걸 우선 적용 (선택)
+  mode= "give",       // ← give/take
   book,
   loading,
   onPrimary,
@@ -34,14 +12,13 @@ export default function ConfirmModal({
   onClose,
 }) {
   if (!open) return null;
-  const finalCopy = copy || DEFAULT_COPY[mode] || DEFAULT_COPY.give;
 
   return (
     <Overlay onClick={onClose}>
       <Sheet onClick={(e) => e.stopPropagation()}>
         <ConfirmPanel
           step={step}
-          copy={finalCopy}
+          mode={mode}
           book={book}
           loading={loading}
           onPrimary={onPrimary}

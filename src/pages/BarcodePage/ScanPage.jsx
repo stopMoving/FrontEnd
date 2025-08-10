@@ -23,12 +23,15 @@ export default function ScanPage() {
         const res = await fetch(`https://stopmoving.p-e.kr/bookinfo/lookup/?isbn=${digits}`);
         if (!res.ok) throw new Error("lookup failed");
         const data = await res.json();
+        console.log("lookup payload ▶", data);
 
         setBook({
-            image: data?.image ?? "",
+            image: data?.cover_url ?? null,
             title: data?.title ?? "제목 없음",
             author: data?.author ?? "-",
             publisher: data?.publisher ?? "-",
+            regular_price: data?.regular_price ?? "-",
+            price: data?.regular_price ? Math.round(data.regular_price * 0.2) : "-",
             isbn: digits,
         });
 
@@ -58,7 +61,7 @@ export default function ScanPage() {
     setLoading(true);
     try {
         // 백엔드 스펙에 맞게 URL/메서드/바디 수정
-        const res = await fetch(`https://stopmoving.p-e.kr/barcode/register`, {
+        const res = await fetch(`https://stopmoving.p-e.kr/books/donate`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

@@ -7,6 +7,8 @@ export default function CameraScan({
   autoStart = false,
   viewSize = { width: 600, height: 300 },
   fit = "cover",
+  paused = false,
+  resetOn,
 }) {
   const html5QrCodeRef = useRef(null);
   const startedRef = useRef(false);
@@ -77,14 +79,37 @@ export default function CameraScan({
       lastScannedRef.current = "";
     }
   };
-
+  
+  // 1) autoStart & cleanup
   useEffect(() => {
-    if (autoStart) startScan();
-    return () => {
-      if (startedRef.current) stopScan();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (autoStart) startScan(); // 페이지 들어오면 autoStart 시 스캔 시작
+      return () => {
+          if (startedRef.current) stopScan(); // 페이지 떠나면 카메라 정지
+        };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoStart]);
+
+  // 2) 모달 열릴 때 일시정지 / 닫히면 재개
+  useEffect(() => {
+    const inst = html5QrCodeRef.current;
+    if (!startedRef.current || !inst) return;
+    (async () => {
+      try {
+        if (paused) {
+          await inst.pause(true);
+        } else {
+          await inst.resume();
+        }
+    } catch (e) {
+      console.warn("pause/resume 실패(무시):", e);
+    }
+    })();
+  }, [paused]);
+
+  // 3) 다시찍기 등의 트리거가 바뀌면 중복 방지값 리셋
+  useEffect(() => {
+    lastScannedRef.current = "";
+  }, [resetOn]);
 
   return (
     <Wrap>

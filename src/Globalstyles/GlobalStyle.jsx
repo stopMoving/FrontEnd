@@ -10,7 +10,7 @@ const GlobalStyle = createGlobalStyle`
 }
 
 html, body, #root {
-  height: 100%
+  height: 100%;
 
   /*Pretandard 폰트 불러오기*/
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -21,7 +21,6 @@ html, body, #root {
   display: flex;
   justify-content: center;  
 }
-
 `;
 
 export default GlobalStyle;

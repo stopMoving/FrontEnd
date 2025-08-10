@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "여기에 url 입력",
+  baseURL: "https://stopmoving.p-e.kr/",
   // withCredentials: true,
 });
 

@@ -17,9 +17,11 @@ const useUserStore = create((set, get) => ({
    */
   setUserAndToken: (user, token) => {
     // axios의 모든 요청 헤더에 인증 토큰을 기본으로 포함시킵니다.
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    axios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${token.access_token}`;
     // 로컬 스토리지에 토큰을 저장하여 페이지를 새로고침해도 로그인 유지
-    localStorage.setItem("authToken", token);
+    localStorage.setItem("authToken", JSON.stringify(token));
     // 상태 업데이트
     set({ user, token });
   },
@@ -30,7 +32,7 @@ const useUserStore = create((set, get) => ({
    */
   login: async (credentials) => {
     try {
-      // 서버에 로그인 요청을 보냅니다. (API 주소는 실제 주소로 변경 필요)
+      // 서버에 로그인 요청을 보냅니다.
       const response = await axios.post("accounts/login", credentials);
       const { user, token } = response.data;
       // 성공 시, 받아온 사용자 정보와 토큰을 저장합니다.
@@ -45,14 +47,17 @@ const useUserStore = create((set, get) => ({
 
   /**
    * 회원가입을 처리하는 함수
-   * @param {object} userData - { name, id, password }
+   * @param {object} userData - { username, nickname, password1, password2 }
    */
   register: async (userData) => {
     try {
       // 서버에 회원가입 요청을 보냅니다. (API 주소는 실제 주소로 변경 필요)
       await axios.post("accounts/join", userData);
       // 회원가입 성공 시, 바로 로그인 처리를 시도합니다.
-      await get().login({ id: userData.id, password: userData.password });
+      await get().login({
+        username: userData.username,
+        password: userData.password1,
+      });
     } catch (error) {
       console.error("회원가입 실패:", error);
       throw error;
@@ -77,10 +82,11 @@ const useUserStore = create((set, get) => ({
     const token = localStorage.getItem("authToken");
     if (token) {
       try {
-        // 토큰이 있으면, 서버에 내 정보를 요청하여 유효한 토큰인지 확인합니다.
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        const response = await axios.get("/users/me"); // 내 정보를 가져오는 API
-        // 성공 시, 사용자 정보와 토큰으로 상태를 다시 설정합니다.
+        const token = JSON.parse(storedToken); // 저장된 문자열을 다시 객체로 변환
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${token.access_token}`;
+        const response = await axios.get("/users/me/"); // 내 정보를 가져오는 API
         set({ user: response.data, token });
       } catch (error) {
         // 토큰이 유효하지 않은 경우 (만료 등), 로그아웃 처리

@@ -12,37 +12,87 @@ export default function ScanPage() {
   const [loading, setLoading] = useState(false);
   const [retakeCount, setRetakeCount] = useState(0);
 
-  // 스캔 성공 시
-  const handleDetected = async (isbn) => {
-    // TODO: 서버 조회해서 book 정보 채우기
-    setBook({ isbn, title: "제목 예시", author: "저자 예시", image: "" });
-    setStep(1);
-    setModalOpen(true);           // ← CameraScan에 paused로 전달되어 일시정지
+  // 스캔 성공 시 (조회))
+  const handleDetected = async (text) => {
+    if (loading || modalOpen) return; // 중복 스캔 가드
+    const digits = String(text).replace(/[^0-9]/g, "");
+    if (!/^97[89]\d{10}$/.test(digits)) return;
+
+    setLoading(true);
+    try {
+        const res = await fetch(`https://stopmoving.p-e.kr/bookinfo/lookup/?isbn=${digits}`);
+        if (!res.ok) throw new Error("lookup failed");
+        const data = await res.json();
+
+        setBook({
+            image: data?.image ?? "",
+            title: data?.title ?? "제목 없음",
+            author: data?.author ?? "-",
+            publisher: data?.publisher ?? "-",
+            isbn: digits,
+        });
+
+        // 모달 열면 CameraScan에서 paused={modalOpen}으로 일시정지됨
+        setStep(1);
+        setModalOpen(true);
+    } catch (e) {
+        // 여기서 조회 실패라고 ui를 띄워줘야 하지 않을까?
+        console.error("조회 실패", e);
+        alert("인식에 실패했어요. 잠시 후 다시 시도해 주세요.") // alert 말고 다르게 표시하자
+    } finally {
+        setLoading(false);
+    }
   };
 
-  // === step 1 버튼 동작 ===
-  const handleRetake = () => {    // 다시 찍기
-    setModalOpen(false);          // 모달 닫힘 → paused=false → 카메라 재개
+  // === step 1 버튼: 다시 찍기 ===
+  const handleRetake = () => {
+    setModalOpen(false);          // 모달 닫힘 → 카메라 재개
     setStep(1);
     setBook(null);
-    setRetakeCount((v) => v + 1);
+    setRetakeCount((v) => v + 1); // 콜백 리셋(같은 코드 재스캔 대비)
   };
 
-  const handleConfirm = () => {   // 확인 → step2
-    setStep(2);
+  // === step 1 버튼: 확인 -> 등록 API 호출 후 step 2===
+  const handleConfirm = async () => {
+    if (!book?.isbn) return;
+    setLoading(true);
+    try {
+        // 백엔드 스펙에 맞게 URL/메서드/바디 수정
+        const res = await fetch(`https://stopmoving.p-e.kr/barcode/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                mode, // give | take -> 서버 입장에서 구분하기 위함
+                image: book.image,
+                title: book.title,
+                author: book.author,
+                publisher: book.publisher,
+                isbn: book.isbn,
+            }),
+        });
+        if (!res.ok) throw new Error("register failed");
+        setStep(2);
+    } catch (e) {
+        console.error("등록 실패", e);
+        alert("등록에 실패했어요. 잠시 후 다시 시도해 주세요.") // alert 말고 다르게 표시하자
+    } finally {
+        setLoading(false);
+    }
   };
 
-  // === step 2 버튼 동작 ===
-  const handleFinish = () => {    // 아니오, 완료
+  // === step 2 버튼: 아니오, 완료 ===
+  const handleFinish = () => {
     setModalOpen(false);          // 닫고 끝
     setStep(1);
     // 필요하면 navigate("/main") 등
   };
 
-  const handleAddMore = () => {   // 네, 추가
+  // === step 2 버튼: 네, 추가 ===
+  const handleAddMore = () => {
     setModalOpen(false);          // 닫고 다음 스캔 준비
     setStep(1);
     setBook(null);
+    setRetakeCount((v) => v + 1);
   };
 
   return (
@@ -53,7 +103,7 @@ export default function ScanPage() {
           autoStart
           hideControls
           viewSize={{ width: 600, height: 300 }}
-          paused={modalOpen}
+          paused={modalOpen || loading}
           resetOn={retakeCount}
         />
       </Center>

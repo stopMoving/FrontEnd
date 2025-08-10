@@ -1,5 +1,5 @@
 import React from "react";
-import KakaoMap from "../components/mapComponents/KakaoMap";
+import KakaoMap from "../../components/mapComponents/KakaoMap";
 
 const Map = () => {
   return (

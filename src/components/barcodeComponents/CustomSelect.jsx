@@ -33,7 +33,7 @@ export default function CustomSelect({
         onClick={() => !disabled && setOpen(o => !o)}
       >
         <Label $placeholder={!current}>{current?.label || placeholder}</Label>
-        <Chevron $open={open} />
+        <Arrow $open={open} />
       </Trigger>
 
       {open && !disabled && (
@@ -70,41 +70,60 @@ const Trigger = styled.button`
   font-weight: 500;
   text-align: left;
   color: #009F25;
-  background: #fff;
+  background: #FFFFFF;
   border: 1px solid #11B55F;
   border-radius: 5px;
   cursor: pointer;
-  transition: background .25s ease, color .25s ease, border-color .25s ease;
+  transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 
-  &:hover { background: #F6FFF9; }
-  &:disabled { opacity: .6; cursor: not-allowed; }
+  &:hover {
+    background: #11B55F;
+  }
+
+  &:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+  }
+
   position: relative;
 `;
 
 const Label = styled.span`
-  color: ${({ $placeholder }) => ($placeholder ? "#9CA3AF" : "#009F25")};
+  color: #009F25;
+  transition: color 0.4s ease;
+
+  ${Trigger}:hover & {
+    color: #FFFFFF;
+  }
 `;
 
-const Chevron = styled(DownIcon)`
+const Arrow = styled(DownIcon)`
   position: absolute;
   right: 12px;
   top: 50%;
   transform: translateY(-50%) rotate(${p => (p.$open ? 180 : 0)}deg);
   transition: transform .2s ease;
   color: #000; /* fill="currentColor"인 경우 색상 적용됨 */
+
+  ${Trigger}:hover & {
+    color: #ffffff;
+  }
 `;
 
 const Menu = styled.ul`
   position: absolute;
   left: 0; right: 0;
-  margin: 6px 0 0;
-  padding: 8px 0;
+  margin: 8px 0 0;
+  padding: 20px 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
   list-style: none;
   background: #fff;
-  border: 1px solid #11B55F;
-  border-radius: 8px;
-  box-shadow: 0 10px 24px rgba(0,0,0,.08);
-  max-height: 240px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+  max-height: 470px;
   overflow: auto;
   z-index: 10;
 `;

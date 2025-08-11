@@ -11,6 +11,7 @@ import useUserStore from "./store/useUserStore";
 import { Toaster } from "./store/useToasterStore";
 import SelectPage from "./pages/BarcodePage/SelectPage";
 import ScanPage from "./pages/BarcodePage/ScanPage";
+import LibrarySelectPage from "./pages/BarcodePage/LibrarySelectPage";
 
 const App = () => {
   // ✅ 스토어에서 initializeAuth 함수와 상태를 가져옵니다.
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="welcome" element={<WelcomePage />} />
         <Route path="main" element={<MainPage />} />
         <Route path="map" element={<Map />} />
+        <Route path="barcode/library/select/:mode" element={<LibrarySelectPage />} />
         <Route path="barcode/select/:mode" element={<SelectPage />} />
         <Route path="barcode/scan" element={<ScanPage />} />
         <Route path="/" element={<MainPage />} />

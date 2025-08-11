@@ -36,7 +36,7 @@ export default function ConfirmPanel({
             <Sub>저자 | {book?.author || "-"}</Sub>
             <Sub>출판사 | {book?.publisher || "-"}</Sub>
             {/* 취소선 넣기 */}
-            <Sub>가격 | {book?.regular_price || "-"}원</Sub>
+            <Sub>가격 | <del>{book?.regular_price || "-"}</del>원</Sub>
           </Meta>
             <Price>{book?.price || "-"}원</Price>
             <Isbn>ISBN 코드: {book?.isbn || "-"}</Isbn>
@@ -120,7 +120,7 @@ const BookTitle = styled.div`
   align-items: center;
   text-align: center;
   gap: 8px;
-`
+`;
 
 const Meta = styled.div`
   display: flex;
@@ -136,7 +136,7 @@ const Sub = styled.div`
   font-size: 12px;
   font-weight: 400;
   color: #868686;
-`
+`;
 
 const Price = styled.div`
   display: flex;

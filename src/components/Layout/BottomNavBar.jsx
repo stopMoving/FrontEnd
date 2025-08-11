@@ -52,8 +52,8 @@ const BottomNav = styled.nav`
   width: 100%;
   max-width: 600px;
   height: 70px; /* 하단 바 높이 */
-  background-color: #b8b8b8;
-  border-top: 1px solid #e5e7eb;
+  background-color: white;
+  border-top: 1px solid #dedede;
   z-index: 100;
 
   display: flex;

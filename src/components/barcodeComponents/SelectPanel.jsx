@@ -1,73 +1,94 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import StepHeader from "./StepHeader";
+import { ReactComponent as CameraIcon } from "../../assets/icons/camera.svg";
+import { ReactComponent as ImageUploadIcon} from "../../assets/icons/imageUpload.svg";
+import { ReactComponent as InputISBNIcon} from "../../assets/icons/inputISBN.svg";
 
 export default function SelectPanel({ title, description }) {
   const navigate = useNavigate();
 
   return (
     <Wrap>
-        <h2></h2>
-      <Title>{title}</Title>
+      {/* 상단 공통 헤더: 뒤로가기 + 스텝 인디케이터 */}
+      <StepHeader
+        title={title}     // 예: "책을 나눔할게요." / "책을 데려갈게요."
+        activeStep={2}    // ← STEP 2 화면
+        onBack={() => navigate(-1)}
+      />
 
-      <Title>| 바코드 인식</Title>
-      <Desc>{description}</Desc>
+      <Inner>
+        <SectionTitle>{description}</SectionTitle>
 
-      <Buttons>
-        <BtnPrimary onClick={() => navigate("/barcode/scan")}>
-          📷 카메라로 바코드 인식
-        </BtnPrimary>
-        <Btn onClick={() => navigate("/barcode/upload")}>
-          🖼️ 바코드 사진 업로드
-        </Btn>
-        <Btn onClick={() => navigate("/barcode/manual")}>
-          ✍️ ISBN 코드 직접 입력
-        </Btn>
-      </Buttons>
+        <Buttons>
+          <Btn onClick={() => navigate("/barcode/scan")}>
+            <CameraIcon width={32} height={32} />
+            카메라로 바코드 인식
+          </Btn>
+
+          <Btn onClick={() => navigate("/barcode/upload_image")}>
+            <ImageUploadIcon width={32} height={32} />
+            바코드 사진 업로드
+          </Btn>
+
+          <Btn onClick={() => navigate("/barcode/input_ISBN")}>
+            <InputISBNIcon width={32} height={32} />
+            ISBN 코드 직접 입력
+          </Btn>
+        </Buttons>
+      </Inner>
     </Wrap>
   );
 }
 
 const Wrap = styled.div`
+  width: 100%;
+  max-width: 600px;
   min-height: 100dvh;
-  padding: 24px 16px;
+  margin: 0 auto;
+  background: #fff;
+  position: relative;
+
+  /* 고정 StepHeader 높이만큼 여백 확보 */
+  padding-top: 180px;
+`;
+
+const Inner = styled.div`
+  padding: 0 16px;
+  display: grid;
+  gap: 20px;
+`;
+
+const SectionTitle = styled.div`
+  width: min(520px, 92vw);
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 auto;
+`;
+
+const Buttons = styled.div`
+  width: min(520px, 92vw);
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 8px;
+  margin: 0 auto;
 `;
-const Title = styled.h2`
-  width: min(520px, 92vw);
-  margin: 8px 0 4px;
-  font-size: 20px;
-`;
-const Desc = styled.p`
-  width: min(520px, 92vw);
-  margin: 0 0 20px;
-  color: var(--color-muted, #6b7280);
-`;
-const Buttons = styled.div`
-  width: min(520px, 92vw);
-  display: grid;
-  gap: 12px;
-`;
+
 const Btn = styled.button`
+  display: flex;
+  align-items: center;
   width: 100%;
-  min-height: var(--tap, 44px);
-  padding: 12px 16px;
-  border-radius: var(--radius-md, 12px);
-  border: 1px solid var(--color-border, #e6e8ec);
-  background: #f7f8fa;
-  font-weight: 600;
+  height: 57px;
+  padding: 0 16px;
+  line-height: 1;
+  border: none;
+  border-radius: 5px;
+  background: #E6F4F0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #000000;
   text-align: center;
-`;
-const BtnPrimary = styled(Btn)`
-  background: var(--color-primary, #111);
-  color: var(--color-primary-contrast, #fff);
-  border-color: transparent;
-  box-shadow: var(--shadow-lg, 0 10px 30px rgba(0,0,0,.08));
-`;
-const Hint = styled.p`
-  width: min(520px, 92vw);
-  margin-top: 16px;
-  font-size: 13px;
-  color: var(--color-muted, #6b7280);
+  cursor: pointer;
+  gap: 16px;
 `;

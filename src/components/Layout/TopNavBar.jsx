@@ -17,7 +17,7 @@ const NavContainer = styled.header`
   height: 50px; /* 상단 바 높이 */
   padding: 0 16px;
   background-color: #ffffff;
-  border-bottom: 1px solid #f0f2f5;
+  // border-bottom: 1px solid #f0f2f5;
   z-index: 100;
 `;
 

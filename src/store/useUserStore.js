@@ -33,7 +33,7 @@ const useUserStore = create((set, get) => ({
   login: async (credentials) => {
     try {
       // 서버에 로그인 요청을 보냅니다.
-      const response = await axios.post("accounts/login", credentials);
+      const response = await axios.post("accounts/login/", credentials);
       const { user, token } = response.data;
       // 성공 시, 받아온 사용자 정보와 토큰을 저장합니다.
       get().setUserAndToken(user, token);
@@ -52,7 +52,7 @@ const useUserStore = create((set, get) => ({
   register: async (userData) => {
     try {
       // 서버에 회원가입 요청을 보냅니다. (API 주소는 실제 주소로 변경 필요)
-      await axios.post("accounts/join", userData);
+      await axios.post("accounts/join/", userData);
       // 회원가입 성공 시, 바로 로그인 처리를 시도합니다.
       await get().login({
         username: userData.username,

@@ -11,7 +11,7 @@ import { useToaster } from "../../store/useToasterStore";
 
 const LoginPage = () => {
   const [values, setValues] = useState({
-    id: "",
+    username: "",
     password: "",
   });
   const navigate = useNavigate();
@@ -53,13 +53,13 @@ const LoginPage = () => {
       <LoginContainer>
         <Logo src={codeitLogo} alt="codeit" />
         <StyledForm onSubmit={handleSubmit}>
-          <Label htmlFor="id">아이디</Label>
+          <Label htmlFor="username">아이디</Label>
           <Input
-            id="id"
-            name="id"
-            type="id"
+            id="username"
+            name="username"
+            type="username"
             placeholder="아이디(이메일)"
-            value={values.id}
+            value={values.username}
             onChange={handleChange}
           />
           <Label htmlFor="password">비밀번호</Label>

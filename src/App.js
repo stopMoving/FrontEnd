@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import GlobalStyle from "./Globalstyles/GlobalStyle";
 import { Route, Routes } from "react-router-dom";
-import Map from "./pages/Map";
 import MainPage from "./pages/MainPage";
 import styled from "styled-components";
 import LoginPage from "./pages/LoginPage/LoginPage";
@@ -12,6 +11,7 @@ import { Toaster } from "./store/useToasterStore";
 import SelectPage from "./pages/BarcodePage/SelectPage";
 import ScanPage from "./pages/BarcodePage/ScanPage";
 import LibrarySelectPage from "./pages/BarcodePage/LibrarySelectPage";
+import Map from "./pages/LibraryPage/Map";
 
 const App = () => {
   // ✅ 스토어에서 initializeAuth 함수와 상태를 가져옵니다.

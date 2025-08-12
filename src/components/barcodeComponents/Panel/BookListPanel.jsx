@@ -2,7 +2,13 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import StepHeader from "../StepHeader";
 
-export default function BookListPanel({ title, description }) {
+export default function BookListPanel({
+  title,
+  description,
+  buttonLabel,
+  disabled = false,
+  onNext,
+}) {
   const navigate = useNavigate();
 
   return (
@@ -15,9 +21,14 @@ export default function BookListPanel({ title, description }) {
 
       <Inner>
         <SectionTitle>{description}</SectionTitle>
-
-        
+        {/* 바코드 찍은 책 목록 불러오기 */}
       </Inner>
+
+      <BottomBar>
+        <Button disabled={disabled} onClick={onNext}>
+          {buttonLabel}
+        </Button>
+      </BottomBar>
     </Wrap>
   );
 }
@@ -47,29 +58,24 @@ const SectionTitle = styled.div`
   margin: 0 auto;
 `;
 
-const Buttons = styled.div`
-  width: min(520px, 92vw);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  margin: 0 auto;
+const BottomBar = styled.div`
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 20px;
+  width: 100%;
+  max-width: 600px;
+  padding: 0 20px;
 `;
 
-const Btn = styled.button`
-  display: flex;
-  align-items: center;
+const Button = styled.button`
   width: 100%;
-  height: 57px;
-  padding: 0 16px;
-  line-height: 1;
-  border: none;
+  height: 47px;
   border-radius: 5px;
-  background: #E6F4F0;
   font-size: 18px;
   font-weight: 500;
-  color: #000000;
-  text-align: center;
-  cursor: pointer;
-  gap: 16px;
+  border: none;
+  color: #FFFFFF;
+  background: "#11B55F";
+  cursor: "pointer";
 `;

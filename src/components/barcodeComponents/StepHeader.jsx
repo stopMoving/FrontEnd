@@ -33,7 +33,7 @@ const Wrap = styled.header`
   max-width: 600px;
   background: #fff;
   z-index: 30px;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid #000000;
 `;
 
 const TopBar = styled.div`
@@ -65,7 +65,7 @@ const Steps = styled.div`
 
 const Step = styled.div`
   position: relative;
-  padding: 0 6px 14px;
+  padding: 3px 6px 11px;
   font-size: 20px;
   font-weight: 500;
   color: #6F6F6F;
@@ -84,8 +84,8 @@ const Step = styled.div`
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        bottom: -1px;
-        height: 3px;
+        bottom: -2px;
+        height: 3.5px;
         width: clamp(72px, 22vw, 140px); /* 가운데 짧은 밑줄 */
         background: #11B55F;
         border-radius: 999px;

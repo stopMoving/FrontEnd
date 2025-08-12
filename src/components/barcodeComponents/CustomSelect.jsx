@@ -65,7 +65,7 @@ const Wrap = styled.div`
 const Trigger = styled.button`
   width: 100%;
   height: 47px;
-  padding: 0 44px 0 16px;
+  padding: 0 44px 0 20px;
   font-size: 16px;
   font-weight: 500;
   text-align: left;
@@ -111,34 +111,38 @@ const Arrow = styled(DownIcon)`
 `;
 
 const Menu = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
   position: absolute;
-  left: 0; right: 0;
-  margin: 8px 0 0;
-  padding: 20px 0;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 1;
+  left: 0;
+  right: 0;
+  margin: 8px 0 0;  /* select 창과 목록 사이의 거리 */
+  padding: 12px 8px;
   list-style: none;
-  background: #fff;
+  background: #FFFFFF;
   border: none;
   border-radius: 5px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
   max-height: 470px;
-  overflow: auto;
-  z-index: 10;
+  overflow: auto; /* 470px 넘으면 스크롤 생기게 함 */
 `;
 
 const Item = styled.li`
+  width: 100%;
   padding: 10px 14px;
   font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
   cursor: pointer;
-  color: #111;
+  color: #000000;
+  transition: background-color 0.4s ease;
 
   &[aria-selected="true"] {
-    font-weight: 700;
-    color: #009F25;
-    background: #EAFBF2;
+    background: #E6F4F0;
   }
 
-  &:hover { background: #F1FBF7; }
+  &:hover {
+    background: #E6F4F0;
+  }
 `;

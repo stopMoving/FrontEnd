@@ -3,7 +3,7 @@
 #POST 링크기입
 #Content-Type: application/json
 
-POST https://stopmoving.p-e.kr/accounts/login
+POST https://stopmoving.p-e.kr/accounts/login/
 Accept: application/json
 
 {

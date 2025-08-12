@@ -5,7 +5,7 @@ const StyledHr = styled.hr`
   border: none;
   width: auto;
   height: 1px;
-  background-color: #e1e1e1;
+  background-color: #6f6f6f;
 `;
 
 const Text = styled.span`

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import LibrarySelectPanel from "../../components/barcodeComponents/LibrarySelectPanel";
+import LibrarySelectPanel from "../../components/barcodeComponents/Panel/LibrarySelectPanel";
 
 export default function LibrarySelectPage() {
   const { mode } = useParams(); // 'give' | 'take'

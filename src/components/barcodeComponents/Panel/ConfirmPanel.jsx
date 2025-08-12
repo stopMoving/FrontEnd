@@ -19,7 +19,7 @@ export default function ConfirmPanel({
   : { title: "책 데려가기가 완료되었습니다!", desc: "다른 책도 데려가시겠어요?" };
 
   return (
-    <Wrap>
+    <Wrap $step={step}>
       {step === 1 ? (
         <>
           <Title>{STEP1_TITLE}</Title>
@@ -57,8 +57,19 @@ export default function ConfirmPanel({
           <Title>{step2.title}</Title>
           <Desc>{step2.desc}</Desc>
           <Buttons>
-            <Btn onClick={onPrimary}>{STEP2_PRIMARY}</Btn>
-            <Btn ghost onClick={onSecondary}>{STEP2_SECONDARY}</Btn>
+            <Btn
+              onClick={onPrimary}
+              $variant={step === 2 && "primary"}
+            >
+              {STEP2_PRIMARY}
+            </Btn>
+            <Btn
+              ghost
+              onClick={onSecondary}
+              $variant={step === 2 && "secondary"}
+            >
+              {STEP2_SECONDARY}
+            </Btn>
           </Buttons>
         </>
       )}
@@ -68,11 +79,12 @@ export default function ConfirmPanel({
 
 const Wrap = styled.div`
   width: 335px;
-  height: 560px;
+  height: ${({ $step }) => ($step === 1 ? "560px" : "232")};
   border-radius: 10px;
   background: #ffffff;
   padding: 40px 16px;
   gap: 40px;
+  transition: height 0.2s ease;
 `;
 
 const Title = styled.div`
@@ -165,9 +177,10 @@ const Isbn = styled.div`
 
 const Desc = styled.p`
   margin: 6px 0 16px;
-  color: #6b7280;
-  font-size: 14px;
-  line-height: 1.4;
+  color: #000000;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1;
   text-align: center;
 `;
 
@@ -189,5 +202,15 @@ const Btn = styled.button`
   background: #ffffff;
   transition: transform .02s ease;
 
-  &:active { transform: translateY(1px); }
+  &:active {
+    transform: translateY(1px);
+  }
+
+  ${({ $variant }) =>
+    $variant === "secondary" &&
+    css`
+      background: #11B55F;
+      color: #FFFFFF;
+      border-color: #11B55F;
+    `}
 `;

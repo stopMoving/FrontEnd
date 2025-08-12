@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import SelectPanel from "../../components/barcodeComponents/SelectPanel";
+import SelectPanel from "../../components/barcodeComponents/Panel/SelectPanel";
 
 export default function SelectPage() {
   const { mode } = useParams(); // 'give' | 'take'

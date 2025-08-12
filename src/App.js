@@ -11,8 +11,10 @@ import { Toaster } from "./store/useToasterStore";
 import SelectPage from "./pages/BarcodePage/SelectPage";
 import ScanPage from "./pages/BarcodePage/ScanPage";
 import UploadPage from "./pages/BarcodePage/UploadPage";
+import BookListPage from "./pages/BarcodePage/BookListPage";
 import LibrarySelectPage from "./pages/BarcodePage/LibrarySelectPage";
 import Map from "./pages/LibraryPage/Map";
+import InputPage from "./pages/BarcodePage/InputPage";
 
 const App = () => {
   // ✅ 스토어에서 initializeAuth 함수와 상태를 가져옵니다.
@@ -40,6 +42,8 @@ const App = () => {
         <Route path="barcode/select/:mode" element={<SelectPage />} />
         <Route path="barcode/scan" element={<ScanPage />} />
         <Route path="barcode/upload" element={<UploadPage />} />
+        <Route path="barcode/input_ISBN" element={<InputPage />} />
+        <Route path="barcode/booklist/:mode" element={<BookListPage />} />
         <Route path="/" element={<MainPage />} />
       </Routes>
       <Toaster />

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import ConfirmPanel from "../../components/barcodeComponents/ConfirmPanel";
+import ConfirmPanel from "../../components/barcodeComponents/Panel/ConfirmPanel";
 
 export default function ConfirmModal({
   open,

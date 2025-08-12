@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import StepHeader from "./StepHeader";
-import CustomSelect from "./CustomSelect";
-import { ReactComponent as DownIcon } from "../../assets/icons/downIcon.svg";
+import StepHeader from "../StepHeader";
+import CustomSelect from "../CustomSelect";
+import { ReactComponent as DownIcon } from "../../../assets/icons/downIcon.svg";
 import { useState } from "react";
 
 export default function LibrarySelectPanel({

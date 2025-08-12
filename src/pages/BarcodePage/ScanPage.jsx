@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import CameraScan from "../../components/barcodeComponents/CameraScan";
 import ConfirmModal from "./ConfirmModal";
 
@@ -87,7 +87,8 @@ export default function ScanPage() {
   const handleFinish = () => {
     setModalOpen(false);          // 닫고 끝
     setStep(1);
-    // 필요하면 navigate("/main") 등
+    setBook(null);
+    Navigate(`/barcode/booklist/${mode}`);
   };
 
   // === step 2 버튼: 네, 추가 ===

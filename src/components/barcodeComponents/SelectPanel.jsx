@@ -10,7 +10,6 @@ export default function SelectPanel({ title, description }) {
 
   return (
     <Wrap>
-      {/* 상단 공통 헤더: 뒤로가기 + 스텝 인디케이터 */}
       <StepHeader
         title={title}     // 예: "책을 나눔할게요." / "책을 데려갈게요."
         activeStep={2}    // ← STEP 2 화면
@@ -26,7 +25,7 @@ export default function SelectPanel({ title, description }) {
             카메라로 바코드 인식
           </Btn>
 
-          <Btn onClick={() => navigate("/barcode/upload_image")}>
+          <Btn onClick={() => navigate("/barcode/upload")}>
             <ImageUploadIcon width={32} height={32} />
             바코드 사진 업로드
           </Btn>

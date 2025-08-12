@@ -14,9 +14,9 @@ export default function ConfirmPanel({
   const STEP2_PRIMARY = "아니오, 완료";
   const STEP2_SECONDARY = "네, 추가";
 
-  const step2 = mode === "take"
-  ? { title: "책 데려가기가 완료되었습니다!", desc: "다른 책도 데려가시겠어요?" }
-  : { title: "책 등록이 완료되었습니다!",     desc: "다른 책도 나눔하시겠어요?" };
+  const step2 = mode === "give"
+  ? { title: "책 등록이 완료되었습니다!",     desc: "다른 책도 나눔하시겠어요?" }
+  : { title: "책 데려가기가 완료되었습니다!", desc: "다른 책도 데려가시겠어요?" };
 
   return (
     <Wrap>
@@ -38,7 +38,9 @@ export default function ConfirmPanel({
             {/* 취소선 넣기 */}
             <Sub>가격 | <del>{book?.regular_price || "-"}</del>원</Sub>
           </Meta>
-            <Price>{book?.price || "-"}원</Price>
+            <Price>
+                {book?.price || "-"}{mode === "give" ? "P" : "원"}
+            </Price>
             <Isbn>ISBN 코드: {book?.isbn || "-"}</Isbn>
             
           <Buttons>
@@ -64,7 +66,6 @@ export default function ConfirmPanel({
   );
 }
 
-// ConfirmPanel.jsx (스타일 부분만 교체)
 const Wrap = styled.div`
   width: 335px;
   height: 560px;
@@ -174,7 +175,7 @@ const Buttons = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  margin-top: 30px;
+  margin-top: 35px;
 `;
 
 const Btn = styled.button`

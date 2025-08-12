@@ -10,6 +10,7 @@ import useUserStore from "./store/useUserStore";
 import { Toaster } from "./store/useToasterStore";
 import SelectPage from "./pages/BarcodePage/SelectPage";
 import ScanPage from "./pages/BarcodePage/ScanPage";
+import UploadPage from "./pages/BarcodePage/UploadPage";
 import LibrarySelectPage from "./pages/BarcodePage/LibrarySelectPage";
 import Map from "./pages/LibraryPage/Map";
 
@@ -38,6 +39,7 @@ const App = () => {
         <Route path="barcode/library/select/:mode" element={<LibrarySelectPage />} />
         <Route path="barcode/select/:mode" element={<SelectPage />} />
         <Route path="barcode/scan" element={<ScanPage />} />
+        <Route path="barcode/upload" element={<UploadPage />} />
         <Route path="/" element={<MainPage />} />
       </Routes>
       <Toaster />

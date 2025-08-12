@@ -42,7 +42,13 @@ const Sheet = styled.div`
   transform: translateY(0);
   animation: pop .12s ease-out;
   @keyframes pop {
-    from { transform: translateY(8px); opacity: .8; }
-    to   { transform: translateY(0); opacity: 1; }
+    from {
+      transform: translateY(8px);
+      opacity: .8;
+    }
+    to   {
+      transform: translateY(0);
+      opacity: 1;
+    }
   }
 `;

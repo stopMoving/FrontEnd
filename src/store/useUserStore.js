@@ -8,6 +8,10 @@ const useUserStore = create((set, get) => ({
   token: null, // 인증 토큰 (JWT)
   isInitialized: false, // 로컬 스토리지에서 토큰을 확인했는지 여부
 
+  // 사용자 위치정보 추가
+  location: null,
+  isLocationLoading: false,
+  locationError: null,
   // --- 2. Actions (상태 변경 함수) ---
 
   /**
@@ -94,6 +98,36 @@ const useUserStore = create((set, get) => ({
       }
     }
     set({ isInitialized: true });
+  },
+  fetchLocation: () => {
+    set({ isLocationLoading: true, locationError: null });
+
+    if (!navigator.geolocation) {
+      set({
+        locationError: "Geolocation을 지원하지 않는 브라우저입니다.",
+        isLocationLoading: false, // 로딩 상태를 다시 false로 변경
+      });
+      return;
+    }
+    //위치 정보 가져오기 성공 시 실행되는 콜백 함수
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+
+        set({
+          location: { latitude, longitude },
+          isLocationLoading: false,
+        });
+      },
+
+      //위치 정보 가져오기 실패 시 실행되는 콜백 함수
+      (error) => {
+        set({
+          locationError: error.message,
+          isLocationLoading: false,
+        });
+      }
+    );
   },
 }));
 

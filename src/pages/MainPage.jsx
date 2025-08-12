@@ -10,6 +10,10 @@ import { ReactComponent as LibraryIcon } from "../assets/icons/library.svg";
 import { ReactComponent as BellIcon } from "../assets/icons/bell.svg";
 import { ReactComponent as SearchIcon } from "../assets/icons/search.svg";
 import BannerCard from "../components/BannerCard";
+import useUserStore from "../store/useUserStore";
+
+import LibrarySidebar from "../components/mapComponents/LibrarySidebar";
+import useLibrarySidebarStore from "../store/useLibrarySidebarStore";
 
 const bannerData = [
   {
@@ -33,8 +37,11 @@ const bannerData = [
 
 const MainPage = () => {
   const navigate = useNavigate();
+  const toggleSidebar = useLibrarySidebarStore((state) => state.toggleSidebar);
 
-  const handleSidebarClick = () => navigate("/"); // 사이드바 기능으로 변경 가능
+  const user = useUserStore((state) => state.user);
+  const userNickName = user?.nickname;
+
   const handleNotificationClick = () => navigate("/notifications");
   const handleSearchClick = () => navigate("/search");
   const handle나눔Button = () => navigate("/");
@@ -42,10 +49,11 @@ const MainPage = () => {
 
   return (
     <>
+      <LibrarySidebar />
       <TopNavBar
         leftControls={
           <TopNavBar.IconButton
-            onClick={handleSidebarClick}
+            onClick={toggleSidebar}
             aria-label="도서관 사이드바"
           >
             <LibraryIcon width={24} height={24} />
@@ -67,7 +75,10 @@ const MainPage = () => {
           <SearchIcon width={24} height={24} />
           관심있는 책을 검색해보세요!
         </SearchButton>
-        <Title>서비스명 가이드</Title>
+        <Title>
+          {" "}
+          <GreenTitle>북작북작</GreenTitle> 가이드
+        </Title>
 
         <BannerWrapper>
           {bannerData.map((banner, index) => (
@@ -84,7 +95,10 @@ const MainPage = () => {
           <ActionButton onClick={handle데려가기Button}>데려가기</ActionButton>
         </ButtonWrapper>
 
-        <Title>AI가 고른 OO님 취향 맞춤 책 리스트</Title>
+        <Title>
+          AI가 고른 {userNickName ? userNickName : "아기사자"}님 취향 맞춤 책
+          리스트
+        </Title>
 
         <Outlet />
       </MainContainer>
@@ -155,10 +169,9 @@ const ActionButton = styled.button`
   background-color: #4f614a;
   color: white;
   border: none;
-  border-radius: 50px;
+  border-radius: 20px;
 
   font-size: 16px;
-  font-weight: bold;
 
   cursor: pointer;
   transition: opacity 0.2s; /* 부드러운 효과 */
@@ -177,7 +190,7 @@ const ButtonWrapper = styled.div`
 const Title = styled.h1`
   width: 100%;
   text-align: left;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
 `;
 
@@ -191,4 +204,8 @@ const BannerWrapper = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+`;
+
+const GreenTitle = styled.span`
+  color: #11b55f;
 `;

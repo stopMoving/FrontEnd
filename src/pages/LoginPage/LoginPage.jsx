@@ -7,6 +7,7 @@ import Button from "../../components/style/Button";
 import styled from "styled-components";
 import useUserStore from "../../store/useUserStore";
 import codeitLogo from "../../assets/icons/codeit.png";
+import Link from "../../components/style/Link";
 import { useToaster } from "../../store/useToasterStore";
 
 const LoginPage = () => {
@@ -74,8 +75,9 @@ const LoginPage = () => {
           <Button>로그인</Button>
           <HorizontalRule>또는</HorizontalRule>
         </StyledForm>
-        <h3>계정이 아직 없으신가요?</h3>
-        <Button onClick={handleRegister}>회원가입</Button>
+        <div style={{ textAlign: "center" }}>
+          계정이 아직 없으신가요? <Link to="/login">회원가입하기</Link>
+        </div>
       </LoginContainer>
     </>
   );

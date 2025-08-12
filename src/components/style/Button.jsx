@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const Button = styled.button`
-  background-color: #6500c3;
+  background-color: #11b55f;
   border: none;
   border-radius: ${({ round }) => (round ? `9999px` : `16px`)};
   color: #ffffff;

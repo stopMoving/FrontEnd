@@ -1,23 +1,19 @@
 import React, { useEffect } from "react";
 import useMapStore from "../../store/useMapStore";
 
-const KakaoMap = ({ children }) => {
-  // setMap 뿐만 아니라 map 객체도 가져옵니다.
+// 1. props로 center를 받도록 수정합니다.
+const KakaoMap = ({ children, center }) => {
   const { map, setMap } = useMapStore();
-
-  const BASE_LOCATION = {
-    lat: 37.505298,
-    lng: 126.957113,
-  };
 
   useEffect(() => {
     const { kakao } = window;
-    if (!kakao || !kakao.maps) return;
+    if (!kakao || !kakao.maps || !center) return; // 3. center 값이 있을 때만 실행
 
     kakao.maps.load(() => {
       const mapContainer = document.getElementById("map");
       const options = {
-        center: new kakao.maps.LatLng(BASE_LOCATION.lat, BASE_LOCATION.lng),
+        // 2. props로 받은 center 값을 사용합니다.
+        center: new kakao.maps.LatLng(center.lat, center.lng),
         level: 3,
       };
       const mapInstance = new kakao.maps.Map(mapContainer, options);
@@ -27,11 +23,11 @@ const KakaoMap = ({ children }) => {
     return () => {
       setMap(null);
     };
-  }, [setMap]);
+    // 4. center 값이 변경될 때마다 지도를 다시 로드합니다.
+  }, [setMap, center]);
 
   return (
     <div id="map" style={{ width: "100%", height: "100%" }}>
-      {/* map 객체가 생성되었을 때만 children(마커 등)을 렌더링합니다. */}
       {map && children}
     </div>
   );

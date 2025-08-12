@@ -10,16 +10,18 @@ import useUserStore from "./store/useUserStore";
 import { Toaster } from "./store/useToasterStore";
 import SelectPage from "./pages/BarcodePage/SelectPage";
 import ScanPage from "./pages/BarcodePage/ScanPage";
-import Map from "./pages/LibraryPage/Map";
+import Map from "./pages/LibraryPage/LibraryDetailPage";
+import LibraryDetailPage from "./pages/LibraryPage/LibraryDetailPage";
 
 const App = () => {
   // ✅ 스토어에서 initializeAuth 함수와 상태를 가져옵니다.
-  const { initializeAuth, isInitialized } = useUserStore();
+  const { initializeAuth, isInitialized, fetchLocation } = useUserStore();
 
   // ✅ 앱이 처음 마운트될 때 딱 한 번만 실행합니다.
   useEffect(() => {
     initializeAuth();
-  }, [initializeAuth]);
+    fetchLocation();
+  }, [initializeAuth, fetchLocation]);
 
   if (!isInitialized) {
     return <div>로딩 중...</div>;
@@ -37,6 +39,7 @@ const App = () => {
         <Route path="barcode/select/:mode" element={<SelectPage />} />
         <Route path="barcode/scan" element={<ScanPage />} />
         <Route path="/" element={<MainPage />} />
+        <Route path="/library/:id" element={<LibraryDetailPage />} />
       </Routes>
       <Toaster />
     </>

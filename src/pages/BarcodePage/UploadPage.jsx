@@ -3,28 +3,27 @@ import { useNavigate } from "react-router-dom";
 import ImageUpload from "../../components/barcodeComponents/ImageUpload";
 import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
 
-export default function UploadPage({
-    onBack,
-}) {
+export default function UploadPage() {
   const navigate = useNavigate();
 
   const handleDetected = (code) => {
     console.log("업로드로 인식된 코드:", code);
-    // 여기서 조회/모달 등 공통 후처리로 연결
+    // TODO: 여기서 조회/모달 등 공통 후처리로 연결
     navigate(-1);
   };
 
   return (
     <Wrap>
       <TopBar>
-        <BackButton type="button" onClick={onBack}>
+        <BackButton type="button" onClick={() => navigate(-1)}>
           <BackIcon width={24} height={24} />
         </BackButton>
         <Title>바코드 사진 업로드</Title>
       </TopBar>
 
       <Inner>
-        <ImageUpload onDetected={handleDetected} />
+        {/* 페이지 진입 시 갤러리 자동 오픈 시도 */}
+        <ImageUpload onDetected={handleDetected} autoOpen />
       </Inner>
     </Wrap>
   );
@@ -32,7 +31,6 @@ export default function UploadPage({
 
 const Wrap = styled.div`
   width: 100%;
-  top: 40px;
   max-width: 600px;
   min-height: 100dvh;
   margin: 0 auto;
@@ -41,13 +39,17 @@ const Wrap = styled.div`
 `;
 
 const TopBar = styled.div`
-  position: relative;
+  position: sticky;
+  top: 0;
+  background: #fff;
   height: 50px;
   display: grid;
   grid-template-columns: 56px 1fr 56px;
   align-items: center;
   padding: 0 10px;
-`
+  border-bottom: 1px solid #eee;
+  z-index: 10;
+`;
 
 const BackButton = styled.button`
   background: none;
@@ -62,7 +64,7 @@ const Title = styled.div`
 `;
 
 const Inner = styled.div`
-  padding: 12px 20px 0;
+  padding: 16px 20px 0;
   display: grid;
   gap: 20px;
 `;

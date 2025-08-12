@@ -3,8 +3,11 @@ import { useNavigate } from "react-router-dom";
 import StepHeader from "../StepHeader";
 
 export default function BookListPanel({
+  mode,
+  book,
   title,
   description,
+  items=[],
   buttonLabel,
   disabled = false,
   onNext,
@@ -22,6 +25,33 @@ export default function BookListPanel({
       <Inner>
         <SectionTitle>{description}</SectionTitle>
         {/* 바코드 찍은 책 목록 불러오기 */}
+        <BookListWrap>
+          <BookWrap>
+            <Cover>
+              {book?.image
+              ? <Cover src={book?.image} alt="" />
+              : <CoverFallback />}
+            </Cover>
+          
+            <BookInfoWrap>
+              <Title>
+                {book?.title || "-"}
+              </Title>
+
+              <Meta>
+                <Sub>저자 | {book?.author || "-"}</Sub>
+                <Sub>출판사 | {book?.publisher || "-"}</Sub>
+              </Meta>
+
+              <Price>
+                {book?.price || "-"}{mode === "give" ? "P" : "원"}
+              </Price>
+              <Isbn>
+                {book?.isbn || "-"}
+              </Isbn>
+            </BookInfoWrap>
+          </BookWrap>
+        </BookListWrap>
       </Inner>
 
       <BottomBar>
@@ -56,6 +86,72 @@ const SectionTitle = styled.div`
   font-size: 20px;
   font-weight: 600;
   margin: 0 auto;
+`;
+
+const BookListWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const BookWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+  height: 117px;
+`;
+
+const Cover = styled.div`
+  width: 79px;
+  height: 117px;
+  border-radius: 5px;
+  object-fit: cover;
+`;
+
+const CoverFallback = styled.div`
+  width: 79px;
+  height: 117px;
+  border-radius: 5px;
+  background-color: #D9D9D9;
+`;
+
+const BookInfoWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+`;
+
+const Title = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+`;
+
+const Meta = styled.div`
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  width: max-content;
+  text-align: left;
+  margin: 0 auto;
+  gap: 4px;
+`;
+
+const Sub = styled.div`
+  font-size: 12px;
+  font-weight: 400;
+  color: #868686;
+`;
+
+const Price = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+`;
+
+const Isbn = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
 `;
 
 const BottomBar = styled.div`

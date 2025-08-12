@@ -76,7 +76,8 @@ const Trigger = styled.button`
   cursor: pointer;
   transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 
-  &:hover {
+  &:hover,
+  &[aria-expanded="true"] {
     background: #11B55F;
   }
 
@@ -92,7 +93,8 @@ const Label = styled.span`
   color: #009F25;
   transition: color 0.4s ease;
 
-  ${Trigger}:hover & {
+  ${Trigger}:hover &,
+  ${Trigger}[aria-expanded="true"] & {
     color: #FFFFFF;
   }
 `;
@@ -105,7 +107,8 @@ const Arrow = styled(DownIcon)`
   transition: transform .2s ease;
   color: #000; /* fill="currentColor"인 경우 색상 적용됨 */
 
-  ${Trigger}:hover & {
+  ${Trigger}:hover &,
+  ${Trigger}[aria-expanded="true"] & {
     color: #ffffff;
   }
 `;

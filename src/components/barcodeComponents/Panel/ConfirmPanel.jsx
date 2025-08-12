@@ -35,7 +35,6 @@ export default function ConfirmPanel({
           <Meta>
             <Sub>저자 | {book?.author || "-"}</Sub>
             <Sub>출판사 | {book?.publisher || "-"}</Sub>
-            {/* 취소선 넣기 */}
             <Sub>가격 | <del>{book?.regular_price || "-"}</del>원</Sub>
           </Meta>
             <Price>
@@ -47,7 +46,7 @@ export default function ConfirmPanel({
             <Btn onClick={onPrimary} disabled={loading}>
               {STEP1_PRIMARY}
             </Btn>
-            <Btn ghost onClick={onSecondary} disabled={loading}>
+            <Btn onClick={onSecondary} disabled={loading}>
               {STEP1_SECONDARY}
             </Btn>
           </Buttons>
@@ -64,7 +63,6 @@ export default function ConfirmPanel({
               {STEP2_PRIMARY}
             </Btn>
             <Btn
-              ghost
               onClick={onSecondary}
               $variant={step === 2 && "secondary"}
             >
@@ -79,7 +77,7 @@ export default function ConfirmPanel({
 
 const Wrap = styled.div`
   width: 335px;
-  height: ${({ $step }) => ($step === 1 ? "560px" : "232")};
+  height: ${({ $step }) => ($step === 1 ? "560px" : "232px")};
   border-radius: 10px;
   background: #ffffff;
   padding: 40px 16px;

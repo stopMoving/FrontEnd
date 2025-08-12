@@ -140,7 +140,7 @@ const Screen = styled.div`
   max-width: 600px;
   height: 100dvh;
   margin: 0 auto;
-  background: #000;
+  background: #FFFFFF;
   overflow: hidden;
 `;
 
@@ -157,7 +157,7 @@ const MaskTop = styled.div`
   right: 0;
   top: 0;
   height: 22%;
-  background: linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,0));
+  background: #FFFFFF;
   pointer-events: none;
 `;
 
@@ -167,12 +167,13 @@ const MaskBottom = styled.div`
   right: 0;
   bottom: 0;
   padding: 16px clamp(12px, 4vw, 20px) max(env(safe-area-inset-bottom), 12px);
-  background: linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,0));
+  background: #FFFFFF;
   color: #fff;
   pointer-events: none;
 `;
 
 const Title = styled.div`
+  color: #000000;
   text-align: center;
   font-weight: 700;
   font-size: 18px;
@@ -181,6 +182,7 @@ const Title = styled.div`
 `;
 
 const Hint = styled.p`
+  color: #000000;
   text-align: center;
   font-size: 13px;
 //   설명필요

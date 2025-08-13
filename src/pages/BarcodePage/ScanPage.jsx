@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CameraScan from "../../components/barcodeComponents/CameraScan";
 import ConfirmModal from "./ConfirmModal";
 
 export default function ScanPage() {
+  const navigate = useNavigate();
   const { mode } = useParams(); // give | take
   const [modalOpen, setModalOpen] = useState(false);
   const [step, setStep] = useState(1);
@@ -17,6 +18,14 @@ export default function ScanPage() {
     if (loading || modalOpen) return; // 중복 스캔 가드
     const digits = String(text).replace(/[^0-9]/g, "");
     if (!/^97[89]\d{10}$/.test(digits)) return;
+
+    const formatIsbn = (isbn) => {
+      if (!isbn) return "-";
+      return isbn.replace(
+        /^(\d{3})(\d{1})(\d{5})(\d{3})(\d{1})$/,
+        "$1-$2-$3-$4-$5"
+      );
+    };
 
     setLoading(true);
     try {
@@ -32,7 +41,7 @@ export default function ScanPage() {
             publisher: data?.publisher ?? "-",
             regular_price: data?.regular_price ?? "-",
             price: data?.regular_price ? Math.round(data.regular_price * 0.2) : "-",
-            isbn: digits,
+            isbn: formatIsbn(digits),
         });
 
         // 모달 열면 CameraScan에서 paused={modalOpen}으로 일시정지됨
@@ -88,7 +97,7 @@ export default function ScanPage() {
     setModalOpen(false);          // 닫고 끝
     setStep(1);
     setBook(null);
-    Navigate(`/barcode/booklist/${mode}`);
+    navigate(`/barcode/booklist/${mode}`);
   };
 
   // === step 2 버튼: 네, 추가 ===

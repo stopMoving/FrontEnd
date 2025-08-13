@@ -37,9 +37,14 @@ export default function ConfirmPanel({
             <Sub>출판사 | {book?.publisher || "-"}</Sub>
             <Sub>가격 | <del>{book?.regular_price || "-"}</del>원</Sub>
           </Meta>
+
             <Price>
-                {book?.price || "-"}{mode === "give" ? "P" : "원"}
+                {book?.price || "-"}
+                <span className="highlight-text">
+                  {mode === "give" ? "P" : "원"}
+                </span>
             </Price>
+
             <Isbn>ISBN 코드: {book?.isbn || "-"}</Isbn>
             
           <Buttons>
@@ -159,6 +164,11 @@ const Price = styled.div`
   font-weight: 600;
   color: #000000;
   margin: 8px;
+
+  .highlight-text {
+    font-size: 12px;
+    font-weight: 400;
+  }
 `;
 
 const Isbn = styled.div`

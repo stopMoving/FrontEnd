@@ -12,6 +12,18 @@ export default function ScanPage() {
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(false);
   const [retakeCount, setRetakeCount] = useState(0);
+  const [isbnCart, setIsbnCart] = useState([]);
+
+  const libraryId = 1; //실제 도서관 ID로 교체
+  // const getAccessToken = () => localStorage.getItem("access_token"); //저장 위치에 맞게 조정
+  const getAccessToken = () => "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2Nzk3MTYwLCJpYXQiOjE3NTUwNjkxNjAsImp0aSI6IjlkM2MzY2E4NDRjMzQyNzY4NTMzZWZkODY5MWY3MzIwIiwidXNlcl9pZCI6IjcifQ.tX-ZDPR6zMci8vMJ_tuj8WZrbwoxhGeSrI7TY58LoJs";
+
+  const formatIsbn = (isbn) => {
+    return isbn
+    ? isbn.replace(/^(\d{3})(\d{2})(\d{4})(\d{3})(\d{1})$/,
+        "$1-$2-$3-$4-$5")
+    : "-";
+    };
 
   // 스캔 성공 시 (조회))
   const handleDetected = async (text) => {
@@ -19,19 +31,35 @@ export default function ScanPage() {
     const digits = String(text).replace(/[^0-9]/g, "");
     if (!/^97[89]\d{10}$/.test(digits)) return;
 
-    const formatIsbn = (isbn) => {
-      if (!isbn) return "-";
-      return isbn.replace(
-        /^(\d{3})(\d{2})(\d{4})(\d{3})(\d{1})$/,
-        "$1-$2-$3-$4-$5"
-      );
-    };
+  const token = getAccessToken();
+  if (!token) {
+    alert("로그인이 필요해요. (토큰 없음)");
+    return;
+  }
 
     setLoading(true);
     try {
-        const res = await fetch(`https://stopmoving.p-e.kr/bookinfo/lookup/?isbn=${digits}`);
-        if (!res.ok) throw new Error("lookup failed");
-        const data = await res.json();
+        const url = `https://stopmoving.p-e.kr/bookinfo/donate/?isbn=${digits}`;
+        const res = await fetch(url, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const textBody = await res.text();
+        let data = null;
+        try {
+          data = textBody ? JSON.parse(textBody) : null;
+        }
+        catch {}
+        
+        if (!res.ok) {
+          if (res.status === 400) throw new Error("잘못된 요청입니다. ISBN을 확인해주세요.");
+          if (res.status === 502) throw new Error("외부 도서 API 오류입니다. 잠시 후 다시 시도해주세요.");
+          throw new Error(textBody || `조회 실패 (${res.status})`);
+        }
+
         console.log("lookup payload ▶", data);
 
         setBook({
@@ -42,6 +70,7 @@ export default function ScanPage() {
             regular_price: data?.regular_price ?? "-",
             price: data?.regular_price ? Math.round(data.regular_price * 0.2) : "-",
             isbn: formatIsbn(digits),
+            rawIsbn: digits,
         });
 
         // 모달 열면 CameraScan에서 paused={modalOpen}으로 일시정지됨
@@ -50,7 +79,7 @@ export default function ScanPage() {
     } catch (e) {
         // 여기서 조회 실패라고 ui를 띄워줘야 하지 않을까?
         console.error("조회 실패", e);
-        alert("인식에 실패했어요. 잠시 후 다시 시도해 주세요.") // alert 말고 다르게 표시하자
+        alert(e.message || "도서 조회에 실패했어요. 잠시 후 다시 시도해 주세요.") // alert 말고 다르게 표시하자
     } finally {
         setLoading(false);
     }
@@ -65,39 +94,75 @@ export default function ScanPage() {
   };
 
   // === step 1 버튼: 확인 -> 등록 API 호출 후 step 2===
-  const handleConfirm = async () => {
+  const handleConfirm = () => {
     if (!book?.isbn) return;
-    setLoading(true);
-    try {
-        // 백엔드 스펙에 맞게 URL/메서드/바디 수정
-        const res = await fetch(`https://stopmoving.p-e.kr/books/donate`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                mode, // give | take -> 서버 입장에서 구분하기 위함
-                image: book.image,
-                title: book.title,
-                author: book.author,
-                publisher: book.publisher,
-                isbn: book.isbn,
-            }),
-        });
-        if (!res.ok) throw new Error("register failed");
-        setStep(2);
-    } catch (e) {
-        console.error("등록 실패", e);
-        alert("등록에 실패했어요. 잠시 후 다시 시도해 주세요.") // alert 말고 다르게 표시하자
-    } finally {
-        setLoading(false);
-    }
+    setIsbnCart((prev) => {
+      const next = new Set(prev);
+      next.add(book.rawIsbn);
+      return Array.from(next);
+    });
+    setStep(2);
   };
 
   // === step 2 버튼: 아니오, 완료 ===
-  const handleFinish = () => {
-    setModalOpen(false);          // 닫고 끝
-    setStep(1);
-    setBook(null);
-    navigate(`/barcode/booklist/${mode}`);
+  const handleFinish = async () => {
+    const token = getAccessToken();
+    if(!token) {
+      alert("로그인이 필요해요. (토큰 없음)");
+      return;
+    }
+    if (isbnCart.length === 0) {
+      alert("담긴 ISBN이 없어요. ");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const payload = {
+        library_id: libraryId,
+        isbn: isbnCart,
+      };
+      const res = await fetch(`https://stopmoving.p-e.kr/books/donate/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+        });
+
+        const textBody = await res.text();
+        let data = null;
+        try {
+          data = textBody ? JSON.parse(textBody) : null;
+        }
+        catch{}
+
+        if (!res.ok) {
+          if (res.status === 400) {
+            const msg = data ?.detail || "요청이 올바르지 않아요.";
+            throw new Error(msg);
+          }
+          if (res.status === 404) {
+            const msg = data ?.error || "리소스를 찾을 수 없어요.";
+            throw new Error(msg);
+          }
+          throw new Error(textBody || `등록 실패 (${res.status})`);
+        }
+
+        console.log("donate success: ", data);
+
+        setModalOpen(false);          // 닫고 끝
+        setStep(1);
+        setBook(null);
+        setIsbnCart([]);
+        navigate(`/barcode/booklist/${mode}`);
+      } catch (e) {
+        console.error("일괄 기증 실패: ", e);
+        alert(e.message || "등록에 실패했어요. 잠시 후 다시 시도해 주세요.") // alert 말고 다르게 표시하자
+    } finally {
+        setLoading(false);
+    }
   };
 
   // === step 2 버튼: 네, 추가 ===

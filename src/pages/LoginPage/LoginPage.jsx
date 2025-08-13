@@ -78,7 +78,7 @@ const LoginPage = () => {
           <HorizontalRule>또는</HorizontalRule>
         </StyledForm>
         <div style={{ textAlign: "center" }}>
-          계정이 아직 없으신가요? <Link to="/login">회원가입하기</Link>
+          계정이 아직 없으신가요? <Link to="/register">회원가입하기</Link>
         </div>
       </LoginContainer>
     </>

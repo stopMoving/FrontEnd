@@ -9,32 +9,56 @@ import codeit from "../assets/icons/codeit.png";
 import { ReactComponent as LibraryIcon } from "../assets/icons/library.svg";
 import { ReactComponent as BellIcon } from "../assets/icons/bell.svg";
 import { ReactComponent as SearchIcon } from "../assets/icons/search.svg";
+import { ReactComponent as Library1 } from "../assets/icons/Library1.svg";
+import { ReactComponent as Library2 } from "../assets/icons/Library2.svg";
+import { ReactComponent as Library3 } from "../assets/icons/Library3.svg";
+import { ReactComponent as Library4 } from "../assets/icons/Library4.svg";
+
 import BannerCard from "../components/BannerCard";
+import useUserStore from "../store/useUserStore";
+
+import LibrarySidebar from "../components/mapComponents/LibrarySidebar";
+import useLibrarySidebarStore from "../store/useLibrarySidebarStore";
 
 const bannerData = [
   {
+    id: 1,
+    // step이 없는 배너
     title: "집에서 잠든 책,\n우리 동네 도서관으로!",
-    description: "상태 좋은 책 기증하고,\n지역화폐 리워드까지 받아가세요",
+    description: "상태 좋은 책 기증하고, \n지역화폐 리워드까지 받아가세요",
+    icon: Library1,
   },
   {
-    title: "Step1.\n우리 동네 도서관으로!",
+    id: 2,
+    step: "Step1",
+    title: "우리 동네 도서관으로!",
     description: "도서관 방문 후 책 스캔해보세요.",
+    icon: Library2,
   },
   {
-    title: "Step2.\n바코드 인식 책 확인",
+    id: 3,
+    step: "Step2",
+    title: "바코드 인식 책 확인",
     description: "표지, 제목이 맞는지 확인하세요.",
+    icon: Library3,
   },
   {
-    title: "Step3.\n나눔하기 / 데려가기 완료",
+    id: 4,
+    step: "Step3",
+    title: "나눔하기 / 데려가기 완료",
     description:
       "나눔하기 | 책을 나눔하고 포인트를 받아요\n데려가기 | 선택한 책을 데려가요",
+    icon: Library4,
   },
 ];
 
 const MainPage = () => {
   const navigate = useNavigate();
+  const toggleSidebar = useLibrarySidebarStore((state) => state.toggleSidebar);
 
-  const handleSidebarClick = () => navigate("/"); // 사이드바 기능으로 변경 가능
+  const user = useUserStore((state) => state.user);
+  const userNickName = user?.nickname;
+
   const handleNotificationClick = () => navigate("/notifications");
   const handleSearchClick = () => navigate("/search");
   const handle나눔Button = () => navigate("/");
@@ -42,10 +66,11 @@ const MainPage = () => {
 
   return (
     <>
+      <LibrarySidebar />
       <TopNavBar
         leftControls={
           <TopNavBar.IconButton
-            onClick={handleSidebarClick}
+            onClick={toggleSidebar}
             aria-label="도서관 사이드바"
           >
             <LibraryIcon width={24} height={24} />
@@ -67,24 +92,32 @@ const MainPage = () => {
           <SearchIcon width={24} height={24} />
           관심있는 책을 검색해보세요!
         </SearchButton>
-        <Title>서비스명 가이드</Title>
+        <Title>
+          {" "}
+          <GreenTitle>북작북작</GreenTitle> 가이드
+        </Title>
 
         <BannerWrapper>
-          {bannerData.map((banner, index) => (
+          {bannerData.map((banner) => (
             <BannerCard
-              key={index}
+              key={banner.id}
+              step={banner.step}
               title={banner.title}
               description={banner.description}
+              icon={banner.icon}
             />
           ))}
         </BannerWrapper>
 
         <ButtonWrapper>
-          <ActionButton onClick={handle나눔Button}>나눔하기</ActionButton>
-          <ActionButton onClick={handle데려가기Button}>데려가기</ActionButton>
+          <ActionButton1 onClick={handle나눔Button}>나눔하기</ActionButton1>
+          <ActionButton2 onClick={handle데려가기Button}>데려가기</ActionButton2>
         </ButtonWrapper>
 
-        <Title>AI가 고른 OO님 취향 맞춤 책 리스트</Title>
+        <Title>
+          AI가 고른 {userNickName ? userNickName : "아기사자"}님 취향 맞춤 책
+          리스트
+        </Title>
 
         <Outlet />
       </MainContainer>
@@ -131,10 +164,10 @@ const SearchButton = styled.button`
   width: 100%;
   height: 38px;
 
-  background-color: #e7efda;
+  background-color: #e6f4f0;
   border: none;
   border-radius: 50px;
-  color: #7b7b7b;
+  color: #6f6f6f;
   cursor: pointer;
 
   font-size: 14px;
@@ -145,20 +178,41 @@ const SearchButton = styled.button`
   }
 `;
 
-const ActionButton = styled.button`
+const ActionButton1 = styled.button`
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 135px; /* (280px / 2) - 좌우 여백 */
+  width: 150px; /* (280px / 2) - 좌우 여백 */
   height: 47px;
 
-  background-color: #4f614a;
+  background-color: #11b55f;
   color: white;
   border: none;
-  border-radius: 50px;
+  border-radius: 20px;
 
   font-size: 16px;
-  font-weight: bold;
+
+  cursor: pointer;
+  transition: opacity 0.2s; /* 부드러운 효과 */
+
+  &:hover {
+    opacity: 0.9;
+  }
+`;
+
+const ActionButton2 = styled.button`
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px; /* (280px / 2) - 좌우 여백 */
+  height: 47px;
+
+  background-color: transparent;
+  color: #009466;
+  border: 2px solid #11b55f;
+  border-radius: 20px;
+
+  font-size: 16px;
 
   cursor: pointer;
   transition: opacity 0.2s; /* 부드러운 효과 */
@@ -177,7 +231,7 @@ const ButtonWrapper = styled.div`
 const Title = styled.h1`
   width: 100%;
   text-align: left;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
 `;
 
@@ -191,4 +245,8 @@ const BannerWrapper = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+`;
+
+const GreenTitle = styled.span`
+  color: #11b55f;
 `;

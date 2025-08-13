@@ -1,18 +1,24 @@
 import React from "react";
 import styled from "styled-components";
 
-// --- 아이콘 임포트 ---
-import { ReactComponent as NextIcon } from "../assets/icons/nextIcon.svg";
-
-const BannerCard = ({ title, description }) => {
+/**
+ * 메인 페이지 가이드 배너 카드 컴포넌트
+ * @param {string} title - 배너 제목
+ * @param {string} description - 배너 설명
+ * @param {React.ComponentType} icon - 렌더링할 아이콘 컴포넌트
+ */
+const BannerCard = ({ step, title, description, icon: IconComponent }) => {
   return (
     <CardContainer>
       <TextContent>
+        {step && <StepLabel>{step}</StepLabel>}
         <h3>{title}</h3>
         <p>{description}</p>
       </TextContent>
-      <ImagePlaceholder>도서관 그림</ImagePlaceholder>
-      <NextIcon width={24} height={24} />
+      <IconWrapper>
+        {/* 전달받은 아이콘 컴포넌트를 렌더링합니다. */}
+        <IconComponent width={68} height={68} />
+      </IconWrapper>
     </CardContainer>
   );
 };
@@ -20,59 +26,59 @@ const BannerCard = ({ title, description }) => {
 export default BannerCard;
 
 const CardContainer = styled.div`
-  /* 레이아웃 */
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  flex-shrink: 0; /* 중요: 아이템 너비가 줄어들지 않도록 설정 */
+  flex-shrink: 0;
 
-  /* 크기 */
-  width: 250px;
-  height: 200px;
-  padding: 20px;
+  width: 280px;
+  height: 213px; /* 높이를 조금 줄여서 더 간결하게 */
+  padding: 24px;
 
-  /* 디자인 */
-  background-color: #e7efda; /* 검색창과 동일한 연두색 배경 */
-  border-radius: 24px; /* 부드러운 둥근 모서리 */
+  background-color: #f5f5f5; /* 이미지와 유사한 밝은 회색 */
+  border-radius: 24px;
   color: #333;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
 
-  /* 아이콘 위치 */
-  & > svg {
-    position: absolute;
-    top: 50%;
-    right: 16px;
-    transform: translateY(-50%);
-    color: #949494;
+  &:hover {
+    transform: translateY(-5px);
   }
 `;
 
 const TextContent = styled.div`
   h3 {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: bold;
-    margin-bottom: 8px;
-    line-height: 1.3; /* 줄 간격 */
+    margin-bottom: 10px;
+    line-height: 1.4;
     white-space: pre-line;
   }
   p {
-    font-size: 14px;
+    font-size: 13px;
     color: #7b7b7b;
-    line-height: 1.4;
+    line-height: 1.5;
     white-space: pre-line;
   }
 `;
 
-const ImagePlaceholder = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  align-self: flex-end; /* 오른쪽 아래에 배치 */
+const IconWrapper = styled.div`
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  color: #4f614a; /* 아이콘 색상 */
+`;
 
-  width: 80px;
-  height: 60px;
-  background-color: #c4c4c4;
-  border-radius: 8px;
-  color: white;
-  font-size: 12px;
+const StepLabel = styled.div`
+  display: inline-block;
+  padding: 4px 12px;
+  margin-bottom: 10px;
+
+  background-color: #e6f4f0; /* 연한 녹색 배경 */
+  color: #11b55f; /* 짙은 녹색 글씨 */
+
+  border-radius: 50px; /* 알약 모양 */
+  font-size: 14px;
+  font-weight: bold;
 `;

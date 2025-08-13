@@ -54,7 +54,7 @@ const BottomNav = styled.nav`
   height: 70px; /* 하단 바 높이 */
   background-color: white;
   border-top: 1px solid #dedede;
-  z-index: 100;
+  z-index: 90;
 
   display: flex;
   justify-content: space-around;

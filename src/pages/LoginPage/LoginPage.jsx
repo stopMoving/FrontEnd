@@ -7,6 +7,7 @@ import Button from "../../components/style/Button";
 import styled from "styled-components";
 import useUserStore from "../../store/useUserStore";
 import codeitLogo from "../../assets/icons/codeit.png";
+import Link from "../../components/style/Link";
 import { useToaster } from "../../store/useToasterStore";
 
 const LoginPage = () => {
@@ -53,16 +54,18 @@ const LoginPage = () => {
       <LoginContainer>
         <Logo src={codeitLogo} alt="codeit" />
         <StyledForm onSubmit={handleSubmit}>
-          <Label htmlFor="username">아이디</Label>
+          <Label htmlFor="username">
+            <GreenText>북작북작</GreenText> 로그인
+          </Label>
           <Input
             id="username"
             name="username"
             type="username"
-            placeholder="아이디(이메일)"
+            placeholder="아이디"
             value={values.username}
             onChange={handleChange}
           />
-          <Label htmlFor="password">비밀번호</Label>
+          {/* <Label htmlFor="password">비밀번호</Label> */}
           <Input
             id="password"
             name="password"
@@ -74,8 +77,9 @@ const LoginPage = () => {
           <Button>로그인</Button>
           <HorizontalRule>또는</HorizontalRule>
         </StyledForm>
-        <h3>계정이 아직 없으신가요?</h3>
-        <Button onClick={handleRegister}>회원가입</Button>
+        <div style={{ textAlign: "center" }}>
+          계정이 아직 없으신가요? <Link to="/register">회원가입하기</Link>
+        </div>
       </LoginContainer>
     </>
   );
@@ -84,19 +88,20 @@ const LoginPage = () => {
 export default LoginPage;
 
 const StyledForm = styled.form`
+  margin-top: 100px;
   display: flex;
   flex-direction: column;
   text-align: left;
-  gap: 8px; /* form 내부 요소들 간의 간격 */
+  gap: 16px; /* form 내부 요소들 간의 간격 */
 `;
 
 const LoginContainer = styled.div`
   width: 100%;
   max-width: 600px;
-  height: 100%;
+  height: 100vh;
   background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: 60px 20px 20px 20px;
   text-align: center;
 
   /* LoginContainer의 자식들(h1, form)을 정렬 */
@@ -110,4 +115,8 @@ const Logo = styled.img`
   width: 50%;
   max-width: 200px;
   margin: 0 auto 16px;
+`;
+
+const GreenText = styled.span`
+  color: #11b55f;
 `;

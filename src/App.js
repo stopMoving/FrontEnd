@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import GlobalStyle from "./Globalstyles/GlobalStyle";
+https://github.com/stopMoving/FrontEnd/pull/16/conflict?name=src%252FApp.js&ancestor_oid=043daffc514e941f446f91bacd4840d9d0fc097b&base_oid=1636115ab48e22875c30ebfdb0a6adef8a17f532&head_oid=b8a6a7e339b3c0ec90479b556c5c01a2169f82d6import GlobalStyle from "./Globalstyles/GlobalStyle";
 import { Route, Routes } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import styled from "styled-components";
@@ -10,8 +10,14 @@ import useUserStore from "./store/useUserStore";
 import { Toaster } from "./store/useToasterStore";
 import SelectPage from "./pages/BarcodePage/SelectPage";
 import ScanPage from "./pages/BarcodePage/ScanPage";
-import Map from "./pages/LibraryPage/LibraryDetailPage";
+
+
+import UploadPage from "./pages/BarcodePage/UploadPage";
+import BookListPage from "./pages/BarcodePage/BookListPage";
+import LibrarySelectPage from "./pages/BarcodePage/LibrarySelectPage";
+import InputPage from "./pages/BarcodePage/InputPage";
 import LibraryDetailPage from "./pages/LibraryPage/LibraryDetailPage";
+
 
 const App = () => {
   // ✅ 스토어에서 initializeAuth 함수와 상태를 가져옵니다.
@@ -35,9 +41,12 @@ const App = () => {
         <Route path="register" element={<RegisterPage />} />
         <Route path="welcome" element={<WelcomePage />} />
         <Route path="main" element={<MainPage />} />
-        <Route path="map" element={<Map />} />
+        <Route path="barcode/library/select/:mode" element={<LibrarySelectPage />} />
         <Route path="barcode/select/:mode" element={<SelectPage />} />
         <Route path="barcode/scan" element={<ScanPage />} />
+        <Route path="barcode/upload" element={<UploadPage />} />
+        <Route path="barcode/input_ISBN" element={<InputPage />} />
+        <Route path="barcode/booklist/:mode" element={<BookListPage />} />
         <Route path="/" element={<MainPage />} />
         <Route path="/library/:id" element={<LibraryDetailPage />} />
       </Routes>

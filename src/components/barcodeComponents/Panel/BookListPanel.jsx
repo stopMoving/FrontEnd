@@ -43,12 +43,8 @@ export default function BookListPanel({
                 <Sub>출판사 | {book?.publisher || "-"}</Sub>
               </Meta>
 
-              <Price>
-                {book?.price || "-"}{mode === "give" ? "P" : "원"}
-              </Price>
-              <Isbn>
-                {book?.isbn || "-"}
-              </Isbn>
+              <Price>{book?.price || "-"}{mode === "give" ? "P" : "원"}</Price>
+              <Isbn>ISBN 코드: {book?.isbn || "-"}</Isbn>
             </BookInfoWrap>
           </BookWrap>
         </BookListWrap>
@@ -89,8 +85,10 @@ const SectionTitle = styled.div`
 `;
 
 const BookListWrap = styled.div`
+  width: min(520px, 92vw);
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
   gap: 8px;
 `;
 
@@ -98,6 +96,7 @@ const BookWrap = styled.div`
   display: flex;
   flex-direction: row;
   height: 117px;
+  gap: 16px;
 `;
 
 const Cover = styled.div`
@@ -112,6 +111,15 @@ const CoverFallback = styled.div`
   height: 117px;
   border-radius: 5px;
   background-color: #D9D9D9;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
 `;
 
 const BookInfoWrap = styled.div`
@@ -124,6 +132,7 @@ const Title = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: #000000;
+  margin-bottom: 10px;
 `;
 
 const Meta = styled.div`
@@ -134,6 +143,7 @@ const Meta = styled.div`
   text-align: left;
   margin: 0 auto;
   gap: 4px;
+  margin-bottom: 10px;
 `;
 
 const Sub = styled.div`
@@ -146,6 +156,7 @@ const Price = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: #000000;
+  margin-bottom: 10px;
 `;
 
 const Isbn = styled.div`
@@ -172,6 +183,6 @@ const Button = styled.button`
   font-weight: 500;
   border: none;
   color: #FFFFFF;
-  background: "#11B55F";
+  background: #11B55F;
   cursor: "pointer";
 `;

@@ -139,6 +139,9 @@ const StyledForm = styled.form`
   padding: 20px; /* 패딩을 Form으로 이동 */
   flex: 1; /* 남은 공간을 모두 차지하도록 설정 */
   overflow-y: auto; /* 내용이 길어지면 세로 스크롤 생성 */
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const RegisterContainer = styled.div`

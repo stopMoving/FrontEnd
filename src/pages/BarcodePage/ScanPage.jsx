@@ -22,7 +22,7 @@ export default function ScanPage() {
     const formatIsbn = (isbn) => {
       if (!isbn) return "-";
       return isbn.replace(
-        /^(\d{3})(\d{1})(\d{5})(\d{3})(\d{1})$/,
+        /^(\d{3})(\d{2})(\d{4})(\d{3})(\d{1})$/,
         "$1-$2-$3-$4-$5"
       );
     };

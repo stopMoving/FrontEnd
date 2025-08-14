@@ -4,9 +4,9 @@ import styled from "styled-components";
 import KakaoMap from "../../components/mapComponents/KakaoMap";
 import LibraryMarker from "../../components/mapComponents/LibraryMarker";
 
-// 아이콘 임포트 (경로는 실제 프로젝트에 맞게 수정)
 import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
 import { ReactComponent as InfoIcon } from "../../assets/icons/infoIcon.svg";
+import instagramIcon from "../../assets/images/instaLogo.png";
 
 // --- 실제로는 API로 가져올 목업(Mockup) 데이터 ---
 const fetchLibraryData = async (libraryId) => {
@@ -55,49 +55,63 @@ const LibraryDetailPage = () => {
   const kakaoMapUrl = `https://map.kakao.com/link/map/${library.libraryName},${library.lat},${library.lng}`;
 
   return (
-    <PageContainer>
-      <Header>
-        <BackButton onClick={() => navigate(-1)}>
-          <BackIcon width={24} height={24} />
-        </BackButton>
-      </Header>
+    <PageWrapper>
+      <PageContainer>
+        <Header>
+          <BackButton onClick={() => navigate(-1)}>
+            <BackIcon width={24} height={24} />
+          </BackButton>
+        </Header>
 
-      <Title>
-        <InfoIcon width={20} height={20} />
-        <h1>{library.libraryName}</h1>
-      </Title>
+        <Title>
+          <InfoIcon width={20} height={20} />
+          <h1>{library.libraryName}</h1>
+        </Title>
 
-      <InfoSection>
-        <InfoTitle>주소</InfoTitle>
-        <InfoContent>{library.address}</InfoContent>
-      </InfoSection>
+        <InfoSection>
+          <InfoTitle>주소</InfoTitle>
+          <InfoContent>{library.address}</InfoContent>
+        </InfoSection>
 
-      <MapLink href={kakaoMapUrl} target="_blank" rel="noopener noreferrer">
-        <MapContainer>
-          <KakaoMap center={{ lat: library.lat, lng: library.lng }}>
-            <LibraryMarker library={library} />
-          </KakaoMap>
-        </MapContainer>
-        <MapCaption>지도를 클릭하시면 카카오 지도로 이동합니다.</MapCaption>
-      </MapLink>
+        <MapLink href={kakaoMapUrl} target="_blank" rel="noopener noreferrer">
+          <MapContainer>
+            <KakaoMap center={{ lat: library.lat, lng: library.lng }}>
+              <LibraryMarker library={library} />
+            </KakaoMap>
+          </MapContainer>
+          <MapCaption>지도를 클릭하시면 카카오 지도로 이동합니다.</MapCaption>
+        </MapLink>
 
-      <InfoSection>
-        <InfoTitle>연락처</InfoTitle>
-        <InfoContent>전화 {library.tel}</InfoContent>
-        <InfoContent>팩스 {library.fax}</InfoContent>
-      </InfoSection>
+        <InfoSection>
+          <InfoTitle>연락처</InfoTitle>
+          <InfoContent>전화 {library.tel}</InfoContent>
+          <InfoContent>팩스 {library.fax}</InfoContent>
+        </InfoSection>
 
-      <InfoSection>
-        <InfoTitle>휴관일</InfoTitle>
-        <InfoContent>{library.closed}</InfoContent>
-      </InfoSection>
+        <InfoSection>
+          <InfoTitle>휴관일</InfoTitle>
+          <InfoContent>{library.closed}</InfoContent>
+        </InfoSection>
 
-      <InfoSection>
-        <InfoTitle>이용시간</InfoTitle>
-        <InfoContent>화~금요일 : {library.weekDayOpTime}</InfoContent>
-        <InfoContent>토~일요일 : {library.weekendOpTime}</InfoContent>
-      </InfoSection>
-    </PageContainer>
+        <InfoSection>
+          <InfoTitle>이용시간</InfoTitle>
+          <InfoContent>화~금요일 : {library.weekDayOpTime}</InfoContent>
+          <InfoContent>토~일요일 : {library.weekendOpTime}</InfoContent>
+        </InfoSection>
+
+        <InfoSection>
+          <InfoTitle>SNS 안내</InfoTitle>
+          <InfoContent>
+            <img
+              style={{ width: "24px", height: "24px" }}
+              src={instagramIcon}
+              alt="인스타그램"
+            />
+            인스타그램
+          </InfoContent>
+        </InfoSection>
+      </PageContainer>
+    </PageWrapper>
   );
 };
 
@@ -122,6 +136,12 @@ const PageContainer = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 50px 20px 20px 20px;
   background-color: #fff;
+`;
+
+const PageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 `;
 
 const Header = styled.header`

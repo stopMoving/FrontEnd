@@ -2,14 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-/**
- * 책 정보를 표시하는 카드 컴포넌트
- * @param {object} book - { id, imageUrl, title, author }
- */
 const BookCard = ({ book }) => {
   const navigate = useNavigate();
 
-  // 카드 클릭 시 상세 페이지로 이동 (경로는 추후 결정)
   const handleClick = () => {
     navigate(`/book/${book.id}`);
   };
@@ -17,7 +12,6 @@ const BookCard = ({ book }) => {
   return (
     <CardContainer onClick={handleClick}>
       <ImageContainer>
-        {/* 이미지가 없을 경우를 대비해 플레이스홀더 텍스트 표시 */}
         {book.imageUrl ? <img src={book.imageUrl} alt={book.title} /> : "책"}
       </ImageContainer>
       <TextContainer>

@@ -4,6 +4,7 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import BottomNavBar from "../components/Layout/BottomNavBar";
 import TopNavBar from "../components/Layout/TopNavBar";
 import codeit from "../assets/icons/codeit.png";
+import BookCard from "../components/BookCard";
 
 // --- 아이콘 임포트 ---
 import { ReactComponent as LibraryIcon } from "../assets/icons/library.svg";
@@ -52,6 +53,64 @@ const bannerData = [
   },
 ];
 
+// 나중에 AI API로 받아올 BookList 데이터
+const bookListData = [
+  {
+    id: 1,
+    imageUrl: "https://placehold.co/100x140",
+    title: "여행의 이유",
+    author: "김영하",
+  },
+  {
+    id: 2,
+    imageUrl: "https://placehold.co/100x140",
+    title: "달러구트 꿈 백화점",
+    author: "이미예",
+  },
+  {
+    id: 3,
+    imageUrl: "https://placehold.co/100x140",
+    title: "아몬드",
+    author: "손원평",
+  },
+  {
+    id: 4,
+    imageUrl: "https://placehold.co/100x140",
+    title: "불편한 편의점",
+    author: "김호연",
+  },
+  {
+    id: 5,
+    imageUrl: "https://placehold.co/100x140",
+    title: "코스모스",
+    author: "칼 세이건",
+  },
+  {
+    id: 6,
+    imageUrl: "https://placehold.co/100x140",
+    title: "사피엔스",
+    author: "유발 하라리",
+  },
+  {
+    id: 7,
+    imageUrl: "https://placehold.co/100x140",
+    title: "데미안",
+    author: "헤르만 헤세",
+  },
+  {
+    id: 8,
+    imageUrl: "https://placehold.co/100x140",
+    title: "파친코",
+    author: "이민진",
+  },
+  {
+    id: 9,
+    imageUrl: "https://placehold.co/100x140",
+    title: "역사의 쓸모",
+    author: "최태성",
+  },
+];
+
 const MainPage = () => {
   const navigate = useNavigate();
   const toggleSidebar = useLibrarySidebarStore((state) => state.toggleSidebar);
@@ -66,63 +125,73 @@ const MainPage = () => {
 
   return (
     <>
-      <LibrarySidebar />
-      <TopNavBar
-        leftControls={
-          <TopNavBar.IconButton
-            onClick={toggleSidebar}
-            aria-label="도서관 사이드바"
-          >
-            <LibraryIcon width={24} height={24} />
-          </TopNavBar.IconButton>
-        }
-        title={<LogoContainer src={codeit} />}
-        rightControls={
-          <TopNavBar.IconButton
-            onClick={handleNotificationClick}
-            aria-label="알림 보기"
-          >
-            <BellIcon width={24} height={24} />
-          </TopNavBar.IconButton>
-        }
-      />
+      <PageWrapper>
+        <LibrarySidebar />
+        <TopNavBar
+          leftControls={
+            <TopNavBar.IconButton
+              onClick={toggleSidebar}
+              aria-label="도서관 사이드바"
+            >
+              <LibraryIcon width={24} height={24} />
+            </TopNavBar.IconButton>
+          }
+          title={<LogoContainer src={codeit} />}
+          rightControls={
+            <TopNavBar.IconButton
+              onClick={handleNotificationClick}
+              aria-label="알림 보기"
+            >
+              <BellIcon width={24} height={24} />
+            </TopNavBar.IconButton>
+          }
+        />
 
-      <MainContainer>
-        <SearchButton onClick={handleSearchClick}>
-          <SearchIcon width={24} height={24} />
-          관심있는 책을 검색해보세요!
-        </SearchButton>
-        <Title>
-          {" "}
-          <GreenTitle>북작북작</GreenTitle> 가이드
-        </Title>
+        <MainContainer>
+          <SearchButton onClick={handleSearchClick}>
+            <SearchIcon width={24} height={24} />
+            관심있는 책을 검색해보세요!
+          </SearchButton>
+          <Title>
+            {" "}
+            <GreenTitle>북작북작</GreenTitle> 가이드
+          </Title>
 
-        <BannerWrapper>
-          {bannerData.map((banner) => (
-            <BannerCard
-              key={banner.id}
-              step={banner.step}
-              title={banner.title}
-              description={banner.description}
-              icon={banner.icon}
-            />
-          ))}
-        </BannerWrapper>
+          <BannerWrapper>
+            {bannerData.map((banner) => (
+              <BannerCard
+                key={banner.id}
+                step={banner.step}
+                title={banner.title}
+                description={banner.description}
+                icon={banner.icon}
+              />
+            ))}
+          </BannerWrapper>
 
-        <ButtonWrapper>
-          <ActionButton1 onClick={handle나눔Button}>나눔하기</ActionButton1>
-          <ActionButton2 onClick={handle데려가기Button}>데려가기</ActionButton2>
-        </ButtonWrapper>
+          <ButtonWrapper>
+            <ActionButton1 onClick={handle나눔Button}>나눔하기</ActionButton1>
+            <ActionButton2 onClick={handle데려가기Button}>
+              데려가기
+            </ActionButton2>
+          </ButtonWrapper>
 
-        <Title>
-          AI가 고른 {userNickName ? userNickName : "아기사자"}님 취향 맞춤 책
-          리스트
-        </Title>
+          <Title>
+            AI가 고른 {userNickName ? userNickName : "아기사자"}님 취향 맞춤 책
+            리스트
+          </Title>
 
-        <Outlet />
-      </MainContainer>
+          <BookGrid>
+            {bookListData.slice(0, 6).map((book) => (
+              <BookCard key={book.id} book={book} />
+            ))}
+          </BookGrid>
 
-      <BottomNavBar />
+          <Outlet />
+        </MainContainer>
+
+        <BottomNavBar />
+      </PageWrapper>
     </>
   );
 };
@@ -133,15 +202,14 @@ export default MainPage;
 const MainContainer = styled.main`
   display: flex;
   flex-direction: column;
-  align-items: center; /* 모든 자식 요소를 가로축 중앙에 정렬 */
-  gap: 24px; /* 자식 요소들 사이의 수직 간격을 24px로 설정 */
+  align-items: center;
+  gap: 24px;
 
   width: 100%;
   max-width: 600px;
-  min-height: 100%;
+  margin: 0 auto;
 
-  /* 상단/하단 바 공간 확보를 위한 패딩 */
-  padding-top: 110px; /* 검색창 위의 여백은 패딩으로 조절 */
+  padding-top: 110px;
   padding-bottom: 80px;
   padding-left: 20px;
   padding-right: 20px;
@@ -149,12 +217,16 @@ const MainContainer = styled.main`
   background-color: white;
 `;
 
+const PageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
+
 const LogoContainer = styled.img`
   width: 50%;
   max-width: 200px;
 `;
-
-// ... MainPage 컴포넌트 및 다른 코드는 그대로 유지
 
 const SearchButton = styled.button`
   display: flex;
@@ -182,7 +254,7 @@ const ActionButton1 = styled.button`
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 150px; /* (280px / 2) - 좌우 여백 */
+  width: 150px;
   height: 47px;
 
   background-color: #11b55f;
@@ -193,7 +265,7 @@ const ActionButton1 = styled.button`
   font-size: 16px;
 
   cursor: pointer;
-  transition: opacity 0.2s; /* 부드러운 효과 */
+  transition: opacity 0.2s;
 
   &:hover {
     opacity: 0.9;
@@ -204,7 +276,7 @@ const ActionButton2 = styled.button`
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 150px; /* (280px / 2) - 좌우 여백 */
+  width: 150px;
   height: 47px;
 
   background-color: transparent;
@@ -215,7 +287,7 @@ const ActionButton2 = styled.button`
   font-size: 16px;
 
   cursor: pointer;
-  transition: opacity 0.2s; /* 부드러운 효과 */
+  transition: opacity 0.2s;
 
   &:hover {
     opacity: 0.9;
@@ -225,7 +297,7 @@ const ActionButton2 = styled.button`
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
-  gap: 30px; /* 버튼 사이의 간격 */
+  gap: 30px;
 `;
 
 const Title = styled.h1`
@@ -233,15 +305,15 @@ const Title = styled.h1`
   text-align: left;
   font-size: 20px;
   font-weight: bold;
+  cursor: default;
 `;
 
 const BannerWrapper = styled.div`
   display: flex;
   overflow-x: auto;
   gap: 16px;
-  width: 100%; /* 부모 컨테이너 너비에 맞춤 */
+  width: 100%;
 
-  /* 스크롤바는 숨김 처리 */
   &::-webkit-scrollbar {
     display: none;
   }
@@ -249,4 +321,14 @@ const BannerWrapper = styled.div`
 
 const GreenTitle = styled.span`
   color: #11b55f;
+`;
+
+const BookGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(
+    3,
+    1fr
+  ); /* 3개의 열을 동일한 너비로 만듭니다. */
+  gap: 16px; /* 아이템 사이의 간격 */
+  width: 100%;
 `;

@@ -105,7 +105,7 @@ const BookWrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 139px;
+  width: 135px;
   height: 177px;
   border-radius: 5px;
   margin: 0 auto;

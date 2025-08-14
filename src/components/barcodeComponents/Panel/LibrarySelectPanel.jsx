@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import StepHeader from "../StepHeader";
 import CustomSelect from "../CustomSelect";
-import { ReactComponent as DownIcon } from "../../../assets/icons/downIcon.svg";
 import { useState } from "react";
 
 export default function LibrarySelectPanel({
@@ -24,7 +23,7 @@ export default function LibrarySelectPanel({
         <SectionTitle>현재 도착한 도서관을 선택해주세요.</SectionTitle>
 
         <CustomSelect
-          options={branches.map(b => ({ value: b.id, label: b.name }))}
+          options={branches.map(b => ({ value: b.libraryId, label: b.name }))}
           value={value || ""}
           onChange={onChange}
           placeholder="도서관 선택"

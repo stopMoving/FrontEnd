@@ -1,8 +1,11 @@
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import SelectPanel from "../../components/barcodeComponents/Panel/SelectPanel";
 
 export default function SelectPage() {
   const { mode } = useParams(); // 'give' | 'take'
+  const [searchParams] = useSearchParams();
+  const libraryId = searchParams.get("branchId");
+
   const copy = mode === "give"
     ? {
         title: "나눔하기",
@@ -23,5 +26,5 @@ export default function SelectPage() {
         ),
       };
 
-  return <SelectPanel {...copy} />;
+  return <SelectPanel {...copy} mode={mode} libraryId={libraryId}/>;
 }

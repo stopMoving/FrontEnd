@@ -5,8 +5,17 @@ import { ReactComponent as CameraIcon } from "../../../assets/icons/camera.svg";
 import { ReactComponent as ImageUploadIcon} from "../../../assets/icons/imageUpload.svg";
 import { ReactComponent as InputISBNIcon} from "../../../assets/icons/inputISBN.svg";
 
-export default function SelectPanel({ title, description }) {
+export default function SelectPanel({
+  title,
+  description,
+  mode,
+  libraryId
+}) {
   const navigate = useNavigate();
+  
+  // const getScanUrl = (path) => {
+  //   return `${path}/${mode}?branchId=${encodeURIComponent(libraryId)}`;
+  // }
 
   return (
     <Wrap>
@@ -20,17 +29,17 @@ export default function SelectPanel({ title, description }) {
         <SectionTitle>{description}</SectionTitle>
 
         <Buttons>
-          <Btn onClick={() => navigate("/barcode/scan")}>
+          <Btn onClick={() => navigate(`/barcode/scan/${mode}?branchId=${encodeURIComponent(libraryId)}`)}>
             <CameraIcon width={32} height={32} />
             카메라로 바코드 인식
           </Btn>
 
-          <Btn onClick={() => navigate("/barcode/upload")}>
+          <Btn onClick={() => navigate(`/barcode/upload/${mode}?branchId=${encodeURIComponent(libraryId)}`)}>
             <ImageUploadIcon width={32} height={32} />
             바코드 사진 업로드
           </Btn>
 
-          <Btn onClick={() => navigate("/barcode/input_ISBN")}>
+          <Btn onClick={() => navigate(`/barcode/input_ISBN/${mode}?branchId=${encodeURIComponent(libraryId)}`)}>
             <InputISBNIcon width={32} height={32} />
             ISBN 코드 직접 입력
           </Btn>

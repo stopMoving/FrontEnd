@@ -129,6 +129,7 @@ const Menu = styled.ul`
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
   max-height: 470px;
   overflow: auto; /* 470px 넘으면 스크롤 생기게 함 */
+  
 `;
 
 const Item = styled.li`
@@ -140,6 +141,7 @@ const Item = styled.li`
   cursor: pointer;
   color: #000000;
   transition: background-color 0.4s ease;
+  
 
   &[aria-selected="true"] {
     background: #E6F4F0;

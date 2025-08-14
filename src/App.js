@@ -48,9 +48,9 @@ const App = () => {
           element={<LibrarySelectPage />}
         />
         <Route path="barcode/select/:mode" element={<SelectPage />} />
-        <Route path="barcode/scan" element={<ScanPage />} />
-        <Route path="barcode/upload" element={<UploadPage />} />
-        <Route path="barcode/input_ISBN" element={<InputPage />} />
+        <Route path="barcode/scan/:mode" element={<ScanPage />} />
+        <Route path="barcode/upload/:mode" element={<UploadPage />} />
+        <Route path="barcode/input_ISBN/:mode" element={<InputPage />} />
         <Route path="barcode/booklist/:mode" element={<BookListPage />} />
       </Routes>
       <Toaster />

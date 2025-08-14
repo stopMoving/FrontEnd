@@ -33,17 +33,19 @@ export default function ConfirmPanel({
           <BookTitle>{book?.title || "제목 없음"}</BookTitle>
 
           <Meta>
-            <Sub>저자 | {book?.author || "-"}</Sub>
-            <Sub>출판사 | {book?.publisher || "-"}</Sub>
-            <Sub>가격 | <del>{book?.regular_price || "-"}</del>원</Sub>
+            <Sub>{book?.author || "-"}</Sub>
+            {/* <Sub>출판사 | {book?.publisher || "-"}</Sub> */}
+            <Sub>{book?.published_date}</Sub>
+            {mode === "take" && (
+              <Sub>가격 | <del>{book?.regular_price || "-"}</del>원</Sub>
+            )}
           </Meta>
 
-            <Price>
-                {book?.price || "-"}
-                <span className="highlight-text">
-                  {mode === "give" ? "P" : "원"}
-                </span>
-            </Price>
+          {mode === "give" ? (
+            <Point>500P</Point>
+          ) : (
+            <Price>({book?.price}원 || "2000원")</Price>
+          )}
 
             <Isbn>ISBN 코드: {book?.isbn || "-"}</Isbn>
             
@@ -143,7 +145,7 @@ const Meta = styled.div`
   flex-direction: column;
   line-height: 1;
   width: max-content;
-  text-align: left;
+  text-align: center;
   margin: 0 auto;
   gap: 4px;
 `;
@@ -154,21 +156,28 @@ const Sub = styled.div`
   color: #868686;
 `;
 
+const Point = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  line-height: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+  margin: 10px;
+`;
+
 const Price = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   line-height: 1;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   color: #000000;
   margin: 8px;
-
-  .highlight-text {
-    font-size: 12px;
-    font-weight: 400;
-  }
 `;
 
 const Isbn = styled.div`
@@ -180,7 +189,7 @@ const Isbn = styled.div`
   font-size: 18px;
   font-weight: 600;
   color: #000000;
-  margin: 16px;
+  margin: 12px;
 `;
 
 const Desc = styled.p`

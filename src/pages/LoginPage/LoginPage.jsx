@@ -36,7 +36,7 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       await login(values);
-      navigate("/main"); // 로그인 성공 시 이동할 페이지
+      navigate("/"); // 로그인 성공 시 이동할 페이지
     } catch (error) {
       toast("warn", "아이디 또는 비밀번호가 올바르지 않습니다.");
       console.error("로그인 실패:", error);

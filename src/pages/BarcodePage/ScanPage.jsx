@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import CameraScan from "../../components/barcodeComponents/CameraScan";
 import ConfirmModal from "./ConfirmModal";
+import useUserStore from "../../store/useUserStore";
 
 export default function ScanPage() {
   const navigate = useNavigate();
@@ -14,10 +15,12 @@ export default function ScanPage() {
   const [retakeCount, setRetakeCount] = useState(0);
   const [isbnCart, setIsbnCart] = useState([]);
   const [searchParams] = useSearchParams();
-  const libraryId = searchParams.get("branchId"); // LibrarySelectPage에서 넘어온 값
-  const getAccessToken = () => localStorage.getItem("access_token"); //저장 위치에 맞게 조정
-  // const getAccessToken = () => "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2Nzk3MTYwLCJpYXQiOjE3NTUwNjkxNjAsImp0aSI6IjlkM2MzY2E4NDRjMzQyNzY4NTMzZWZkODY5MWY3MzIwIiwidXNlcl9pZCI6IjcifQ.tX-ZDPR6zMci8vMJ_tuj8WZrbwoxhGeSrI7TY58LoJs";
 
+  const libraryId = searchParams.get("branchId"); // LibrarySelectPage에서 넘어온 값
+  const token = useUserStore((state) => state.token);
+
+  console.log("ScanPage에서 읽은 libraryId: ", libraryId);
+  
   const formatIsbn = (isbn) => {
     return isbn
     ? isbn.replace(/^(\d{3})(\d{2})(\d{4})(\d{3})(\d{1})$/,
@@ -31,8 +34,8 @@ export default function ScanPage() {
     const digits = String(text).replace(/[^0-9]/g, "");
     if (!/^97[89]\d{10}$/.test(digits)) return;
 
-  const token = getAccessToken();
-  if (!token) {
+  const accessToken = token?.access_token;
+  if (!accessToken) {
     alert("로그인이 필요해요. (토큰 없음)");
     return;
   }
@@ -43,7 +46,7 @@ export default function ScanPage() {
         const res = await fetch(url, {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         });
 
@@ -66,8 +69,12 @@ export default function ScanPage() {
             image: data?.cover_url ?? null,
             title: data?.title ?? "제목 없음",
             author: data?.author ?? "-",
-            publisher: data?.publisher ?? "-",
+            //출간일
+            published_date: data?.published_date ?? "-",
+            // publisher: data?.publisher ?? "-",
+            //포인트
             regular_price: data?.regular_price ?? "-",
+            //내가 계산 x, 백엔드에서 넘겨주는 걸로
             price: data?.regular_price ? Math.round(data.regular_price * 0.2) : "-",
             isbn: formatIsbn(digits),
             rawIsbn: digits,
@@ -106,8 +113,8 @@ export default function ScanPage() {
 
   // === step 2 버튼: 아니오, 완료 ===
   const handleFinish = async () => {
-    const token = getAccessToken();
-    if(!token) {
+    const accessToken = token?.access_token;
+    if(!accessToken) {
       alert("로그인이 필요해요. (토큰 없음)");
       return;
     }
@@ -130,7 +137,7 @@ export default function ScanPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(payload),
         });

@@ -8,11 +8,13 @@ export default function BookListPanel({
   title,
   description,
   items=[],
+  unit,
   buttonLabel,
   disabled = false,
   onNext,
 }) {
   const navigate = useNavigate();
+  console.log('BookListPanel에 전달된 mode 값:', mode);
 
   return (
     <Wrap>
@@ -34,26 +36,30 @@ export default function BookListPanel({
             </Cover>
           
             <BookInfoWrap>
-              <Title>
-                {book?.title || "-"}
-              </Title>
+              <Title>{book?.title || "-"}</Title>
 
-              <Meta>
-                <Sub>저자 | {book?.author || "-"}</Sub>
-                <Sub>출판사 | {book?.publisher || "-"}</Sub>
-              </Meta>
+              <Author>{book?.author || "-"}</Author>
 
-              <Price>{book?.price || "-"}{mode === "give" ? "P" : "원"}</Price>
               <Isbn>ISBN 코드: {book?.isbn || "-"}</Isbn>
+
+              <SubWrap>
+                <QuantityWrap>
+                  <QuantityBtn>-</QuantityBtn>
+                  <Quantity>1권</Quantity>
+                  <QuantityBtn>+</QuantityBtn>
+                </QuantityWrap>
+                <Price>{book?.price || "-"}{unit}</Price>
+              </SubWrap>
             </BookInfoWrap>
+            
           </BookWrap>
         </BookListWrap>
       </Inner>
 
       <BottomBar>
-        <Button disabled={disabled} onClick={onNext}>
+        <NextBtn disabled={disabled} onClick={onNext}>
           {buttonLabel}
-        </Button>
+        </NextBtn>
       </BottomBar>
     </Wrap>
   );
@@ -101,7 +107,7 @@ const BookWrap = styled.div`
 
 const Cover = styled.div`
   width: 79px;
-  height: 117px;
+  height: 101px;
   border-radius: 5px;
   object-fit: cover;
 `;
@@ -123,6 +129,7 @@ const CoverFallback = styled.div`
 `;
 
 const BookInfoWrap = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   line-height: 1;
@@ -132,36 +139,59 @@ const Title = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: #000000;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 `;
 
-const Meta = styled.div`
-  display: flex;
-  flex-direction: column;
-  line-height: 1;
-  width: max-content;
-  text-align: left;
-  margin: 0 auto;
-  gap: 4px;
-  margin-bottom: 10px;
-`;
-
-const Sub = styled.div`
+const Author = styled.div`
   font-size: 12px;
   font-weight: 400;
   color: #868686;
-`;
-
-const Price = styled.div`
-  font-size: 14px;
-  font-weight: 500;
-  color: #000000;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 `;
 
 const Isbn = styled.div`
   font-size: 14px;
   font-weight: 500;
+  color: #000000;
+  margin-bottom: 16px;
+`;
+
+const SubWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const QuantityWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+`;
+
+const QuantityBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: #F4F4F4;
+  border-radius: 5px;
+  border: 1px solid #DEDEDE;
+  font-size: 16px;
+  font-weight: 500;
+`;
+
+const Quantity = styled.div`
+  font-size: 16px;
+  font-weight: 400;
+`;
+
+const Price = styled.div`
+  font-size: 16px;
+  font-weight: 600;
   color: #000000;
 `;
 
@@ -173,9 +203,10 @@ const BottomBar = styled.div`
   width: 100%;
   max-width: 600px;
   padding: 0 20px;
+  z-index: 10px;
 `;
 
-const Button = styled.button`
+const NextBtn = styled.button`
   width: 100%;
   height: 47px;
   border-radius: 5px;

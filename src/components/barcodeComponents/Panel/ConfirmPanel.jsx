@@ -8,7 +8,7 @@ export default function ConfirmPanel({
   onPrimary,   // step1: 다시 찍기, step2: 아니오(완료)
   onSecondary, // step1: 확인 → step2로, step2: 네(추가)
 }) {
-  const STEP1_TITLE = "이 책이 맞는지 확인해주세요!";
+  const STEP1_TITLE = "이 책이 맞는지 확인해주세요.";
   const STEP1_PRIMARY = "다시 찍기";
   const STEP1_SECONDARY = "확인";
   const STEP2_PRIMARY = "아니오, 완료";
@@ -47,15 +47,21 @@ export default function ConfirmPanel({
             <Price>({book?.price}원 || "2000원")</Price>
           )}
 
-            <Isbn>ISBN 코드: {book?.isbn || "-"}</Isbn>
-            
+          <Isbn>ISBN 코드: {book?.isbn || "-"}</Isbn>
+
+          <QuantityWrap>
+            <QuantityBtn>-</QuantityBtn>
+            <Quantity>1권</Quantity>
+            <QuantityBtn>+</QuantityBtn>
+          </QuantityWrap>
+          
           <Buttons>
-            <Btn onClick={onPrimary} disabled={loading}>
+            <AgainBtn onClick={onPrimary} disabled={loading}>
               {STEP1_PRIMARY}
-            </Btn>
-            <Btn onClick={onSecondary} disabled={loading}>
+            </AgainBtn>
+            <OkBtn onClick={onSecondary} disabled={loading}>
               {STEP1_SECONDARY}
-            </Btn>
+            </OkBtn>
           </Buttons>
         </>
       ) : (
@@ -111,7 +117,7 @@ const BookWrap = styled.div`
   height: 177px;
   border-radius: 5px;
   margin: 0 auto;
-  margin-top: 40px;
+  margin-top: 30px;
   margin-bottom: 15px;
   gap: 10px;
 `;
@@ -189,7 +195,32 @@ const Isbn = styled.div`
   font-size: 18px;
   font-weight: 600;
   color: #000000;
-  margin: 12px;
+  margin-bottom: 15px;
+`;
+
+const QuantityWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+`;
+
+const QuantityBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: #F4F4F4;
+  border-radius: 5px;
+  border: 1px solid #DEDEDE;
+  font-size: 16px;
+  font-weight: 400;
+`;
+
+const Quantity = styled.div`
+  font-size: 16px;
+  font-weight: 400;
 `;
 
 const Desc = styled.p`
@@ -205,7 +236,46 @@ const Buttons = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  margin-top: 35px;
+  margin-top: 25px;
+`;
+
+const AgainBtn = styled.button`
+  font-size: 18px;
+  font-weight: 500;
+  padding: 12px 16px;
+  border-radius: 10px;
+  line-height: 1;
+  border: 1px solid #DEDEDE;
+  color: #000000;
+  background: #F4F4F4;
+  transition: transform .02s ease;
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  ${({ $variant }) =>
+    $variant === "secondary" &&
+    css`
+      background: #11B55F;
+      color: #FFFFFF;
+      border-color: #11B55F;
+    `}
+`;
+
+const OkBtn = styled.button`
+  font-size: 18px;
+  font-weight: 500;
+  padding: 12px 16px;
+  border-radius: 10px;
+  line-height: 1;
+  border: 1px solid #11B55F;
+  color: #FFFFFF;
+  background: #11B55F;
+  transition: transform .02s ease;
+
+  &:active {
+    transform: translateY(1px);
 `;
 
 const Btn = styled.button`

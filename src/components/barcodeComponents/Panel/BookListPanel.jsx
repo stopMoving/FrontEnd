@@ -181,7 +181,7 @@ const QuantityBtn = styled.div`
   border-radius: 5px;
   border: 1px solid #DEDEDE;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 400;
 `;
 
 const Quantity = styled.div`

@@ -56,6 +56,8 @@ export default function BookListPanel({
         </BookListWrap>
       </Inner>
 
+      <AddButton>+</AddButton>
+
       <BottomBar>
         <NextBtn disabled={disabled} onClick={onNext}>
           {buttonLabel}
@@ -193,6 +195,17 @@ const Price = styled.div`
   font-size: 16px;
   font-weight: 600;
   color: #000000;
+`;
+
+const AddButton = styled.button`
+  width: 60px;
+  height: 60px;
+  color: #FFFFFF;
+  background-color: #11B55F;
+  border-radius: 50px;
+  border: none;
+  font-size: 40px;
+  z-index: 100;
 `;
 
 const BottomBar = styled.div`

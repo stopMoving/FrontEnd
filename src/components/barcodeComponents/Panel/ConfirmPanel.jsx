@@ -11,16 +11,10 @@ export default function ConfirmPanel({
   const STEP1_TITLE = "이 책이 맞는지 확인해주세요.";
   const STEP1_PRIMARY = "다시 찍기";
   const STEP1_SECONDARY = "확인";
-  const STEP2_PRIMARY = "아니오, 완료";
-  const STEP2_SECONDARY = "네, 추가";
-
-  const step2 = mode === "give"
-  ? { title: "책 등록이 완료되었습니다!",     desc: "다른 책도 나눔하시겠어요?" }
-  : { title: "책 데려가기가 완료되었습니다!", desc: "다른 책도 데려가시겠어요?" };
 
   return (
     <Wrap $step={step}>
-      {step === 1 ? (
+      {step === 1 && (
         <>
           <Title>{STEP1_TITLE}</Title>
 
@@ -62,25 +56,6 @@ export default function ConfirmPanel({
             <OkBtn onClick={onSecondary} disabled={loading}>
               {STEP1_SECONDARY}
             </OkBtn>
-          </Buttons>
-        </>
-      ) : (
-        <>
-          <Title>{step2.title}</Title>
-          <Desc>{step2.desc}</Desc>
-          <Buttons>
-            <Btn
-              onClick={onPrimary}
-              $variant={step === 2 && "primary"}
-            >
-              {STEP2_PRIMARY}
-            </Btn>
-            <Btn
-              onClick={onSecondary}
-              $variant={step === 2 && "secondary"}
-            >
-              {STEP2_SECONDARY}
-            </Btn>
           </Buttons>
         </>
       )}
@@ -223,15 +198,6 @@ const Quantity = styled.div`
   font-weight: 400;
 `;
 
-const Desc = styled.p`
-  margin: 6px 0 16px;
-  color: #000000;
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 1;
-  text-align: center;
-`;
-
 const Buttons = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -276,28 +242,4 @@ const OkBtn = styled.button`
 
   &:active {
     transform: translateY(1px);
-`;
-
-const Btn = styled.button`
-  font-size: 18px;
-  font-weight: 500;
-  padding: 12px 16px;
-  border-radius: 10px;
-  line-height: 1;
-  border: 1px solid #000000;
-  color: #000000;
-  background: #ffffff;
-  transition: transform .02s ease;
-
-  &:active {
-    transform: translateY(1px);
-  }
-
-  ${({ $variant }) =>
-    $variant === "secondary" &&
-    css`
-      background: #11B55F;
-      color: #FFFFFF;
-      border-color: #11B55F;
-    `}
 `;

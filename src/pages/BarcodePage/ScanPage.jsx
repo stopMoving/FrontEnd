@@ -108,7 +108,8 @@ export default function ScanPage() {
       next.add(book.rawIsbn);
       return Array.from(next);
     });
-    setStep(2);
+    // setStep(2);
+    navigate(`/barcode/booklist/${mode}`);
   };
 
   // === step 2 버튼: 아니오, 완료 ===

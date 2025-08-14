@@ -61,8 +61,8 @@ const MainPage = () => {
 
   const handleNotificationClick = () => navigate("/notifications");
   const handleSearchClick = () => navigate("/search");
-  const handle나눔Button = () => navigate("/");
-  const handle데려가기Button = () => navigate("/");
+  const handle나눔Button = () => navigate("/barcode/library/select/give");
+  const handle데려가기Button = () => navigate("/barcode/library/select/take");
 
   return (
     <>

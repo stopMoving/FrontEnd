@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import CameraScan from "../../components/barcodeComponents/CameraScan";
 import ConfirmModal from "./ConfirmModal";
 
@@ -13,10 +13,10 @@ export default function ScanPage() {
   const [loading, setLoading] = useState(false);
   const [retakeCount, setRetakeCount] = useState(0);
   const [isbnCart, setIsbnCart] = useState([]);
-
-  const libraryId = 1; //실제 도서관 ID로 교체
-  // const getAccessToken = () => localStorage.getItem("access_token"); //저장 위치에 맞게 조정
-  const getAccessToken = () => "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2Nzk3MTYwLCJpYXQiOjE3NTUwNjkxNjAsImp0aSI6IjlkM2MzY2E4NDRjMzQyNzY4NTMzZWZkODY5MWY3MzIwIiwidXNlcl9pZCI6IjcifQ.tX-ZDPR6zMci8vMJ_tuj8WZrbwoxhGeSrI7TY58LoJs";
+  const [searchParams] = useSearchParams();
+  const libraryId = searchParams.get("branchId"); // LibrarySelectPage에서 넘어온 값
+  const getAccessToken = () => localStorage.getItem("access_token"); //저장 위치에 맞게 조정
+  // const getAccessToken = () => "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU2Nzk3MTYwLCJpYXQiOjE3NTUwNjkxNjAsImp0aSI6IjlkM2MzY2E4NDRjMzQyNzY4NTMzZWZkODY5MWY3MzIwIiwidXNlcl9pZCI6IjcifQ.tX-ZDPR6zMci8vMJ_tuj8WZrbwoxhGeSrI7TY58LoJs";
 
   const formatIsbn = (isbn) => {
     return isbn
@@ -111,6 +111,10 @@ export default function ScanPage() {
       alert("로그인이 필요해요. (토큰 없음)");
       return;
     }
+    if (!libraryId) {
+      alert("도서관이 선택되지 않았어요.");
+      return;
+    }
     if (isbnCart.length === 0) {
       alert("담긴 ISBN이 없어요. ");
       return;
@@ -119,7 +123,7 @@ export default function ScanPage() {
     setLoading(true);
     try {
       const payload = {
-        library_id: libraryId,
+        library_id: Number(libraryId),
         isbn: isbnCart,
       };
       const res = await fetch(`https://stopmoving.p-e.kr/books/donate/`, {

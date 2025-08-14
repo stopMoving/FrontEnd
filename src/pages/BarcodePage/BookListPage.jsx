@@ -14,11 +14,13 @@ export default function BookListPage() {
     ? {
         title: "나눔하기",
         description: "책 목록을 확인 후 나눔해주세요.",
+        unit: "P",
         buttonLabel: "나눔하기",
       }
     : {
         title: "데려가기",
         description: "책 목록을 확인 후 결제해주세요.",
+        unit: "원",
         buttonLabel: "결제하기",
       };
 

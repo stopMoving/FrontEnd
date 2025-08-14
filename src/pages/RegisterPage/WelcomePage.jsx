@@ -18,9 +18,9 @@ const WelcomePage = () => {
     <>
       <FullScreenContainer>
         <h1 style={{ fontSize: "32px" }}>
-          {userNickName ? `${userNickName}님,` : ""} 환영합니다!
+          {userNickName ? `${userNickName}님,` : "아기사자님"} 환영합니다!
         </h1>
-        <div style={{ fontSize: "16px" }}>
+        <div style={{ fontSize: "18px" }}>
           이제 마음껏 책을 나누고, 받을 수 있어요.
         </div>
         <WelcomeButton onClick={handleNavigate}>지금 시작하기</WelcomeButton>
@@ -32,15 +32,17 @@ const WelcomePage = () => {
 export default WelcomePage;
 
 const WelcomeButton = styled.button`
-  background-color: #bcbcbc;
-  width: 50%;
+  background-color: #11b55f;
   border: none;
-  border-radius: ${({ round }) => (round ? `9999px` : `16px`)};
+  border-radius: ${({ round }) => (round ? `9999px` : `5px`)};
   color: #ffffff;
   cursor: pointer;
   font-size: 18px;
   padding: 16px;
-  margin: 16px;
+
+  width: 80%;
+  margin: 16px 0 0 0;
+
   transition: background-color 0.2s ease-in-out;
 
   &:hover,

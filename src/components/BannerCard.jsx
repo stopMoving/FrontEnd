@@ -16,7 +16,6 @@ const BannerCard = ({ step, title, description, icon: IconComponent }) => {
         <p>{description}</p>
       </TextContent>
       <IconWrapper>
-        {/* 전달받은 아이콘 컴포넌트를 렌더링합니다. */}
         <IconComponent width={68} height={68} />
       </IconWrapper>
     </CardContainer>
@@ -33,18 +32,16 @@ const CardContainer = styled.div`
   flex-shrink: 0;
 
   width: 280px;
-  height: 213px; /* 높이를 조금 줄여서 더 간결하게 */
+  height: 213px;
   padding: 24px;
 
-  background-color: #f5f5f5; /* 이미지와 유사한 밝은 회색 */
+  background-color: #f4f4f4;
   border-radius: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
   color: #333;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
-
-  &:hover {
-    transform: translateY(-5px);
-  }
 `;
 
 const TextContent = styled.div`
@@ -75,7 +72,8 @@ const StepLabel = styled.div`
   padding: 4px 12px;
   margin-bottom: 10px;
 
-  background-color: #e6f4f0; /* 연한 녹색 배경 */
+  background-color: transparent;
+  border: 1px solid #11b55f;
   color: #11b55f; /* 짙은 녹색 글씨 */
 
   border-radius: 50px; /* 알약 모양 */

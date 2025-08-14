@@ -199,24 +199,31 @@ export default LibraryPage;
 // --- Styled Components ---
 
 const PageWrapper = styled.div`
+  width: 100%;
+  max-width: 600px;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 `;
 
 const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  height: 100vh; /* 화면 높이로 고정 */
-  max-width: 600px;
-  margin: 0 auto;
-  overflow-y: auto;
-  &::-webkit-scrollbar {
-    display: none; /* 스크롤바 숨기기 */
-  }
-  padding: 60px 16px 16px 16px;
-  background-color: #fff;
+  padding: 60px 20px 20px;
   flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (max-width: 480px) {
+    padding: 60px 16px 20px;
+  }
 `;
 
 const Header = styled.header`
@@ -228,6 +235,8 @@ const BackButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
+  padding: 8px;
+  margin: -8px;
 `;
 
 const LibraryHeader = styled.div`
@@ -235,6 +244,11 @@ const LibraryHeader = styled.div`
   align-items: center;
   gap: 12px;
   margin-bottom: 32px;
+
+  @media (max-width: 480px) {
+    gap: 8px;
+    margin-bottom: 24px;
+  }
 `;
 
 const LibraryImage = styled.img`
@@ -242,24 +256,32 @@ const LibraryImage = styled.img`
   height: 48px;
   border-radius: 50%;
   background-color: #f0f0f0;
+  flex-shrink: 0;
 `;
 
 const LibraryTitle = styled(Link)`
   font-size: 22px;
   font-weight: bold;
-  color: #333;
+  color: black;
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 6px;
   flex-grow: 1;
+  min-width: 0;
+
+  @media (max-width: 480px) {
+    font-size: 18px;
+  }
 `;
 
 const FavoriteButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  color: #ffd700;
+  padding: 8px;
+  margin: -8px;
+  flex-shrink: 0;
 `;
 
 const Section = styled.section`
@@ -272,19 +294,26 @@ const SectionHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  gap: 8px;
 `;
 
 const SectionTitle = styled.h2`
   font-size: 18px;
   font-weight: bold;
+  min-width: 0;
+
+  @media (max-width: 480px) {
+    font-size: 16px;
+  }
 `;
 
 const MoreLink = styled(Link)`
   display: flex;
   align-items: center;
   font-size: 14px;
-  color: #777;
+  color: black;
   text-decoration: none;
+  white-space: nowrap;
 `;
 
 const SearchPlaceholder = styled.div`
@@ -292,7 +321,7 @@ const SearchPlaceholder = styled.div`
   padding: 12px 16px;
   background-color: #f5f5f5;
   border-radius: 50px;
-  color: #888;
+  color: #6f6f6f;
   font-size: 14px;
   text-align: center;
   margin-bottom: 32px;
@@ -302,40 +331,43 @@ const HorizontalScroll = styled.div`
   display: flex;
   overflow-x: auto;
   gap: 16px;
-  padding-bottom: 10px; /* 스크롤바 공간 확보 */
+  width: calc(100% + 40px);
+  padding: 4px 20px 10px 20px;
+  margin: 0 -20px;
 
   &::-webkit-scrollbar {
-    display: none; /* 스크롤바 숨기기 */
+    display: none;
   }
 `;
 
 const BookCardWrapper = styled.div`
-  flex: 0 0 110px; /* 너비 고정 */
+  flex: 0 0 110px;
 `;
 
 const SwiperSection = styled(Section)`
   background-color: #e6f4f0;
   border-radius: 16px;
-  padding: 20px;
+  padding: 20px 0;
+  width: 100%;
+  overflow: hidden;
 `;
 
 const CenteredSwiperWrapper = styled.div`
-  padding: 20px 0; /* 위아래 여백을 주어 커진 슬라이드가 잘리지 않게 함 */
+  .swiper {
+    padding: 20px 0 !important;
+  }
 
   .swiper-slide {
     transition: transform 0.3s ease-out;
-    transform: scale(0.85); /* 기본 슬라이드 크기를 약간 줄임 */
+    transform: scale(0.85);
     opacity: 0.7;
   }
 
   .swiper-slide-active {
-    transform: scale(
-      1
-    ); /* 활성화된 슬라이드만 원래 크기로 복원 (또는 더 크게) */
+    transform: scale(1);
     opacity: 1;
   }
 
-  /* Swiper의 이전/다음 버튼 스타일 수정 */
   .swiper-button-prev,
   .swiper-button-next {
     color: #4f614a;
@@ -344,6 +376,6 @@ const CenteredSwiperWrapper = styled.div`
   }
   .swiper-button-prev::after,
   .swiper-button-next::after {
-    font-size: 24px !important; /* 아이콘 크기 조정 */
+    font-size: 24px !important;
   }
 `;

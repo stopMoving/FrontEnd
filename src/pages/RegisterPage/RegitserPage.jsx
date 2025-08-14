@@ -33,11 +33,6 @@ function RegisterPage() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (values.password1 !== values.password2) {
-      toast("warn", "비밀번호가 일치하지 않습니다.");
-      return;
-    }
-
     try {
       // ✅ 스토어의 register 함수에 state 객체를 그대로 전달합니다.
       await register(values);
@@ -61,21 +56,6 @@ function RegisterPage() {
           <Label>
             <GreenText>북작북작</GreenText> 회원가입
           </Label>
-
-          {/* 각 입력 필드를 div로 그룹화 */}
-          <div>
-            <Input
-              id="nickname"
-              name="nickname"
-              type="text"
-              placeholder="닉네임"
-              value={values.nickname}
-              onChange={handleChange}
-            />
-            <ValidationText>
-              • 닉네임은 2~10자 이하의 한글과 영문 대/소문자만 사용 가능합니다.
-            </ValidationText>
-          </div>
 
           <div>
             <Input
@@ -117,6 +97,20 @@ function RegisterPage() {
             />
           </div>
 
+          <div>
+            <Input
+              id="nickname"
+              name="nickname"
+              type="text"
+              placeholder="닉네임"
+              value={values.nickname}
+              onChange={handleChange}
+            />
+            <ValidationText>
+              • 닉네임은 2~10자 이하의 한글과 영문 대/소문자만 사용 가능합니다.
+            </ValidationText>
+          </div>
+
           <Button>회원가입</Button>
 
           <HorizontalRule>또는</HorizontalRule>
@@ -139,9 +133,6 @@ const StyledForm = styled.form`
   padding: 20px; /* 패딩을 Form으로 이동 */
   flex: 1; /* 남은 공간을 모두 차지하도록 설정 */
   overflow-y: auto; /* 내용이 길어지면 세로 스크롤 생성 */
-  &::-webkit-scrollbar {
-    display: none;
-  }
 `;
 
 const RegisterContainer = styled.div`

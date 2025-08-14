@@ -40,8 +40,8 @@ const LibrarySidebar = () => {
   return (
     <>
       {/* 사이드바 뒤의 어두운 배경 */}
-      <Backdrop isOpen={isOpen} onClick={toggleSidebar} />
-      <SidebarContainer isOpen={isOpen}>
+      <Backdrop $isOpen={isOpen} onClick={toggleSidebar} />
+      <SidebarContainer $isOpen={isOpen}>
         <Header>
           <BackButton onClick={toggleSidebar}>
             <BackIcon width={24} height={24} />
@@ -87,8 +87,8 @@ const Backdrop = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 99;
-  opacity: ${(props) => (props.isOpen ? 1 : 0)};
-  visibility: ${(props) => (props.isOpen ? "visible" : "hidden")};
+  opacity: ${(props) => (props.$isOpen ? 1 : 0)};
+  visibility: ${(props) => (props.$isOpen ? "visible" : "hidden")};
   transition: opacity 0.3s ease;
 `;
 
@@ -101,7 +101,7 @@ const SidebarContainer = styled.div`
   height: 100%;
   background-color: white;
   z-index: 100;
-  transform: translateX(${(props) => (props.isOpen ? "0" : "-100%")});
+  transform: translateX(${(props) => (props.$isOpen ? "0" : "-100%")});
   transition: transform 0.3s ease-out;
   display: flex;
   flex-direction: column;

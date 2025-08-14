@@ -4,7 +4,7 @@ import styled from "styled-components";
 // --- 스타일 정의 ---
 const NavContainer = styled.header`
   position: fixed;
-  top: 40px;
+  top: 0px;
   left: 50%;
   transform: translateX(-50%);
 
@@ -15,7 +15,7 @@ const NavContainer = styled.header`
   width: 100%;
   max-width: 600px;
   height: 50px; /* 상단 바 높이 */
-  padding: 0 16px;
+  padding: 70px 16px 30px 16px;
   background-color: #ffffff;
   border-bottom: 1px solid #dedede;
   z-index: 90;

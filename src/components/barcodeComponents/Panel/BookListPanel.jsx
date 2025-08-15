@@ -44,9 +44,9 @@ export default function BookListPanel({
 
               <SubWrap>
                 <QuantityWrap>
-                  <QuantityBtn onClick={() => onQuantityChange(-1)}>-</QuantityBtn>
+                  <QuantityBtn onClick={() => onQuantityChange(book.isbn, -1)}>-</QuantityBtn>
                   <Quantity>{book.quantity}권</Quantity>
-                  <QuantityBtn onClick={() => onQuantityChange(1)}>+</QuantityBtn>
+                  <QuantityBtn onClick={() => onQuantityChange(book.isbn, 1)}>+</QuantityBtn>
                 </QuantityWrap>
 
                 {/* {mode === "give" ? (
@@ -100,6 +100,7 @@ const SectionTitle = styled.div`
   font-size: 20px;
   font-weight: 600;
   margin: 0 auto;
+  margin-top: -15px;
 `;
 
 const BookListWrap = styled.div`
@@ -186,7 +187,6 @@ const QuantityWrap = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 16px;
 `;
 
 const QuantityBtn = styled.button`
@@ -205,6 +205,8 @@ const QuantityBtn = styled.button`
 const Quantity = styled.div`
   font-size: 16px;
   font-weight: 400;
+  width: 54px;
+  text-align: center;
 `;
 
 const Point = styled.div`

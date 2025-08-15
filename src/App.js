@@ -17,6 +17,8 @@ import LibrarySelectPage from "./pages/BarcodePage/LibrarySelectPage";
 import InputPage from "./pages/BarcodePage/InputPage";
 import LibraryDetailPage from "./pages/LibraryPage/LibraryDetailPage";
 import LibraryPage from "./pages/LibraryPage/LibraryPage";
+import SharedBooksPage from "./pages/LibraryPage/SharedBooksPage";
+import BookDetailPage from "./pages/LibraryPage/BookDetailPage";
 
 const App = () => {
   // ✅ 스토어에서 initializeAuth 함수와 상태를 가져옵니다.
@@ -42,6 +44,11 @@ const App = () => {
         <Route path="/" element={<MainPage />} />
         <Route path="/library/detail/:id" element={<LibraryDetailPage />} />
         <Route path="/library/:libraryId" element={<LibraryPage />} />
+        <Route
+          path="/library/:libraryId/shared"
+          element={<SharedBooksPage />}
+        />
+        <Route path="/book/:bookId" element={<BookDetailPage />} />
 
         <Route
           path="barcode/library/select/:mode"

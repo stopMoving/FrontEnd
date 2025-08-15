@@ -4,13 +4,10 @@ import StepHeader from "../StepHeader";
 
 export default function BookListPanel({
   mode,
-  book,
   title,
   description,
   items=[],
-  unit,
   buttonLabel,
-  quantity,
   disabled = false,
   onNext,
   onQuantityChange,
@@ -29,15 +26,15 @@ export default function BookListPanel({
 
       <Inner>
         <SectionTitle>{description}</SectionTitle>
-        {/* 바코드 찍은 책 목록 불러오기 */}
         <BookListWrap>
-          <BookWrap>
+          {items.map((book) => (
+            <BookWrap key={book.isbn}>
             <Cover>
               {book?.image
-              ? <Cover src={book?.image} alt="" />
+              ? <CoverImg src={book?.image} alt="" />
               : <CoverFallback />}
             </Cover>
-          
+
             <BookInfoWrap>
               <Title>{book?.title || "-"}</Title>
 
@@ -48,19 +45,24 @@ export default function BookListPanel({
               <SubWrap>
                 <QuantityWrap>
                   <QuantityBtn onClick={() => onQuantityChange(-1)}>-</QuantityBtn>
-                  <Quantity>{quantity}권</Quantity>
+                  <Quantity>{book.quantity}권</Quantity>
                   <QuantityBtn onClick={() => onQuantityChange(1)}>+</QuantityBtn>
                 </QuantityWrap>
 
-                {mode === "give" ? (
+                {/* {mode === "give" ? (
                   <Point>500P</Point>
                 ) : (
-                <Price>{book?.price원 || "2000"}원</Price>
+                <Price>{book?.price || "2000"}원</Price>
+                )} */}
+                {mode === "give" ? (
+                  <Price>{book?.price || "2000"}원</Price>
+                ) : (
+                <Point>500P</Point>
                 )}
               </SubWrap>
             </BookInfoWrap>
-            
           </BookWrap>
+        ))}
         </BookListWrap>
       </Inner>
 
@@ -113,14 +115,20 @@ const BookWrap = styled.div`
   flex-direction: row;
   height: 117px;
   gap: 16px;
+  align-items: flex-start;
 `;
 
 const Cover = styled.div`
   width: 79px;
   height: 101px;
+`;
+
+const CoverImg = styled.img`
+  width: 100%;
+  height: 100%;
   border-radius: 5px;
   object-fit: cover;
-`;
+`
 
 const CoverFallback = styled.div`
   width: 79px;
@@ -143,27 +151,27 @@ const BookInfoWrap = styled.div`
   display: flex;
   flex-direction: column;
   line-height: 1;
+  gap: 4px;
 `;
 
 const Title = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: #000000;
-  margin-bottom: 5px;
 `;
 
 const Author = styled.div`
   font-size: 12px;
   font-weight: 400;
   color: #868686;
-  margin-bottom: 16px;
+  margin-bottom: 4px;
 `;
 
 const Isbn = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: #000000;
-  margin-bottom: 16px;
+  margin-bottom: 4px;
 `;
 
 const SubWrap = styled.div`
@@ -181,7 +189,7 @@ const QuantityWrap = styled.div`
   gap: 16px;
 `;
 
-const QuantityBtn = styled.div`
+const QuantityBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;

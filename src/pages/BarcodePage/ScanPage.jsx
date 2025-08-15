@@ -4,6 +4,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import CameraScan from "../../components/barcodeComponents/CameraScan";
 import ConfirmModal from "./ConfirmModal";
 import useUserStore from "../../store/useUserStore";
+import useBookStore from "../../store/useBookStore";
 
 export default function ScanPage() {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ export default function ScanPage() {
 
   const libraryId = searchParams.get("branchId"); // LibrarySelectPage에서 넘어온 값
   const token = useUserStore((state) => state.token);
+  const { addScannedBook } = useBookStore();
 
   console.log("ScanPage에서 읽은 libraryId: ", libraryId);
   
@@ -69,13 +71,10 @@ export default function ScanPage() {
             image: data?.cover_url ?? null,
             title: data?.title ?? "제목 없음",
             author: data?.author ?? "-",
-            //출간일
             published_date: data?.published_date ?? "-",
-            // publisher: data?.publisher ?? "-",
-            //포인트
             regular_price: data?.regular_price ?? "-",
             //내가 계산 x, 백엔드에서 넘겨주는 걸로
-            price: data?.regular_price ? Math.round(data.regular_price * 0.2) : "-",
+            price: data?.regular_price ? Math.round(data.regular_price * 0.2) : null,
             isbn: formatIsbn(digits),
         });
 
@@ -102,12 +101,18 @@ export default function ScanPage() {
   // === step 1 버튼: 확인 -> 등록 API 호출 후 step 2===
   const handleConfirm = async () => {
     if (!book?.isbn) return;
-    setIsbnCart((prev) => {
-      const next = new Set(prev);
-      next.add(book.rawIsbn);
-      return Array.from(next);
+
+    addScannedBook({
+      ...book,
+      isbn: book.isbn.replace(/-/g, '')
     });
+    // setIsbnCart((prev) => {
+    //   const next = new Set(prev);
+    //   next.add(book.rawIsbn);
+    //   return Array.from(next);
+    // });
     // setStep(2);
+    setModalOpen(false);
     navigate(`/barcode/booklist/${mode}`);
   };
 

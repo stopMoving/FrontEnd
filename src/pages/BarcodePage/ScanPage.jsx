@@ -77,7 +77,6 @@ export default function ScanPage() {
             //내가 계산 x, 백엔드에서 넘겨주는 걸로
             price: data?.regular_price ? Math.round(data.regular_price * 0.2) : "-",
             isbn: formatIsbn(digits),
-            rawIsbn: digits,
         });
 
         // 모달 열면 CameraScan에서 paused={modalOpen}으로 일시정지됨
@@ -86,7 +85,7 @@ export default function ScanPage() {
     } catch (e) {
         // 여기서 조회 실패라고 ui를 띄워줘야 하지 않을까?
         console.error("조회 실패", e);
-        alert(e.message || "도서 조회에 실패했어요. 잠시 후 다시 시도해 주세요.") // alert 말고 다르게 표시하자
+        alert("인식에 실패했어요. 잠시 후 다시 시도해 주세요.") // alert 말고 다르게 표시하자
     } finally {
         setLoading(false);
     }
@@ -101,7 +100,7 @@ export default function ScanPage() {
   };
 
   // === step 1 버튼: 확인 -> 등록 API 호출 후 step 2===
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!book?.isbn) return;
     setIsbnCart((prev) => {
       const next = new Set(prev);
@@ -142,40 +141,23 @@ export default function ScanPage() {
         },
         body: JSON.stringify(payload),
         });
-
-        const textBody = await res.text();
-        let data = null;
-        try {
-          data = textBody ? JSON.parse(textBody) : null;
-        }
-        catch{}
-
-        if (!res.ok) {
-          if (res.status === 400) {
-            const msg = data ?.detail || "요청이 올바르지 않아요.";
-            throw new Error(msg);
-          }
-          if (res.status === 404) {
-            const msg = data ?.error || "리소스를 찾을 수 없어요.";
-            throw new Error(msg);
-          }
-          throw new Error(textBody || `등록 실패 (${res.status})`);
-        }
-
-        console.log("donate success: ", data);
-
-        setModalOpen(false);          // 닫고 끝
-        setStep(1);
-        setBook(null);
-        setIsbnCart([]);
-        navigate(`/barcode/booklist/${mode}`);
-      } catch (e) {
-        console.error("일괄 기증 실패: ", e);
-        alert(e.message || "등록에 실패했어요. 잠시 후 다시 시도해 주세요.") // alert 말고 다르게 표시하자
+        if (!res.ok) throw new Error("register failed");
+        setStep(2);
+    } catch (e) {
+        console.error("등록 실패", e);
+        alert("등록에 실패했어요. 잠시 후 다시 시도해 주세요.") // alert 말고 다르게 표시하자
     } finally {
         setLoading(false);
     }
   };
+
+  // === step 2 버튼: 아니오, 완료 ===
+  // const handleFinish = () => {
+  //   setModalOpen(false);          // 닫고 끝
+  //   setStep(1);
+  //   setBook(null);
+  //   navigate(`/barcode/booklist/${mode}`);
+  // };
 
   // === step 2 버튼: 네, 추가 ===
   const handleAddMore = () => {

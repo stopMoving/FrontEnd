@@ -5,6 +5,10 @@ import BottomNavBar from "../components/Layout/BottomNavBar";
 import TopNavBar from "../components/Layout/TopNavBar";
 import codeit from "../assets/icons/codeit.png";
 import BookCard from "../components/BookCard";
+import BannerCard from "../components/BannerCard";
+import useUserStore from "../store/useUserStore";
+import LibrarySidebar from "../components/mapComponents/LibrarySidebar";
+import useLibrarySidebarStore from "../store/useLibrarySidebarStore";
 
 // --- 아이콘 임포트 ---
 import { ReactComponent as LibraryIcon } from "../assets/icons/library.svg";
@@ -15,16 +19,9 @@ import { ReactComponent as Library2 } from "../assets/icons/Library2.svg";
 import { ReactComponent as Library3 } from "../assets/icons/Library3.svg";
 import { ReactComponent as Library4 } from "../assets/icons/Library4.svg";
 
-import BannerCard from "../components/BannerCard";
-import useUserStore from "../store/useUserStore";
-
-import LibrarySidebar from "../components/mapComponents/LibrarySidebar";
-import useLibrarySidebarStore from "../store/useLibrarySidebarStore";
-
 const bannerData = [
   {
     id: 1,
-    // step이 없는 배너
     title: "집에서 잠든 책,\n우리 동네 도서관으로!",
     description: "상태 좋은 책 기증하고, \n지역화폐 리워드까지 받아가세요",
     icon: Library1,
@@ -53,7 +50,6 @@ const bannerData = [
   },
 ];
 
-// 나중에 AI API로 받아올 BookList 데이터
 const bookListData = [
   {
     id: 1,
@@ -91,30 +87,11 @@ const bookListData = [
     title: "사피엔스",
     author: "유발 하라리",
   },
-  {
-    id: 7,
-    imageUrl: "https://placehold.co/100x140",
-    title: "데미안",
-    author: "헤르만 헤세",
-  },
-  {
-    id: 8,
-    imageUrl: "https://placehold.co/100x140",
-    title: "파친코",
-    author: "이민진",
-  },
-  {
-    id: 9,
-    imageUrl: "https://placehold.co/100x140",
-    title: "역사의 쓸모",
-    author: "최태성",
-  },
 ];
 
 const MainPage = () => {
   const navigate = useNavigate();
   const toggleSidebar = useLibrarySidebarStore((state) => state.toggleSidebar);
-
   const user = useUserStore((state) => state.user);
   const userNickName = user?.nickname;
 
@@ -124,195 +101,169 @@ const MainPage = () => {
   const handle데려가기Button = () => navigate("/barcode/library/select/take");
 
   return (
-    <>
-      <PageWrapper>
-        <LibrarySidebar />
-        <TopNavBar
-          leftControls={
-            <TopNavBar.IconButton
-              onClick={toggleSidebar}
-              aria-label="도서관 사이드바"
-            >
-              <LibraryIcon width={24} height={24} />
-            </TopNavBar.IconButton>
-          }
-          title={<LogoContainer src={codeit} />}
-          rightControls={
-            <TopNavBar.IconButton
-              onClick={handleNotificationClick}
-              aria-label="알림 보기"
-            >
-              <BellIcon width={24} height={24} />
-            </TopNavBar.IconButton>
-          }
-        />
-
-        <MainContainer>
-          <SearchButton onClick={handleSearchClick}>
-            <SearchIcon width={24} height={24} />
-            관심있는 책을 검색해보세요!
-          </SearchButton>
-          <Title>
+    <PageWrapper>
+      <LibrarySidebar />
+      <TopNavBar
+        leftControls={
+          <TopNavBar.IconButton
+            onClick={toggleSidebar}
+            aria-label="도서관 사이드바"
+          >
             {" "}
-            <GreenTitle>북작북작</GreenTitle> 가이드
-          </Title>
-
-          <BannerWrapper>
-            {bannerData.map((banner) => (
-              <BannerCard
-                key={banner.id}
-                step={banner.step}
-                title={banner.title}
-                description={banner.description}
-                icon={banner.icon}
-              />
-            ))}
-          </BannerWrapper>
-
-          <ButtonWrapper>
-            <ActionButton1 onClick={handle나눔Button}>나눔하기</ActionButton1>
-            <ActionButton2 onClick={handle데려가기Button}>
-              데려가기
-            </ActionButton2>
-          </ButtonWrapper>
-
-          <Title>
-            AI가 고른 {userNickName ? userNickName : "아기사자"}님 취향 맞춤 책
-            리스트
-          </Title>
-
-          <BookGrid>
-            {bookListData.slice(0, 6).map((book) => (
-              <BookCard key={book.id} book={book} />
-            ))}
-          </BookGrid>
-
-          <Outlet />
-        </MainContainer>
-
-        <BottomNavBar />
-      </PageWrapper>
-    </>
+            <LibraryIcon fill={"#0D8847"} width={24} height={24} />{" "}
+          </TopNavBar.IconButton>
+        }
+        title={<LogoContainer src={codeit} />}
+        rightControls={
+          <TopNavBar.IconButton
+            onClick={handleNotificationClick}
+            aria-label="알림 보기"
+          >
+            {" "}
+            <BellIcon width={24} height={24} />{" "}
+          </TopNavBar.IconButton>
+        }
+      />
+      <MainContainer>
+        <SearchButton onClick={handleSearchClick}>
+          <SearchIcon fill={"#6F6F6F"} width={20} height={20} />
+          관심있는 책을 검색해보세요!
+        </SearchButton>
+        <Title>
+          <GreenTitle>북작북작</GreenTitle> 가이드
+        </Title>
+        <BannerWrapper>
+          {bannerData.map((banner) => (
+            <BannerCard key={banner.id} {...banner} />
+          ))}
+        </BannerWrapper>
+        <ButtonWrapper>
+          <ActionButton1 onClick={handle나눔Button}>나눔하기</ActionButton1>
+          <ActionButton2 onClick={handle데려가기Button}>데려가기</ActionButton2>
+        </ButtonWrapper>
+        <Title2>
+          AI가 고른 {userNickName || "아기사자"}님 취향 맞춤 책 리스트
+        </Title2>
+        <BookGrid>
+          {bookListData.slice(0, 6).map((book) => (
+            <BookCard key={book.id} book={book} />
+          ))}
+        </BookGrid>
+        <Outlet />
+      </MainContainer>
+      <BottomNavBar />
+    </PageWrapper>
   );
 };
 
 export default MainPage;
 
-// 콘텐츠를 담을 컨테이너
+// --- Styled Components (반응형 최종 수정) ---
+
+const PageWrapper = styled.div`
+  width: 100%;
+  max-width: 600px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+`;
+
 const MainContainer = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 24px;
-
   width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-
-  padding-top: 110px;
-  padding-bottom: 80px;
-  padding-left: 20px;
-  padding-right: 20px;
-
-  background-color: white;
-`;
-
-const PageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  padding: 80px 20px 80px 20px;
+  flex-grow: 1;
+  overflow-x: hidden; /* 자식 요소의 가로 오버플로우를 제어 */
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const LogoContainer = styled.img`
-  width: 50%;
-  max-width: 200px;
+  height: 20px;
+  width: auto;
 `;
 
 const SearchButton = styled.button`
   display: flex;
   align-items: center;
+  gap: 8px;
   font-weight: 500;
-
   width: 100%;
-  height: 38px;
-
-  background-color: #e6f4f0;
+  height: 42px;
+  background-color: #f0f2f5;
   border: none;
   border-radius: 50px;
   color: #6f6f6f;
   cursor: pointer;
-
   font-size: 14px;
-  padding: 0 16px;
-
-  svg {
-    margin-right: 8px;
-  }
+  padding: 16px 16px;
 `;
 
-const ActionButton1 = styled.button`
+const ActionButton = styled.button`
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 150px;
+  flex: 1;
   height: 47px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  padding: 0 8px;
+  white-space: nowrap;
+  &:hover {
+    opacity: 0.9;
+  }
+`;
 
+const ActionButton1 = styled(ActionButton)`
   background-color: #11b55f;
   color: white;
   border: none;
-  border-radius: 20px;
-
-  font-size: 16px;
-
-  cursor: pointer;
-  transition: opacity 0.2s;
-
-  &:hover {
-    opacity: 0.9;
-  }
 `;
 
-const ActionButton2 = styled.button`
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 150px;
-  height: 47px;
-
+const ActionButton2 = styled(ActionButton)`
   background-color: transparent;
-  color: #009466;
+  color: #11b55f;
   border: 2px solid #11b55f;
-  border-radius: 20px;
-
-  font-size: 16px;
-
-  cursor: pointer;
-  transition: opacity 0.2s;
-
-  &:hover {
-    opacity: 0.9;
-  }
 `;
 
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
-  gap: 30px;
+  width: 100%;
+  gap: 12px;
 `;
 
 const Title = styled.h1`
   width: 100%;
   text-align: left;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
-  cursor: default;
+`;
+
+const Title2 = styled.h2`
+  width: 100%;
+  text-align: left;
+  font-size: 19px;
+  font-weight: bold;
 `;
 
 const BannerWrapper = styled.div`
   display: flex;
   overflow-x: auto;
   gap: 16px;
-  width: 100%;
+  width: calc(100% + 40px);
+  margin: 0 -20px;
+  padding: 4px 20px;
+  min-height: 220px;
 
   &::-webkit-scrollbar {
     display: none;
@@ -325,10 +276,7 @@ const GreenTitle = styled.span`
 
 const BookGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(
-    3,
-    1fr
-  ); /* 3개의 열을 동일한 너비로 만듭니다. */
-  gap: 16px; /* 아이템 사이의 간격 */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
   width: 100%;
 `;

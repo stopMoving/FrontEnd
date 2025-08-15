@@ -10,8 +10,11 @@ export default function BookListPanel({
   items=[],
   unit,
   buttonLabel,
+  quantity,
   disabled = false,
   onNext,
+  onQuantityChange,
+  onAddClick,
 }) {
   const navigate = useNavigate();
   console.log('BookListPanel에 전달된 mode 값:', mode);
@@ -44,11 +47,16 @@ export default function BookListPanel({
 
               <SubWrap>
                 <QuantityWrap>
-                  <QuantityBtn>-</QuantityBtn>
-                  <Quantity>1권</Quantity>
-                  <QuantityBtn>+</QuantityBtn>
+                  <QuantityBtn onClick={() => onQuantityChange(-1)}>-</QuantityBtn>
+                  <Quantity>{quantity}권</Quantity>
+                  <QuantityBtn onClick={() => onQuantityChange(1)}>+</QuantityBtn>
                 </QuantityWrap>
-                <Price>{book?.price || "-"}{unit}</Price>
+
+                {mode === "give" ? (
+                  <Point>500P</Point>
+                ) : (
+                <Price>{book?.price원 || "2000"}원</Price>
+                )}
               </SubWrap>
             </BookInfoWrap>
             
@@ -56,7 +64,7 @@ export default function BookListPanel({
         </BookListWrap>
       </Inner>
 
-      <AddButton>+</AddButton>
+      <AddButton onClick={onAddClick}>+</AddButton>
 
       <BottomBar>
         <NextBtn disabled={disabled} onClick={onNext}>
@@ -191,6 +199,12 @@ const Quantity = styled.div`
   font-weight: 400;
 `;
 
+const Point = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  color: #000000;
+`;
+
 const Price = styled.div`
   font-size: 16px;
   font-weight: 600;
@@ -198,6 +212,9 @@ const Price = styled.div`
 `;
 
 const AddButton = styled.button`
+  position: absolute;
+  right: 20px;
+  bottom: 100px;
   width: 60px;
   height: 60px;
   color: #FFFFFF;
@@ -206,6 +223,7 @@ const AddButton = styled.button`
   border: none;
   font-size: 40px;
   z-index: 100;
+  cursor: pointer;
 `;
 
 const BottomBar = styled.div`
@@ -216,7 +234,7 @@ const BottomBar = styled.div`
   width: 100%;
   max-width: 600px;
   padding: 0 20px;
-  z-index: 10px;
+  z-index: 10;
 `;
 
 const NextBtn = styled.button`

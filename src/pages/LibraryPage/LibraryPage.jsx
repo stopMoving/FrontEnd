@@ -2,21 +2,19 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
 
-// Swiper 관련 import
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay, Mousewheel } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
-// 아이콘 및 컴포넌트 import (경로는 실제 프로젝트에 맞게 수정)
 import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
 import { ReactComponent as InfoIcon } from "../../assets/icons/infoIcon.svg";
 import { ReactComponent as StarIcon } from "../../assets/icons/fullStarIcon.svg";
 import { ReactComponent as StarOutlineIcon } from "../../assets/icons/outlineStar.svg";
+import { ReactComponent as SearchIcon } from "../../assets/icons/search.svg";
 import { ReactComponent as ChevronRightIcon } from "../../assets/icons/nextIcon.svg";
 import BookCard from "../../components/BookCard";
 
-// --- 목업(Mockup) 데이터 ---
 const fetchLibraryPageData = async (libraryId) => {
   console.log(`${libraryId} 페이지 데이터 요청`);
 
@@ -139,13 +137,13 @@ const LibraryPage = () => {
           </FavoriteButton>
         </LibraryHeader>
 
+        <SectionHeader>
+          <SectionTitle>{library.name}에 나눔된 모든 책</SectionTitle>
+          <MoreLink to={`/library/${library.id}/shared`}>
+            더보기 <ChevronRightIcon width={16} height={16} />
+          </MoreLink>
+        </SectionHeader>
         <SwiperSection>
-          <SectionHeader>
-            <SectionTitle>{library.name}에 나눔된 모든 책</SectionTitle>
-            <MoreLink to={`/library/${library.id}/shared`}>
-              더보기 <ChevronRightIcon width={16} height={16} />
-            </MoreLink>
-          </SectionHeader>
           <CenteredSwiperWrapper>
             <Swiper
               modules={[Navigation, Autoplay, Mousewheel]}
@@ -158,7 +156,7 @@ const LibraryPage = () => {
               centeredSlides={true}
               slidesPerView={"auto"}
               spaceBetween={16}
-              navigation={true} // 버튼이 필요 없다면 false로 변경
+              navigation={true}
             >
               {sharedBooks.map((book, index) => (
                 <SwiperSlide
@@ -173,8 +171,8 @@ const LibraryPage = () => {
         </SwiperSection>
 
         <SearchPlaceholder>
-          {/* 여기에 검색 컴포넌트를 작성하면 됩니다 */}
-          🔍 {library.name}에 있는 책을 검색해보세요!
+          <SearchIcon width={20} height={20} /> {library.name}에 있는 책을
+          검색해보세요!
         </SearchPlaceholder>
 
         <Section>
@@ -212,7 +210,7 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 60px 20px 20px;
+  padding: 50px 20px 20px;
   flex-grow: 1;
   overflow-y: auto;
   overflow-x: hidden;
@@ -222,7 +220,8 @@ const PageContainer = styled.div`
   }
 
   @media (max-width: 480px) {
-    padding: 60px 16px 20px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 `;
 
@@ -260,7 +259,7 @@ const LibraryImage = styled.img`
 `;
 
 const LibraryTitle = styled(Link)`
-  font-size: 22px;
+  font-size: 30px;
   font-weight: bold;
   color: black;
   text-decoration: none;
@@ -271,7 +270,7 @@ const LibraryTitle = styled(Link)`
   min-width: 0;
 
   @media (max-width: 480px) {
-    font-size: 18px;
+    font-size: 28px;
   }
 `;
 
@@ -295,6 +294,7 @@ const SectionHeader = styled.div`
   align-items: center;
   margin-bottom: 16px;
   gap: 8px;
+  width: 100%;
 `;
 
 const SectionTitle = styled.h2`
@@ -323,8 +323,13 @@ const SearchPlaceholder = styled.div`
   border-radius: 50px;
   color: #6f6f6f;
   font-size: 14px;
+  font-weight: 600;
   text-align: center;
   margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  justify-center: center;
+  gap: 8px;
 `;
 
 const HorizontalScroll = styled.div`
@@ -346,10 +351,15 @@ const BookCardWrapper = styled.div`
 
 const SwiperSection = styled(Section)`
   background-color: #e6f4f0;
-  border-radius: 16px;
   padding: 20px 0;
-  width: 100%;
-  overflow: hidden;
+  margin-bottom: 32px;
+
+  width: calc(100% + 40px);
+  margin-left: -16px;
+  margin-right: -16px;
+
+  // min-height: 300px
+  // overflow: hidden;
 `;
 
 const CenteredSwiperWrapper = styled.div`
@@ -373,6 +383,10 @@ const CenteredSwiperWrapper = styled.div`
     color: #4f614a;
     top: 50%;
     transform: translateY(-50%);
+
+    @media (max-width: 480px) {
+      display: none;
+    }
   }
   .swiper-button-prev::after,
   .swiper-button-next::after {

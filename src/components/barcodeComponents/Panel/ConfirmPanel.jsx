@@ -34,12 +34,11 @@ export default function ConfirmPanel({
               <Sub>가격 | <del>{book?.regular_price || "-"}</del>원</Sub>
             )}
           </Meta>
-<<<<<<< HEAD
 
           {mode === "give" ? (
             <Point>500P</Point>
           ) : (
-            <Price>({book?.price}원 || "2000원")</Price>
+            <Price>{book?.price원 || "2000"}원</Price>
           )}
 
           <Isbn>ISBN 코드: {book?.isbn || "-"}</Isbn>
@@ -50,13 +49,6 @@ export default function ConfirmPanel({
             <QuantityBtn>+</QuantityBtn>
           </QuantityWrap>
           
-=======
-            <Price>
-                {book?.price || "-"}{mode === "give" ? "P" : "원"}
-            </Price>
-            <Isbn>ISBN 코드: {book?.isbn || "-"}</Isbn>
-            
->>>>>>> 72b31f74fd623f9014c8ae49b1ca770c11bde409
           <Buttons>
             <AgainBtn onClick={onPrimary} disabled={loading}>
               {STEP1_PRIMARY}

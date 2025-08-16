@@ -78,7 +78,7 @@ const NextButton = styled.button`
   height: 52px;
   border-radius: 5px;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 600;
   border: 0;
   color: #fff;
   background: ${(p) => (p.disabled ? "#DEDEDE" : "#11B55F")};

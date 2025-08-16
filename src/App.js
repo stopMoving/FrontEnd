@@ -10,11 +10,8 @@ import useUserStore from "./store/useUserStore";
 import { Toaster } from "./store/useToasterStore";
 import SelectPage from "./pages/BarcodePage/SelectPage";
 import ScanPage from "./pages/BarcodePage/ScanPage";
-
-import UploadPage from "./pages/BarcodePage/UploadPage";
 import BookListPage from "./pages/BarcodePage/BookListPage";
 import LibrarySelectPage from "./pages/BarcodePage/LibrarySelectPage";
-import InputPage from "./pages/BarcodePage/InputPage";
 import LibraryDetailPage from "./pages/LibraryPage/LibraryDetailPage";
 import LibraryPage from "./pages/LibraryPage/LibraryPage";
 
@@ -49,8 +46,6 @@ const App = () => {
         />
         <Route path="barcode/select/:mode" element={<SelectPage />} />
         <Route path="barcode/scan/:mode" element={<ScanPage />} />
-        <Route path="barcode/upload/:mode" element={<UploadPage />} />
-        <Route path="barcode/input_ISBN/:mode" element={<InputPage />} />
         <Route path="barcode/booklist/:mode" element={<BookListPage />} />
       </Routes>
       <Toaster />

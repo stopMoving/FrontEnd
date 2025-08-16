@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import StepHeader from "../StepHeader";
+import BottomSheetWrapper from "./BottomSheetWrapper";
+import ImageUploadPanel from "../ImageUploadPanel";
+import ISBNInputPanel from "../ISBNInputPanel";
 import { ReactComponent as CameraIcon } from "../../../assets/icons/camera.svg";
 import { ReactComponent as ImageUploadIcon} from "../../../assets/icons/imageUpload.svg";
 import { ReactComponent as InputISBNIcon} from "../../../assets/icons/inputISBN.svg";
@@ -12,10 +16,11 @@ export default function SelectPanel({
   libraryId
 }) {
   const navigate = useNavigate();
-  
-  // const getScanUrl = (path) => {
-  //   return `${path}/${mode}?branchId=${encodeURIComponent(libraryId)}`;
-  // }
+  const [activeSheet, setActiveSheet] = useState(null);
+
+  const handleOpenSheet = (sheetType) => {
+    setActiveSheet(sheetType);
+  }
 
   return (
     <Wrap>
@@ -34,17 +39,34 @@ export default function SelectPanel({
             카메라로 바코드 인식
           </Btn>
 
-          <Btn onClick={() => navigate(`/barcode/upload/${mode}?branchId=${encodeURIComponent(libraryId)}`)}>
+          <Btn onClick={() => handleOpenSheet('image')}>
             <ImageUploadIcon width={32} height={32} />
             바코드 사진 업로드
           </Btn>
 
-          <Btn onClick={() => navigate(`/barcode/input_ISBN/${mode}?branchId=${encodeURIComponent(libraryId)}`)}>
+          <Btn onClick={() => handleOpenSheet('isbn')}>
             <InputISBNIcon width={32} height={32} />
             ISBN 코드 직접 입력
           </Btn>
         </Buttons>
       </Inner>
+
+      <BottomSheetWrapper isOpen={activeSheet !== null} onClose={() => setActiveSheet(null)}>
+        {activeSheet === 'image' && (
+          <ImageUploadPanel
+            onClose={() => setActiveSheet(null)}
+            mode={mode}
+            libraryId={libraryId}
+          />
+        )}
+        {activeSheet === 'isbn' && (
+          <ISBNInputPanel
+            onClose={() => setActiveSheet(null)}
+            mode={mode}
+            libraryId={libraryId}
+          />
+        )}
+      </BottomSheetWrapper>
     </Wrap>
   );
 }

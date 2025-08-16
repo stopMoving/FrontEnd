@@ -6,6 +6,8 @@ export default function ConfirmModal({
   mode= "give",       // ← give/take
   book,
   loading,
+  quantity,
+  onQuantityChange,
   onPrimary,
   onSecondary,
   onClose,
@@ -19,6 +21,8 @@ export default function ConfirmModal({
           mode={mode}
           book={book}
           loading={loading}
+          quantity={quantity}
+          onQuantityChange={onQuantityChange}
           onPrimary={onPrimary}
           onSecondary={onSecondary}
         />

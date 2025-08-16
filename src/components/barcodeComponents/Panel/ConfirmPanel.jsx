@@ -5,8 +5,10 @@ export default function ConfirmPanel({
   step = 1,
   book,
   loading = false,
-  onPrimary,   // step1: 다시 찍기, step2: 아니오(완료)
-  onSecondary, // step1: 확인 → step2로, step2: 네(추가)
+  quantity,
+  onQuantityChange,
+  onPrimary,   // step1: 다시 찍기
+  onSecondary, // step1: 확인 → step2로
 }) {
   const STEP1_TITLE = "이 책이 맞는지 확인해주세요.";
   const STEP1_PRIMARY = "다시 찍기";
@@ -44,9 +46,9 @@ export default function ConfirmPanel({
           <Isbn>ISBN 코드: {book?.isbn || "-"}</Isbn>
 
           <QuantityWrap>
-            <QuantityBtn>-</QuantityBtn>
-            <Quantity>1권</Quantity>
-            <QuantityBtn>+</QuantityBtn>
+            <QuantityBtn onClick={() => onQuantityChange(-1)}>-</QuantityBtn>
+            <Quantity>{quantity}권</Quantity>
+            <QuantityBtn onClick={() => onQuantityChange(1)}>+</QuantityBtn>
           </QuantityWrap>
           
           <Buttons>
@@ -179,7 +181,7 @@ const QuantityWrap = styled.div`
   align-items: center;
 `;
 
-const QuantityBtn = styled.div`
+const QuantityBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;

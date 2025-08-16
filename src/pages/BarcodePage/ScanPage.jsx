@@ -14,6 +14,7 @@ export default function ScanPage() {
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(false);
   const [retakeCount, setRetakeCount] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   const [isbnCart, setIsbnCart] = useState([]);
   const [searchParams] = useSearchParams();
 
@@ -28,6 +29,10 @@ export default function ScanPage() {
     ? isbn.replace(/^(\d{3})(\d{2})(\d{4})(\d{3})(\d{1})$/,
         "$1-$2-$3-$4-$5")
     : "-";
+    };
+
+    const handleQuantityChange = (change) => {
+      setQuantity(prev => Math.max(1, prev + change));
     };
 
   // 스캔 성공 시 (조회))
@@ -79,6 +84,7 @@ export default function ScanPage() {
         });
 
         // 모달 열면 CameraScan에서 paused={modalOpen}으로 일시정지됨
+        setQuantity(1);
         setStep(1);
         setModalOpen(true);
     } catch (e) {
@@ -102,7 +108,11 @@ export default function ScanPage() {
   const handleConfirm = async () => {
     if (!book?.isbn) return;
 
-    addScannedBook(book);
+    addScannedBook({
+      ...book,
+      quantity: quantity,
+      isbn: book.isbn
+    });
     // setIsbnCart((prev) => {
     //   const next = new Set(prev);
     //   next.add(book.rawIsbn);
@@ -194,9 +204,11 @@ export default function ScanPage() {
       <ConfirmModal
         open={modalOpen}
         step={step}
-        mode={mode} // give | take
+        mode={mode}
         book={book}
         loading={loading}
+        quantity = {quantity}
+        onQuantityChange={handleQuantityChange}
         onPrimary={step === 1 ? handleRetake  : handleFinish}
         onSecondary={step === 1 ? handleConfirm : handleAddMore}
         onClose={() => setModalOpen(false)}

@@ -14,7 +14,7 @@ const useBookStore = create((set) => ({
                 };
             }
             return {
-                scannedBooks: [...state.scannedBooks, { ...book, quantity: 1 }],
+                scannedBooks: [...state.scannedBooks, { ...book, quantity: book.quantity }],
             };
         });
     },

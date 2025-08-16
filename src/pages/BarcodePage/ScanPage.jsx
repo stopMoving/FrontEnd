@@ -102,10 +102,7 @@ export default function ScanPage() {
   const handleConfirm = async () => {
     if (!book?.isbn) return;
 
-    addScannedBook({
-      ...book,
-      isbn: book.isbn.replace(/-/g, '')
-    });
+    addScannedBook(book);
     // setIsbnCart((prev) => {
     //   const next = new Set(prev);
     //   next.add(book.rawIsbn);

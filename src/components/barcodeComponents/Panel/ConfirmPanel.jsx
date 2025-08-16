@@ -65,12 +65,11 @@ export default function ConfirmPanel({
 
 const Wrap = styled.div`
   width: 335px;
-  height: ${({ $step }) => ($step === 1 ? "560px" : "232px")};
+  min-height: 560px;
   border-radius: 10px;
   background: #ffffff;
   padding: 40px 16px;
   gap: 40px;
-  transition: height 0.2s ease;
 `;
 
 const Title = styled.div`

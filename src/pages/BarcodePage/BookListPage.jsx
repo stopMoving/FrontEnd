@@ -1,7 +1,7 @@
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import BookListPanel from "../../components/barcodeComponents/Panel/BookListPanel";
 import CompleteModal from "./CompleteModal";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import useBookStore from "../../store/useBookStore";
 
 export default function BookListPage() {
@@ -13,9 +13,19 @@ export default function BookListPage() {
   const [completeOpen, setCompleteOpen] = useState(false);
   const { scannedBooks, updateBookQuantity } = useBookStore();
 
-  //연결하기
-  const count = 3;
-  const points = 1200;
+  const {totalCount, totalPoints } = useMemo(() => {
+    let count = 0;
+    let points = 0;
+
+    scannedBooks.forEach(book => {
+      count += book.quantity;
+
+      if (mode === "give") {
+        points += book.quantity * 500;
+      }
+    });
+    return { totalCount: count, totalPoints: points };
+  }, [scannedBooks, mode]);
 
   const copy = mode === "give"
     ? {
@@ -48,8 +58,8 @@ export default function BookListPage() {
     <CompleteModal
       open={completeOpen}
       mode={mode}
-      count={count}
-      points={points}
+      count={totalCount}
+      points={totalPoints}
       onPrimary={() => {
         setCompleteOpen(false);
       }}

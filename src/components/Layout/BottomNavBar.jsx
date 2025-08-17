@@ -11,11 +11,21 @@ import { ReactComponent as AiIcon } from "../../assets/icons/AI.svg";
 import { ReactComponent as MypageIcon } from "../../assets/icons/mypageIcon.svg";
 
 const navItems = [
-  { id: 1, Iconlabel: "책 나눔하기", component: BookShareIcon, path: "/" },
-  { id: 2, Iconlabel: "책 데려가기", component: BookTakeIcon, path: "/" },
+  {
+    id: 1,
+    Iconlabel: "책 나눔하기",
+    component: BookShareIcon,
+    path: "/barcode/library/select/give",
+  },
+  {
+    id: 2,
+    Iconlabel: "책 데려가기",
+    component: BookTakeIcon,
+    path: "/barcode/library/select/take",
+  },
   { id: 3, Iconlabel: "홈", component: HomeIcon, path: "/" },
   { id: 4, Iconlabel: "AI", component: AiIcon, path: "/" },
-  { id: 5, Iconlabel: "마이페이지", component: MypageIcon, path: "/" },
+  { id: 5, Iconlabel: "마이페이지", component: MypageIcon, path: "/mypage" },
 ];
 
 const BottomNavBar = () => {
@@ -30,7 +40,7 @@ const BottomNavBar = () => {
           <NavButton
             key={item.id}
             label={item.Iconlabel}
-            component={item.component} // 아이콘 '컴포넌트'를 그대로 전달
+            component={item.component}
             onClick={() => navigate(item.path)}
             // 현재 경로와 버튼의 경로가 일치하는지 확인하여 활성화 상태를 전달
             isActive={currentPath === item.path}

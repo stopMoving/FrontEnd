@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import BottomNavBar from "../components/Layout/BottomNavBar";
 import TopNavBar from "../components/Layout/TopNavBar";
 import codeit from "../assets/icons/codeit.png";
@@ -96,9 +96,9 @@ const MainPage = () => {
   const userNickName = user?.nickname;
 
   const handleNotificationClick = () => navigate("/notifications");
-  const handleSearchClick = () => navigate("/search");
-  const handle나눔Button = () => navigate("/");
-  const handle데려가기Button = () => navigate("/");
+  const handleSearchClick = () => navigate("/search/book");
+  const handle나눔Button = () => navigate("/barcode/library/select/give");
+  const handle데려가기Button = () => navigate("/barcode/library/select/take");
 
   return (
     <PageWrapper>
@@ -124,6 +124,7 @@ const MainPage = () => {
           </TopNavBar.IconButton>
         }
       />
+
       <MainContainer>
         <SearchButton onClick={handleSearchClick}>
           <SearchIcon fill={"#6F6F6F"} width={20} height={20} />
@@ -178,7 +179,7 @@ const MainContainer = styled.main`
   width: 100%;
   padding: 80px 20px 80px 20px;
   flex-grow: 1;
-  overflow-x: hidden; /* 자식 요소의 가로 오버플로우를 제어 */
+  overflow-x: hidden;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -218,21 +219,36 @@ const ActionButton = styled.button`
   transition: opacity 0.2s;
   padding: 0 8px;
   white-space: nowrap;
-  &:hover {
-    opacity: 0.9;
-  }
 `;
 
 const ActionButton1 = styled(ActionButton)`
   background-color: #11b55f;
   color: white;
   border: none;
+  &:hover {
+    background-color: #0fa356;
+    transition: 0.3s ease;
+  }
+
+  &:active {
+    background-color: #0e914c;
+  }
 `;
 
 const ActionButton2 = styled(ActionButton)`
   background-color: transparent;
   color: #11b55f;
   border: 2px solid #11b55f;
+
+  &:hover {
+    background-color: #dbf4e7;
+    border: 2px solid transparent;
+    transition: 0.3s ease;
+  }
+
+  &:active {
+    background-color: #b5e8cd;
+  }
 `;
 
 const ButtonWrapper = styled.div`

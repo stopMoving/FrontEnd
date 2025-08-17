@@ -16,9 +16,12 @@ const Button = styled.button`
 
   transition: background-color 0.2s ease-in-out;
 
-  &:hover,
+  &:hover {
+    background-color: #0fa356;
+  }
+
   &:active {
-    background-color: #7760b4;
+    background-color: #0e914c;
   }
 `;
 

@@ -55,7 +55,7 @@ const BarcodeScanner = () => {
     const digits = String(text).replace(/[^0-9]/g, "");
     if (/^97[89]\d{10}$/.test(digits) && isValidEan13(digits)) {
       setResult(`✅ ISBN: ${digits}`);
-      fetch(`https://stopmoving.p-e.kr/bookinfo/lookup/?isbn=${digits}`)
+      fetch(`https://stopmoving.o-r.kr/bookinfo/lookup/?isbn=${digits}`)
         .then(res => res.json())
         .then(data => console.log("서버 응답:", data))
         .catch(err => console.error("전송 실패:", err));

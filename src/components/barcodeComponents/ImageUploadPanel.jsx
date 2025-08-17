@@ -61,7 +61,7 @@
 //           throw new Error("로그인이 필요합니다.");
 //         }
 
-//         const url = `https://stopmoving.p-e.kr/bookinfo/donate/?isbn=${digits}`;
+//         const url = `https://stopmoving.o-r.kr/bookinfo/donate/?isbn=${digits}`;
 //         const fetchRes = await fetch(url, {
 //           method: "GET",
 //           headers: {
@@ -239,7 +239,7 @@ export default function ImageUploadPanel({
           throw new Error("로그인이 필요합니다.");
         }
 
-        const url = `https://stopmoving.p-e.kr/bookinfo/donate/?isbn=${digits}`;
+        const url = `https://stopmoving.o-r.kr/bookinfo/donate/?isbn=${digits}`;
         const fetchRes = await fetch(url, {
           method: "GET",
           headers: {

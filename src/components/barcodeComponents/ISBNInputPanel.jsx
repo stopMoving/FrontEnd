@@ -58,7 +58,7 @@
 //     }
 
 //     try {
-//       const url = `https://stopmoving.p-e.kr/bookinfo/donate/?isbn=${isbn}`;
+//       const url = `https://stopmoving.o-r.kr/bookinfo/donate/?isbn=${isbn}`;
 //         const res = await fetch(url, {
 //           method: "GET",
 //           headers: {
@@ -151,7 +151,7 @@ export default function ISBNInputPanel({ onClose, onConfirm }) { // ✅ onConfir
     }
 
     try {
-        const url = `https://stopmoving.p-e.kr/bookinfo/donate/?isbn=${isbn}`;
+        const url = `https://stopmoving.o-r.kr/bookinfo/donate/?isbn=${isbn}`;
         const res = await fetch(url, {
           method: "GET",
           headers: { Authorization: `Bearer ${accessToken}` },

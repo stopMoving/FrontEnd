@@ -49,7 +49,7 @@ export default function ScanPage() {
 
     setLoading(true);
     try {
-        const url = `https://stopmoving.p-e.kr/bookinfo/donate/?isbn=${digits}`;
+        const url = `https://stopmoving.o-r.kr/bookinfo/donate/?isbn=${digits}`;
         const res = await fetch(url, {
           method: "GET",
           headers: {
@@ -141,7 +141,7 @@ export default function ScanPage() {
         library_id: Number(libraryId),
         isbn: isbnCart,
       };
-      const res = await fetch(`https://stopmoving.p-e.kr/books/donate/`, {
+      const res = await fetch(`https://stopmoving.o-r.kr/books/donate/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

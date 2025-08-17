@@ -45,6 +45,7 @@ export default function SelectPanel({
   const [activeSheet, setActiveSheet] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [bookData, setBookData] = useState(null);
+  const { addScannedBook } = useBookStore();
 
   const handleOpenSheet = (sheetType) => {
     setActiveSheet(sheetType);
@@ -60,8 +61,12 @@ export default function SelectPanel({
   
   // ✅ ConfirmModal에서 "확인" 버튼 클릭 시 호출될 함수
   const handleConfirmAction = () => {
+    addScannedBook({
+      ...bookData,
+      isbn: bookData.isbn
+    });
     setIsConfirmModalOpen(false);
-    navigate(`/barcode/scan/${mode}?branchId=${encodeURIComponent(libraryId)}&isbn=${bookData.isbn}`);
+    navigate(`/barcode/booklist/${mode}?branchId=${encodeURIComponent(libraryId)}&isbn=${bookData.isbn}`);
   };
   
   return (
@@ -97,6 +102,7 @@ export default function SelectPanel({
         {activeSheet === 'image' && (
           <ImageUploadPanel
             onClose={() => setActiveSheet(null)}
+            onConfirm={handleConfirm}
             mode={mode}
             libraryId={libraryId}
           />
@@ -104,6 +110,7 @@ export default function SelectPanel({
         {activeSheet === 'isbn' && (
           <ISBNInputPanel
             onClose={() => setActiveSheet(null)}
+            onConfirm={handleConfirm}
             mode={mode}
             libraryId={libraryId}
           />

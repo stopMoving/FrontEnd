@@ -11,7 +11,7 @@ export default function ConfirmPanel({
   onSecondary, // step1: 확인 → step2로
 }) {
   const STEP1_TITLE = "이 책이 맞는지 확인해주세요.";
-  const STEP1_PRIMARY = "다시 찍기";
+  const STEP1_PRIMARY = "다시 스캔";
   const STEP1_SECONDARY = "확인";
 
   return (

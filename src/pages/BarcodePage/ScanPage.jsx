@@ -31,9 +31,9 @@ export default function ScanPage() {
     : "-";
     };
 
-    const handleQuantityChange = (change) => {
-      setQuantity(prev => Math.max(1, prev + change));
-    };
+  const handleQuantityChange = (change) => {
+    setQuantity(prev => Math.max(1, prev + change));
+  };
 
   // 스캔 성공 시 (조회))
   const handleDetected = async (text) => {
@@ -58,11 +58,7 @@ export default function ScanPage() {
         });
 
         const textBody = await res.text();
-        let data = null;
-        try {
-          data = textBody ? JSON.parse(textBody) : null;
-        }
-        catch {}
+        const data = textBody ? JSON.parse(textBody) : null;
         
         if (!res.ok) {
           if (res.status === 400) throw new Error("잘못된 요청입니다. ISBN을 확인해주세요.");
@@ -120,7 +116,7 @@ export default function ScanPage() {
     // });
     // setStep(2);
     setModalOpen(false);
-    navigate(`/barcode/booklist/${mode}`);
+    navigate(`/barcode/booklist/${mode}?branchId=${encodeURIComponent(libraryId)}`);
   };
 
   // === step 2 버튼: 아니오, 완료 ===
@@ -209,8 +205,8 @@ export default function ScanPage() {
         loading={loading}
         quantity = {quantity}
         onQuantityChange={handleQuantityChange}
-        onPrimary={step === 1 ? handleRetake  : handleFinish}
-        onSecondary={step === 1 ? handleConfirm : handleAddMore}
+        onPrimary={handleRetake}
+        onSecondary={handleConfirm}
         onClose={() => setModalOpen(false)}
       />
     </Screen>

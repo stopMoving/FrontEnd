@@ -1,119 +1,120 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import axios from "../../lib/axios";
+import Button from "../../components/style/Button";
 
-// Swiper 관련 import
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay, Mousewheel } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
-// 아이콘 및 컴포넌트 import (경로는 실제 프로젝트에 맞게 수정)
 import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
 import { ReactComponent as InfoIcon } from "../../assets/icons/infoIcon.svg";
 import { ReactComponent as StarIcon } from "../../assets/icons/fullStarIcon.svg";
 import { ReactComponent as StarOutlineIcon } from "../../assets/icons/outlineStar.svg";
+import { ReactComponent as SearchIcon } from "../../assets/icons/search.svg";
 import { ReactComponent as ChevronRightIcon } from "../../assets/icons/nextIcon.svg";
 import BookCard from "../../components/BookCard";
+import useUserStore from "../../store/useUserStore";
 
-// --- 목업(Mockup) 데이터 ---
-const fetchLibraryPageData = async (libraryId) => {
-  console.log(`${libraryId} 페이지 데이터 요청`);
-
-  const sharedBooksData = [
-    {
-      id: 101,
-      title: "증정책 제목",
-      author: "저자",
-      imageUrl: "https://placehold.co/120x168?text=증정책",
-    },
-    {
-      id: 102,
-      title: "대형책 제목",
-      author: "저자",
-      imageUrl: "https://placehold.co/120x168?text=대형책",
-    },
-    {
-      id: 103,
-      title: "증정책 제목",
-      author: "저자",
-      imageUrl: "https://placehold.co/120x168?text=증정책",
-    },
-    {
-      id: 104,
-      title: "대형책 제목",
-      author: "저자",
-      imageUrl: "https://placehold.co/120x168?text=대형책",
-    },
-  ];
-
-  return {
-    library: {
-      id: libraryId,
-      name: "김영삼도서관",
-      imageUrl: "https://placehold.co/80x80/E6F4F0/4F614A?text=도서관",
-    },
-    sharedBooks: [...sharedBooksData, ...sharedBooksData, ...sharedBooksData],
-    recommendedBooks: [
-      {
-        id: 201,
-        title: "취향 맞춤 책 1",
-        author: "저자1",
-        imageUrl: "https://placehold.co/100x140",
-      },
-      {
-        id: 202,
-        title: "취향 맞춤 책 2",
-        author: "저자2",
-        imageUrl: "https://placehold.co/100x140",
-      },
-      {
-        id: 203,
-        title: "취향 맞춤 책 3",
-        author: "저자3",
-        imageUrl: "https://placehold.co/100x140",
-      },
-      {
-        id: 204,
-        title: "취향 맞춤 책 4",
-        author: "저자4",
-        imageUrl: "https://placehold.co/100x140",
-      },
-      {
-        id: 205,
-        title: "취향 맞춤 책 5",
-        author: "저자5",
-        imageUrl: "https://placehold.co/100x140",
-      },
-      {
-        id: 206,
-        title: "취향 맞춤 책 6",
-        author: "저자6",
-        imageUrl: "https://placehold.co/100x140",
-      },
-    ],
-  };
-};
+const mockRecommendedBooks = [
+  {
+    id: 201,
+    isbn: "mock-isbn-201",
+    title: "취향 맞춤 책 1",
+    author: "저자1",
+    imageUrl: "https://placehold.co/100x140?text=추천1",
+  },
+  {
+    id: 202,
+    isbn: "mock-isbn-202",
+    title: "취향 맞춤 책 2",
+    author: "저자2",
+    imageUrl: "https://placehold.co/100x140?text=추천2",
+  },
+  {
+    id: 203,
+    isbn: "mock-isbn-203",
+    title: "취향 맞춤 책 3",
+    author: "저자3",
+    imageUrl: "https://placehold.co/100x140?text=추천3",
+  },
+  {
+    id: 204,
+    isbn: "mock-isbn-204",
+    title: "취향 맞춤 책 4",
+    author: "저자4",
+    imageUrl: "https://placehold.co/100x140?text=추천4",
+  },
+];
 
 const LibraryPage = () => {
   const { libraryId } = useParams();
   const navigate = useNavigate();
-  const [data, setData] = useState(null);
-  const [isFavorite, setIsFavorite] = useState(false); // 즐겨찾기 상태
+  const { user } = useUserStore();
+
+  const { state } = useLocation();
+  const libraryName = state?.name;
+
+  const [sharedBooks, setSharedBooks] = useState([]);
+  const [recommendedBooks, setRecommendedBooks] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
-    const loadData = async () => {
-      const pageData = await fetchLibraryPageData(libraryId);
-      setData(pageData);
+    if (!libraryName) {
+      setError("도서관 정보를 찾을 수 없습니다.");
+      setIsLoading(false);
+      // navigate(-1);
+      return;
+    }
+
+    const loadBookList = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const response = await axios.get(`library/booklist/${libraryId}`);
+        setSharedBooks(response.data);
+        console.log(sharedBooks);
+
+        setRecommendedBooks(mockRecommendedBooks);
+      } catch (err) {
+        if (err.response && err.response.data && err.response.data.message) {
+          setError(err.response.data.message);
+        } else {
+          setError("책 목록을 불러오는 중 문제가 발생했습니다.");
+        }
+        console.error("Failed to fetch book list:", err);
+      } finally {
+        setIsLoading(false);
+      }
     };
-    loadData();
-  }, [libraryId]);
 
-  if (!data) {
-    return <PageContainer>로딩 중...</PageContainer>;
-  }
+    loadBookList();
+  }, [libraryId, libraryName, navigate]);
 
-  const { library, sharedBooks, recommendedBooks } = data;
+  if (isLoading)
+    return (
+      <PageWrapper>
+        <StatusContainer>
+          <h2>로딩 중...</h2>
+        </StatusContainer>
+      </PageWrapper>
+    );
+  if (error)
+    return (
+      <PageWrapper>
+        <StatusContainer>
+          <h2>😥</h2>
+          <p>{error}</p>
+          <Button onClick={() => navigate(-1)}>뒤로가기</Button>
+        </StatusContainer>
+      </PageWrapper>
+    );
 
   return (
     <PageWrapper>
@@ -125,9 +126,9 @@ const LibraryPage = () => {
         </Header>
 
         <LibraryHeader>
-          <LibraryImage src={library.imageUrl} alt={library.name} />
-          <LibraryTitle to={`/library/${library.id}`}>
-            {library.name}
+          <LibraryImage />
+          <LibraryTitle to={`/library/detail/${libraryId}`}>
+            {libraryName}
             <InfoIcon width={16} height={16} />
           </LibraryTitle>
           <FavoriteButton onClick={() => setIsFavorite(!isFavorite)}>
@@ -139,52 +140,67 @@ const LibraryPage = () => {
           </FavoriteButton>
         </LibraryHeader>
 
-        <SwiperSection>
+        {/* --- 상단 스와이퍼 (추천 도서 - Mock) --- */}
+        <Section>
           <SectionHeader>
-            <SectionTitle>{library.name}에 나눔된 모든 책</SectionTitle>
-            <MoreLink to={`/library/${library.id}/shared`}>
-              더보기 <ChevronRightIcon width={16} height={16} />
-            </MoreLink>
+            <SectionTitle>
+              {user?.nickname || "회원"}님과
+              <br />
+              취향이 유사한 분들이 좋아한 책
+            </SectionTitle>
           </SectionHeader>
-          <CenteredSwiperWrapper>
-            <Swiper
-              modules={[Navigation, Autoplay, Mousewheel]}
-              autoplay={{
-                delay: 3000,
-                disableOnInteraction: false,
-              }}
-              loop={true}
-              mousewheel={true}
-              centeredSlides={true}
-              slidesPerView={"auto"}
-              spaceBetween={16}
-              navigation={true} // 버튼이 필요 없다면 false로 변경
-            >
-              {sharedBooks.map((book, index) => (
-                <SwiperSlide
-                  key={`${book.id}-${index}`}
-                  style={{ width: "120px" }}
-                >
-                  <BookCard book={book} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </CenteredSwiperWrapper>
-        </SwiperSection>
 
-        <SearchPlaceholder>
-          {/* 여기에 검색 컴포넌트를 작성하면 됩니다 */}
-          🔍 {library.name}에 있는 책을 검색해보세요!
+          <SwiperSection>
+            <CenteredSwiperWrapper>
+              <Swiper
+                modules={[Navigation, Autoplay, Mousewheel]}
+                autoplay={{
+                  delay: 3000,
+                  disableOnInteraction: false,
+                }}
+                slidesPerView={"auto"}
+                spaceBetween={16}
+                centeredSlides={true}
+                navigation={true}
+              >
+                {recommendedBooks.map((book, index) => (
+                  <SwiperSlide key={`rec-${index}`} style={{ width: "120px" }}>
+                    <BookCard
+                      book={book}
+                      onClick={() => navigate(`/book/${book.isbn}`)}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </CenteredSwiperWrapper>
+          </SwiperSection>
+        </Section>
+
+        <SearchPlaceholder
+          onClick={() =>
+            navigate(`/library/${libraryId}/shared`, {
+              state: { name: libraryName },
+            })
+          }
+        >
+          <SearchIcon fill={"#6F6F6F"} width={20} height={20} />
+          {libraryName}에 있는 책을 검색해보세요!
         </SearchPlaceholder>
 
         <Section>
           <SectionHeader>
-            <SectionTitle>OO님과 취향이 유사한 분들이 좋아한 책</SectionTitle>
+            <SectionTitle>{libraryName}에 나눔된 모든 책</SectionTitle>
+            <MoreLink to={`/library/${libraryId}/shared`}>
+              더보기 <ChevronRightIcon width={16} height={16} />
+            </MoreLink>
           </SectionHeader>
           <HorizontalScroll>
-            {recommendedBooks.slice(0, 6).map((book) => (
-              <BookCardWrapper key={book.id}>
-                <BookCard book={book} />
+            {sharedBooks.map((book, index) => (
+              <BookCardWrapper
+                key={`shared-${index}`}
+                onClick={() => navigate(`/book/${book.isbn}`)}
+              >
+                <BookCard book={{ ...book, imageUrl: book.cover }} />
               </BookCardWrapper>
             ))}
           </HorizontalScroll>
@@ -195,8 +211,6 @@ const LibraryPage = () => {
 };
 
 export default LibraryPage;
-
-// --- Styled Components ---
 
 const PageWrapper = styled.div`
   width: 100%;
@@ -212,7 +226,7 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 60px 20px 20px;
+  padding: 50px 20px 20px;
   flex-grow: 1;
   overflow-y: auto;
   overflow-x: hidden;
@@ -222,7 +236,8 @@ const PageContainer = styled.div`
   }
 
   @media (max-width: 480px) {
-    padding: 60px 16px 20px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 `;
 
@@ -244,14 +259,9 @@ const LibraryHeader = styled.div`
   align-items: center;
   gap: 12px;
   margin-bottom: 32px;
-
-  @media (max-width: 480px) {
-    gap: 8px;
-    margin-bottom: 24px;
-  }
 `;
 
-const LibraryImage = styled.img`
+const LibraryImage = styled.div`
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -260,7 +270,7 @@ const LibraryImage = styled.img`
 `;
 
 const LibraryTitle = styled(Link)`
-  font-size: 22px;
+  font-size: 30px;
   font-weight: bold;
   color: black;
   text-decoration: none;
@@ -269,10 +279,6 @@ const LibraryTitle = styled(Link)`
   gap: 6px;
   flex-grow: 1;
   min-width: 0;
-
-  @media (max-width: 480px) {
-    font-size: 18px;
-  }
 `;
 
 const FavoriteButton = styled.button`
@@ -294,17 +300,12 @@ const SectionHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
-  gap: 8px;
 `;
 
 const SectionTitle = styled.h2`
   font-size: 18px;
   font-weight: bold;
-  min-width: 0;
-
-  @media (max-width: 480px) {
-    font-size: 16px;
-  }
+  line-height: 1.4;
 `;
 
 const MoreLink = styled(Link)`
@@ -323,8 +324,12 @@ const SearchPlaceholder = styled.div`
   border-radius: 50px;
   color: #6f6f6f;
   font-size: 14px;
-  text-align: center;
   margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
 `;
 
 const HorizontalScroll = styled.div`
@@ -342,21 +347,25 @@ const HorizontalScroll = styled.div`
 
 const BookCardWrapper = styled.div`
   flex: 0 0 110px;
+  display: flex;
+  cursor: pointer;
 `;
 
 const SwiperSection = styled(Section)`
   background-color: #e6f4f0;
-  border-radius: 16px;
-  padding: 20px 0;
-  width: 100%;
-  overflow: hidden;
+  padding: 20px;
+  width: calc(100% + 40px);
+  margin: 0 -20px 32px -20px;
+  box-sizing: border-box;
+
+  @media (max-width: 480px) {
+    width: calc(100% + 32px);
+    margin-left: -16px;
+    margin-right: -16px;
+  }
 `;
 
 const CenteredSwiperWrapper = styled.div`
-  .swiper {
-    padding: 20px 0 !important;
-  }
-
   .swiper-slide {
     transition: transform 0.3s ease-out;
     transform: scale(0.85);
@@ -373,9 +382,31 @@ const CenteredSwiperWrapper = styled.div`
     color: #4f614a;
     top: 50%;
     transform: translateY(-50%);
+
+    @media (max-width: 480px) {
+      display: none;
+    }
   }
-  .swiper-button-prev::after,
-  .swiper-button-next::after {
-    font-size: 24px !important;
+`;
+
+const StatusContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 80vh;
+  padding: 20px;
+  box-sizing: border-box;
+
+  h2 {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+  p {
+    font-size: 16px;
+    color: #6f6f6f;
+    text-align: center;
+    line-height: 1.6;
   }
 `;

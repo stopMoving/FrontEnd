@@ -5,22 +5,18 @@ export default function ConfirmPanel({
   step = 1,
   book,
   loading = false,
-  onPrimary,   // step1: 다시 찍기, step2: 아니오(완료)
-  onSecondary, // step1: 확인 → step2로, step2: 네(추가)
+  quantity,
+  onQuantityChange,
+  onPrimary,   // step1: 다시 찍기
+  onSecondary, // step1: 확인 → step2로
 }) {
-  const STEP1_TITLE = "이 책이 맞는지 확인해주세요!";
-  const STEP1_PRIMARY = "다시 찍기";
+  const STEP1_TITLE = "이 책이 맞는지 확인해주세요.";
+  const STEP1_PRIMARY = "다시 스캔";
   const STEP1_SECONDARY = "확인";
-  const STEP2_PRIMARY = "아니오, 완료";
-  const STEP2_SECONDARY = "네, 추가";
-
-  const step2 = mode === "give"
-  ? { title: "책 등록이 완료되었습니다!",     desc: "다른 책도 나눔하시겠어요?" }
-  : { title: "책 데려가기가 완료되었습니다!", desc: "다른 책도 데려가시겠어요?" };
 
   return (
     <Wrap $step={step}>
-      {step === 1 ? (
+      {step === 1 && (
         <>
           <Title>{STEP1_TITLE}</Title>
 
@@ -33,41 +29,34 @@ export default function ConfirmPanel({
           <BookTitle>{book?.title || "제목 없음"}</BookTitle>
 
           <Meta>
-            <Sub>저자 | {book?.author || "-"}</Sub>
-            <Sub>출판사 | {book?.publisher || "-"}</Sub>
-            <Sub>가격 | <del>{book?.regular_price || "-"}</del>원</Sub>
+            <Sub>{book?.author || "-"}</Sub>
+            <Sub>{book?.published_date}</Sub>
+            {mode === "take" && (
+              <Sub><del>{book?.regular_price || "-"}</del>원</Sub>
+            )}
           </Meta>
-            <Price>
-                {book?.price || "-"}{mode === "give" ? "P" : "원"}
-            </Price>
-            <Isbn>ISBN 코드: {book?.isbn || "-"}</Isbn>
-            
+
+          {mode === "give" ? (
+            <Point>500P</Point>
+          ) : (
+            <Price>{book?.price원 || "2000"}원</Price>
+          )}
+
+          <Isbn>ISBN 코드: {book?.isbn || "-"}</Isbn>
+
+          <QuantityWrap>
+            <QuantityBtn onClick={() => onQuantityChange(-1)}>-</QuantityBtn>
+            <Quantity>{quantity}권</Quantity>
+            <QuantityBtn onClick={() => onQuantityChange(1)}>+</QuantityBtn>
+          </QuantityWrap>
+          
           <Buttons>
-            <Btn onClick={onPrimary} disabled={loading}>
+            <AgainBtn onClick={onPrimary} disabled={loading}>
               {STEP1_PRIMARY}
-            </Btn>
-            <Btn onClick={onSecondary} disabled={loading}>
+            </AgainBtn>
+            <OkBtn onClick={onSecondary} disabled={loading}>
               {STEP1_SECONDARY}
-            </Btn>
-          </Buttons>
-        </>
-      ) : (
-        <>
-          <Title>{step2.title}</Title>
-          <Desc>{step2.desc}</Desc>
-          <Buttons>
-            <Btn
-              onClick={onPrimary}
-              $variant={step === 2 && "primary"}
-            >
-              {STEP2_PRIMARY}
-            </Btn>
-            <Btn
-              onClick={onSecondary}
-              $variant={step === 2 && "secondary"}
-            >
-              {STEP2_SECONDARY}
-            </Btn>
+            </OkBtn>
           </Buttons>
         </>
       )}
@@ -77,12 +66,11 @@ export default function ConfirmPanel({
 
 const Wrap = styled.div`
   width: 335px;
-  height: ${({ $step }) => ($step === 1 ? "560px" : "232px")};
+  min-height: 560px;
   border-radius: 10px;
   background: #ffffff;
   padding: 40px 16px;
   gap: 40px;
-  transition: height 0.2s ease;
 `;
 
 const Title = styled.div`
@@ -100,11 +88,11 @@ const BookWrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 139px;
+  width: 135px;
   height: 177px;
   border-radius: 5px;
   margin: 0 auto;
-  margin-top: 40px;
+  margin-top: 30px;
   margin-bottom: 15px;
   gap: 10px;
 `;
@@ -138,7 +126,7 @@ const Meta = styled.div`
   flex-direction: column;
   line-height: 1;
   width: max-content;
-  text-align: left;
+  text-align: center;
   margin: 0 auto;
   gap: 4px;
 `;
@@ -149,14 +137,26 @@ const Sub = styled.div`
   color: #868686;
 `;
 
+const Point = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  line-height: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+  margin: 10px;
+`;
+
 const Price = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   line-height: 1;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   color: #000000;
   margin: 8px;
 `;
@@ -170,34 +170,50 @@ const Isbn = styled.div`
   font-size: 18px;
   font-weight: 600;
   color: #000000;
-  margin: 16px;
+  margin-bottom: 15px;
 `;
 
-const Desc = styled.p`
-  margin: 6px 0 16px;
-  color: #000000;
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 1;
-  text-align: center;
+const QuantityWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+`;
+
+const QuantityBtn = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: #F4F4F4;
+  border-radius: 5px;
+  border: 1px solid #DEDEDE;
+  font-size: 16px;
+  font-weight: 400;
+`;
+
+const Quantity = styled.div`
+  font-size: 16px;
+  font-weight: 400;
 `;
 
 const Buttons = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  margin-top: 35px;
+  margin-top: 25px;
 `;
 
-const Btn = styled.button`
+const AgainBtn = styled.button`
   font-size: 18px;
   font-weight: 500;
   padding: 12px 16px;
   border-radius: 10px;
   line-height: 1;
-  border: 1px solid #000000;
+  border: 1px solid #DEDEDE;
   color: #000000;
-  background: #ffffff;
+  background: #F4F4F4;
   transition: transform .02s ease;
 
   &:active {
@@ -211,4 +227,19 @@ const Btn = styled.button`
       color: #FFFFFF;
       border-color: #11B55F;
     `}
+`;
+
+const OkBtn = styled.button`
+  font-size: 18px;
+  font-weight: 500;
+  padding: 12px 16px;
+  border-radius: 10px;
+  line-height: 1;
+  border: 1px solid #11B55F;
+  color: #FFFFFF;
+  background: #11B55F;
+  transition: transform .02s ease;
+
+  &:active {
+    transform: translateY(1px);
 `;

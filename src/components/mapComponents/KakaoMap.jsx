@@ -1,34 +1,38 @@
-import React, { useEffect } from "react";
-import useMapStore from "../../store/useMapStore";
+/* global kakao */
+import React, { useEffect, useRef, useState } from "react";
 
-// 1. props로 center를 받도록 수정합니다.
 const KakaoMap = ({ children, center }) => {
-  const { map, setMap } = useMapStore();
+  const mapContainer = useRef(null);
+  const [mapInstance, setMapInstance] = useState(null);
 
   useEffect(() => {
-    const { kakao } = window;
-    if (!kakao || !kakao.maps || !center) return; // 3. center 값이 있을 때만 실행
+    if (
+      !window.kakao ||
+      !window.kakao.maps ||
+      !center ||
+      !mapContainer.current
+    ) {
+      return;
+    }
 
-    kakao.maps.load(() => {
-      const mapContainer = document.getElementById("map");
+    window.kakao.maps.load(() => {
       const options = {
-        // 2. props로 받은 center 값을 사용합니다.
-        center: new kakao.maps.LatLng(center.lat, center.lng),
+        center: new window.kakao.maps.LatLng(center.lat, center.lng),
         level: 3,
       };
-      const mapInstance = new kakao.maps.Map(mapContainer, options);
-      setMap(mapInstance);
-    });
 
-    return () => {
-      setMap(null);
-    };
-    // 4. center 값이 변경될 때마다 지도를 다시 로드합니다.
-  }, [setMap, center]);
+      const map = new window.kakao.maps.Map(mapContainer.current, options);
+      setMapInstance(map);
+
+      setTimeout(() => {
+        map.relayout();
+      }, 0);
+    });
+  }, [center]);
 
   return (
-    <div id="map" style={{ width: "100%", height: "100%" }}>
-      {map && children}
+    <div ref={mapContainer} style={{ width: "100%", height: "100%" }}>
+      {mapInstance && React.cloneElement(children, { map: mapInstance })}
     </div>
   );
 };

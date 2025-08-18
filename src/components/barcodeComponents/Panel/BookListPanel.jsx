@@ -4,15 +4,17 @@ import StepHeader from "../StepHeader";
 
 export default function BookListPanel({
   mode,
-  book,
   title,
   description,
   items=[],
   buttonLabel,
   disabled = false,
   onNext,
+  onQuantityChange,
+  onAddClick,
 }) {
   const navigate = useNavigate();
+  console.log('BookListPanel에 전달된 mode 값:', mode);
 
   return (
     <Wrap>
@@ -24,36 +26,52 @@ export default function BookListPanel({
 
       <Inner>
         <SectionTitle>{description}</SectionTitle>
-        {/* 바코드 찍은 책 목록 불러오기 */}
         <BookListWrap>
-          <BookWrap>
+          {items.map((book) => (
+            <BookWrap key={book.isbn}>
             <Cover>
               {book?.image
-              ? <Cover src={book?.image} alt="" />
+              ? <CoverImg src={book?.image} alt="" />
               : <CoverFallback />}
             </Cover>
-          
+
             <BookInfoWrap>
-              <Title>
-                {book?.title || "-"}
-              </Title>
+              <Title>{book?.title || "-"}</Title>
 
-              <Meta>
-                <Sub>저자 | {book?.author || "-"}</Sub>
-                <Sub>출판사 | {book?.publisher || "-"}</Sub>
-              </Meta>
+              <Author>{book?.author || "-"}</Author>
 
-              <Price>{book?.price || "-"}{mode === "give" ? "P" : "원"}</Price>
               <Isbn>ISBN 코드: {book?.isbn || "-"}</Isbn>
+
+              <SubWrap>
+                <QuantityWrap>
+                  <QuantityBtn onClick={() => onQuantityChange(book.isbn, -1)}>-</QuantityBtn>
+                  <Quantity>{book.quantity}권</Quantity>
+                  <QuantityBtn onClick={() => onQuantityChange(book.isbn, 1)}>+</QuantityBtn>
+                </QuantityWrap>
+
+                {/* {mode === "give" ? (
+                  <Point>500P</Point>
+                ) : (
+                <Price>{book?.price || "2000"}원</Price>
+                )} */}
+                {mode === "give" ? (
+                  <Price>{book?.price || "2000"}원</Price>
+                ) : (
+                <Point>500P</Point>
+                )}
+              </SubWrap>
             </BookInfoWrap>
           </BookWrap>
+        ))}
         </BookListWrap>
       </Inner>
 
+      <AddButton onClick={onAddClick}>+</AddButton>
+
       <BottomBar>
-        <Button disabled={disabled} onClick={onNext}>
+        <NextBtn disabled={disabled} onClick={onNext}>
           {buttonLabel}
-        </Button>
+        </NextBtn>
       </BottomBar>
     </Wrap>
   );
@@ -72,23 +90,23 @@ const Wrap = styled.div`
 `;
 
 const Inner = styled.div`
-  padding: 0 16px;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  padding: 0 22px;
   gap: 20px;
 `;
 
 const SectionTitle = styled.div`
-  width: min(520px, 92vw);
+  width: 100%;
   font-size: 20px;
   font-weight: 600;
-  margin: 0 auto;
+  margin-top: -15px;
 `;
 
 const BookListWrap = styled.div`
-  width: min(520px, 92vw);
+  width: 100%;
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
   gap: 8px;
 `;
 
@@ -97,14 +115,20 @@ const BookWrap = styled.div`
   flex-direction: row;
   height: 117px;
   gap: 16px;
+  align-items: flex-start;
 `;
 
 const Cover = styled.div`
   width: 79px;
-  height: 117px;
+  height: 101px;
+`;
+
+const CoverImg = styled.img`
+  width: 100%;
+  height: 100%;
   border-radius: 5px;
   object-fit: cover;
-`;
+`
 
 const CoverFallback = styled.div`
   width: 79px;
@@ -123,46 +147,92 @@ const CoverFallback = styled.div`
 `;
 
 const BookInfoWrap = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   line-height: 1;
+  gap: 4px;
 `;
 
 const Title = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: #000000;
-  margin-bottom: 10px;
 `;
 
-const Meta = styled.div`
-  display: flex;
-  flex-direction: column;
-  line-height: 1;
-  width: max-content;
-  text-align: left;
-  margin: 0 auto;
-  gap: 4px;
-  margin-bottom: 10px;
-`;
-
-const Sub = styled.div`
+const Author = styled.div`
   font-size: 12px;
   font-weight: 400;
   color: #868686;
-`;
-
-const Price = styled.div`
-  font-size: 14px;
-  font-weight: 500;
-  color: #000000;
-  margin-bottom: 10px;
+  margin-bottom: 4px;
 `;
 
 const Isbn = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: #000000;
+  margin-bottom: 4px;
+`;
+
+const SubWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const QuantityWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const QuantityBtn = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: #F4F4F4;
+  border-radius: 5px;
+  border: 1px solid #DEDEDE;
+  font-size: 16px;
+  font-weight: 400;
+`;
+
+const Quantity = styled.div`
+  font-size: 16px;
+  font-weight: 400;
+  width: 54px;
+  text-align: center;
+`;
+
+const Point = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  color: #000000;
+`;
+
+const Price = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  color: #000000;
+`;
+
+const AddButton = styled.button`
+  position: absolute;
+  right: 20px;
+  bottom: 100px;
+  width: 60px;
+  height: 60px;
+  color: #FFFFFF;
+  background-color: #11B55F;
+  border-radius: 50px;
+  border: none;
+  font-size: 40px;
+  z-index: 100;
+  cursor: pointer;
 `;
 
 const BottomBar = styled.div`
@@ -173,9 +243,10 @@ const BottomBar = styled.div`
   width: 100%;
   max-width: 600px;
   padding: 0 20px;
+  z-index: 10;
 `;
 
-const Button = styled.button`
+const NextBtn = styled.button`
   width: 100%;
   height: 47px;
   border-radius: 5px;

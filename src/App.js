@@ -10,19 +10,18 @@ import useUserStore from "./store/useUserStore";
 import { Toaster } from "./store/useToasterStore";
 import SelectPage from "./pages/BarcodePage/SelectPage";
 import ScanPage from "./pages/BarcodePage/ScanPage";
-
-import UploadPage from "./pages/BarcodePage/UploadPage";
 import BookListPage from "./pages/BarcodePage/BookListPage";
 import LibrarySelectPage from "./pages/BarcodePage/LibrarySelectPage";
-import InputPage from "./pages/BarcodePage/InputPage";
 import LibraryDetailPage from "./pages/LibraryPage/LibraryDetailPage";
 import LibraryPage from "./pages/LibraryPage/LibraryPage";
+import SearchPage from "./pages/SearchPage";
+import BookInfoWrap from "./pages/BookInfoPage";
+import SharedBooksPage from "./pages/LibraryPage/SharedBooksPage";
+import BookDetailPage from "./pages/LibraryPage/BookDetailPage";
 
 const App = () => {
-  // ✅ 스토어에서 initializeAuth 함수와 상태를 가져옵니다.
   const { initializeAuth, isInitialized, fetchLocation } = useUserStore();
 
-  // ✅ 앱이 처음 마운트될 때 딱 한 번만 실행합니다.
   useEffect(() => {
     initializeAuth();
     fetchLocation();
@@ -43,14 +42,24 @@ const App = () => {
         <Route path="/library/detail/:id" element={<LibraryDetailPage />} />
         <Route path="/library/:libraryId" element={<LibraryPage />} />
 
+        <Route path="search/book" element={<SearchPage />} />
+        <Route path="search/book-detail" element={<BookInfoWrap />} />
+        <Route
+          path="barcode/library/select/:mode"
+          element={<LibrarySelectPage />}
+        />
+        <Route
+          path="/library/:libraryId/shared"
+          element={<SharedBooksPage />}
+        />
+        <Route path="/book/:isbnId" element={<BookDetailPage />} />
+
         <Route
           path="barcode/library/select/:mode"
           element={<LibrarySelectPage />}
         />
         <Route path="barcode/select/:mode" element={<SelectPage />} />
-        <Route path="barcode/scan" element={<ScanPage />} />
-        <Route path="barcode/upload" element={<UploadPage />} />
-        <Route path="barcode/input_ISBN" element={<InputPage />} />
+        <Route path="barcode/scan/:mode" element={<ScanPage />} />
         <Route path="barcode/booklist/:mode" element={<BookListPage />} />
       </Routes>
       <Toaster />

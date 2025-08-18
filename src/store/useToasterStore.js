@@ -3,36 +3,28 @@ import styled, { css } from "styled-components";
 import { create } from "zustand";
 import checkImage from "../../src/assets/icons/check.svg";
 
-// --- 1. Zustand 스토어 생성 ---
-// 상태와 상태를 변경하는 함수(액션)를 정의합니다.
 const useToasterStore = create((set, get) => ({
   toasts: [],
-  // 새 토스트를 목록에 추가하는 액션
+
   addToast: (type, message) => {
     const newToast = { id: Date.now(), type, message };
     set((state) => ({ toasts: [...state.toasts, newToast] }));
     return newToast;
   },
-  // ID로 특정 토스트를 제거하는 액션
+
   removeToast: (id) => {
     set((state) => ({
       toasts: state.toasts.filter((toast) => toast.id !== id),
     }));
   },
 
-  // add와 remove를 조합한 편리한 함수
   toaster: (type, message) => {
     const newToast = get().addToast(type, message);
-    // 2초 후에 자동으로 토스트를 제거합니다.
     setTimeout(() => get().removeToast(newToast.id), 2000);
   },
 }));
 
-// --- 2. 외부에서 사용할 커스텀 훅 ---
-// 컴포넌트에서 쉽게 toaster 함수를 호출할 수 있도록 합니다.
 export const useToaster = () => useToasterStore((state) => state.toaster);
-
-// --- 3. Styled-components 정의 ---
 
 const ToastContainer = styled.div`
   position: fixed;

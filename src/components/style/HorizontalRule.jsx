@@ -5,11 +5,11 @@ const StyledHr = styled.hr`
   border: none;
   width: auto;
   height: 1px;
-  background-color: #6f6f6f;
+  background-color: #dedede;
 `;
 
 const Text = styled.span`
-  color: #636363;
+  color: #dedede;
   /* 텍스트가 줄바꿈되지 않도록 설정 (선택 사항) */
   white-space: nowrap;
 `;

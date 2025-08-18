@@ -17,7 +17,6 @@ html, body, #root {
 
   webkit-overflow-scrolling: touch;
   overflow-x: hidden;
-  /*Pretandard 폰트 불러오기*/
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   background-color: #f0f2f5;
 }

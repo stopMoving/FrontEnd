@@ -30,10 +30,9 @@ export default function ConfirmPanel({
 
           <Meta>
             <Sub>{book?.author || "-"}</Sub>
-            {/* <Sub>출판사 | {book?.publisher || "-"}</Sub> */}
             <Sub>{book?.published_date}</Sub>
             {mode === "take" && (
-              <Sub>가격 | <del>{book?.regular_price || "-"}</del>원</Sub>
+              <Sub><del>{book?.regular_price || "-"}</del>원</Sub>
             )}
           </Meta>
 

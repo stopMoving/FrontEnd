@@ -127,6 +127,7 @@ const SearchContainer = styled.div`
 `;
 
 const SearchInput = styled.input`
+  width: 100%;
   height: 42px;
   font-size: 14px;
   font-weight: 500;

@@ -20,10 +20,8 @@ import SharedBooksPage from "./pages/LibraryPage/SharedBooksPage";
 import BookDetailPage from "./pages/LibraryPage/BookDetailPage";
 
 const App = () => {
-  // ✅ 스토어에서 initializeAuth 함수와 상태를 가져옵니다.
   const { initializeAuth, isInitialized, fetchLocation } = useUserStore();
 
-  // ✅ 앱이 처음 마운트될 때 딱 한 번만 실행합니다.
   useEffect(() => {
     initializeAuth();
     fetchLocation();
@@ -43,10 +41,13 @@ const App = () => {
         <Route path="/" element={<MainPage />} />
         <Route path="/library/detail/:id" element={<LibraryDetailPage />} />
         <Route path="/library/:libraryId" element={<LibraryPage />} />
-        
+
         <Route path="search/book" element={<SearchPage />} />
         <Route path="search/book-detail" element={<BookInfoWrap />} />
-        <Route path="barcode/library/select/:mode" element={<LibrarySelectPage />} />
+        <Route
+          path="barcode/library/select/:mode"
+          element={<LibrarySelectPage />}
+        />
         <Route
           path="/library/:libraryId/shared"
           element={<SharedBooksPage />}

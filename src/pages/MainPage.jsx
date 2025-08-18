@@ -96,7 +96,7 @@ const MainPage = () => {
   const userNickName = user?.nickname;
 
   const handleNotificationClick = () => navigate("/notifications");
-  const handleSearchClick = () => navigate("/search");
+  const handleSearchClick = () => navigate("/search/book");
   const handle나눔Button = () => navigate("/barcode/library/select/give");
   const handle데려가기Button = () => navigate("/barcode/library/select/take");
 

@@ -72,6 +72,7 @@ export default function ScanPage() {
             image: data?.cover_url ?? null,
             title: data?.title ?? "제목 없음",
             author: data?.author ?? "-",
+            publisher: data?.publisher ?? "-",
             published_date: data?.published_date ?? "-",
             regular_price: data?.regular_price ?? "-",
             //내가 계산 x, 백엔드에서 넘겨주는 걸로

@@ -90,24 +90,23 @@ const Wrap = styled.div`
 `;
 
 const Inner = styled.div`
-  padding: 0 16px;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  padding: 0 22px;
   gap: 20px;
 `;
 
 const SectionTitle = styled.div`
-  width: min(520px, 92vw);
+  width: 100%;
   font-size: 20px;
   font-weight: 600;
-  margin: 0 auto;
   margin-top: -15px;
 `;
 
 const BookListWrap = styled.div`
-  width: min(520px, 92vw);
+  width: 100%;
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
   gap: 8px;
 `;
 

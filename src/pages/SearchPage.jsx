@@ -16,6 +16,10 @@ export default function SearchPage() {
       navigate(-1);
     }
 
+    const handleBookClick = (isbn) => {
+      navigate(`/book-detail/${isbn}`)
+    }
+
     useEffect(() => {
       if (searchQuery.length > 0) {
         setLoading(true);
@@ -55,7 +59,7 @@ export default function SearchPage() {
       
       <BookListWrap>
         {books.map((book) => (
-          <BookWrap key={book.isbn}>
+          <BookWrap key={book.isbn} onClick={() => handleBookClick(book.isbn)}>
             <Cover>
               {book?.image
               ? <CoverImg src={book?.image} alt="" />
@@ -147,6 +151,7 @@ const BookWrap = styled.div`
   height: 117px;
   gap: 16px;
   align-items: flex-start;
+  cursor: pointer;
 `;
 
 const Cover = styled.div`

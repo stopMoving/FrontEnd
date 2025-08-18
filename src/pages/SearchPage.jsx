@@ -1,19 +1,27 @@
 import { useEffect, useState } from "react"
 import styled from "styled-components";
+import { ReactComponent as BackIcon } from "../assets/icons/backIcon.svg";
+import { ReactComponent as SearchIcon } from "../assets/icons/search.svg";
+import useBookStore from "../store/useBookStore";
+import { useNavigate } from "react-router-dom";
 
 export default function SearchPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [books, setBooks] = useState([]);
-    const [loadint, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const { scannedBooks } = useBookStore();
+    const navigate = useNavigate();
 
-    const mockBooks = [];
+    const onBack = () => {
+      navigate(-1);
+    }
 
     useEffect(() => {
       if (searchQuery.length > 0) {
         setLoading(true);
         const timer = setTimeout(() => {
-          const filteredBooks = mockBooks.filter((book) =>
-          book.title.includes(searchQuery)
+          const filteredBooks = scannedBooks.filter((book) =>
+            book.title.includes(searchQuery)
           );
         setBooks(filteredBooks);
         setLoading(false);
@@ -21,68 +29,69 @@ export default function SearchPage() {
 
         return () => clearTimeout(timer);
       } else {
-        setBooks([]);
+        setBooks(scannedBooks);
       }
-    }, [searchQuery]);
+    }, [searchQuery, scannedBooks]);
+    
+    return (
+    <PageWrap>
+      <Header>
+        <BackButton type="button" onClick={onBack}>
+          <BackIcon width={24} height={24} />
+        </BackButton>
+
+        <SectionTitle>나눔된 책 검색</SectionTitle>
+      </Header>
+      
+      <SearchContainer>
+        <SearchIcon fill={"#6F6F6F"} width={20} height={20} />
+        <SearchInput
+          type="text"
+          placeholder="책 제목을 검색하세요."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </SearchContainer>
+      
+      <BookListWrap>
+        {books.map((book) => (
+          <BookWrap key={book.isbn}>
+            <Cover>
+              {book?.image
+              ? <CoverImg src={book?.image} alt="" />
+              : <CoverFallback />}
+            </Cover>
+
+            <BookInfoWrap>
+              <Title>{book?.title || "-"}</Title>
+
+              <SubWrap>
+                <Author>{book?.author || "-"}</Author>
+                <Publisher>{book?.publisher || "-"}</Publisher>
+                <PublishedDate>{book?.published_date || "-"}</PublishedDate>
+              </SubWrap>
+            </BookInfoWrap>
+          </BookWrap>
+        ))}
+      </BookListWrap>
+      
+  </PageWrap>
+  )
 }
 
-return (
-  <Wrap>
-    <TopBar>
-      <BackButton type="button" onClick={onBack}>
-        <BackIcon width={24} height={24} />
-      </BackButton>
-
-      <SearchButton onClick={handleSearchClick}>
-      <SearchIcon fill={"#6F6F6F"} width={20} height={20} />
-        관심있는 책을 검색해보세요!
-    </SearchButton>
-    </TopBar>
-
-    <BookListWrap>
-      {items.map((book) => (
-        <BookWrap key={book.isbn}>
-          <Cover>
-            {book?.image
-            ? <CoverImg src={book?.image} alt="" />
-            : <CoverFallback />}
-          </Cover>
-
-          <BookInfoWrap>
-            <Title>{book?.title || "-"}</Title>
-
-            <SubWrap>
-              <Author>{book?.author || "-"}</Author>
-              <Publisher>{book?.publisher || "-"}</Publisher>
-              <PublishedDate>{book?.published_date || "-"}</PublishedDate>
-            </SubWrap>
-          </BookInfoWrap>
-        </BookWrap>
-        ))}
-    </BookListWrap>
-</Wrap>
-)
-
-const Wrap = styled.header`
-  position: fixed;
-  top: 40px;
-  left: 50%;
-  transform: translateX(-50%);
+const PageWrap = styled.div`
   width: 100%;
   max-width: 600px;
-  background: #fff;
-  z-index: 30px;
-  border-bottom: 1px solid #000000;
+  background: #FFFFFF;
+  margin: 0 auto;
+  padding: 30px 0;
 `;
 
-const TopBar = styled.div`
-  position: relative;
-  height: 50px;
-  display: grid;
-  grid-template-columns: 56px 1fr 56px;
+const Header = styled.div`
+  display: flex;
   align-items: center;
-  padding: 0 10px;
-`
+  padding: 16px;
+`;
 
 const BackButton = styled.button`
   background: none;
@@ -90,26 +99,38 @@ const BackButton = styled.button`
   cursor: pointer;
 `;
 
-const SearchButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 8px;
+const SectionTitle = styled.div`
+  font-size: 20px;
   font-weight: 500;
-  width: 100%;
-  height: 42px;
-  background-color: #f0f2f5;
-  border: none;
-  border-radius: 50px;
-  color: #6f6f6f;
-  cursor: pointer;
-  font-size: 14px;
-  padding: 16px 16px;
+  margin: 0 auto;
 `;
 
-const Inner = styled.div`
-  padding: 0 16px;
-  display: grid;
-  gap: 20px;
+const SearchContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 93%;
+  height: 42px;
+  background-color: #E6F4F0;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+  margin: 10px auto;
+
+  svg {
+    margin-right: 8px;
+    color: #888;
+  }
+`;
+
+const SearchInput = styled.input`
+  height: 42px;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #E6F4F0;
+  border: none;
+  color: #000000;
+  cursor: pointer;
+  padding: 16px 10px;
 `;
 
 const BookListWrap = styled.div`
@@ -181,9 +202,16 @@ const Author = styled.div`
   margin-bottom: 4px;
 `;
 
-const Isbn = styled.div`
-  font-size: 14px;
-  font-weight: 500;
-  color: #000000;
+const Publisher = styled.div`
+  font-size: 12px;
+  font-weight: 400;
+  color: #868686;
+  margin-bottom: 4px;
+`;
+
+const PublishedDate = styled.div`
+  font-size: 12px;
+  font-weight: 400;
+  color: #868686;
   margin-bottom: 4px;
 `;

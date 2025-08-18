@@ -17,7 +17,7 @@ export default function SearchPage() {
     }
 
     const handleBookClick = (isbn) => {
-      navigate(`/book-detail/${isbn}`)
+      navigate(`/search/book-detail/${isbn}`)
     }
 
     useEffect(() => {

@@ -1,13 +1,74 @@
+// import styled from "styled-components";
+// import { useNavigate } from "react-router-dom";
+// import { useState } from "react";
+// import StepHeader from "../StepHeader";
+// import BottomSheetWrapper from "./BottomSheetWrapper";
+// import ImageUploadPanel from "../ImageUploadPanel";
+// import ISBNInputPanel from "../ISBNInputPanel";
+// import { ReactComponent as CameraIcon } from "../../../assets/icons/camera.svg";
+// import { ReactComponent as ImageUploadIcon} from "../../../assets/icons/imageUpload.svg";
+// import { ReactComponent as InputISBNIcon} from "../../../assets/icons/inputISBN.svg";
+
+// export default function SelectPanel({
+//   title,
+//   description,
+//   mode,
+//   libraryId
+// }) {
+//   const navigate = useNavigate();
+//   const [activeSheet, setActiveSheet] = useState(null);
+
+//   const handleOpenSheet = (sheetType) => {
+//     setActiveSheet(sheetType);
+//   }
+
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import StepHeader from "../StepHeader";
+import BottomSheetWrapper from "./BottomSheetWrapper";
+import ImageUploadPanel from "../ImageUploadPanel";
+import ISBNInputPanel from "../ISBNInputPanel";
 import { ReactComponent as CameraIcon } from "../../../assets/icons/camera.svg";
 import { ReactComponent as ImageUploadIcon} from "../../../assets/icons/imageUpload.svg";
 import { ReactComponent as InputISBNIcon} from "../../../assets/icons/inputISBN.svg";
+import ConfirmModal from "../../../pages/BarcodePage/ConfirmModal";
+import useBookStore from "../../../store/useBookStore";
 
-export default function SelectPanel({ title, description }) {
+export default function SelectPanel({
+  title,
+  description,
+  mode,
+  libraryId
+}) {
   const navigate = useNavigate();
+  const [activeSheet, setActiveSheet] = useState(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [bookData, setBookData] = useState(null);
+  const { addScannedBook } = useBookStore();
 
+  const handleOpenSheet = (sheetType) => {
+    setActiveSheet(sheetType);
+  }
+
+  // ✅ ISBNInputPanel, ImageUploadPanel에서 호출될 콜백
+  const handleConfirm = (data) => {
+    // ✅ 바텀 시트를 닫고, ConfirmModal을 띄우기 위한 상태를 설정합니다.
+    setActiveSheet(null);
+    setBookData({ ...data, quantity: 1 });
+    setIsConfirmModalOpen(true);
+  };
+  
+  // ✅ ConfirmModal에서 "확인" 버튼 클릭 시 호출될 함수
+  const handleConfirmAction = () => {
+    addScannedBook({
+      ...bookData,
+      isbn: bookData.isbn
+    });
+    setIsConfirmModalOpen(false);
+    navigate(`/barcode/booklist/${mode}?branchId=${encodeURIComponent(libraryId)}&isbn=${bookData.isbn}`);
+  };
+  
   return (
     <Wrap>
       <StepHeader
@@ -20,22 +81,51 @@ export default function SelectPanel({ title, description }) {
         <SectionTitle>{description}</SectionTitle>
 
         <Buttons>
-          <Btn onClick={() => navigate("/barcode/scan")}>
+          <Btn onClick={() => navigate(`/barcode/scan/${mode}?branchId=${encodeURIComponent(libraryId)}`)}>
             <CameraIcon width={32} height={32} />
             카메라로 바코드 인식
           </Btn>
 
-          <Btn onClick={() => navigate("/barcode/upload")}>
+          <Btn onClick={() => handleOpenSheet('image')}>
             <ImageUploadIcon width={32} height={32} />
             바코드 사진 업로드
           </Btn>
 
-          <Btn onClick={() => navigate("/barcode/input_ISBN")}>
+          <Btn onClick={() => handleOpenSheet('isbn')}>
             <InputISBNIcon width={32} height={32} />
             ISBN 코드 직접 입력
           </Btn>
         </Buttons>
       </Inner>
+
+      <BottomSheetWrapper isOpen={activeSheet !== null} onClose={() => setActiveSheet(null)}>
+        {activeSheet === 'image' && (
+          <ImageUploadPanel
+            onClose={() => setActiveSheet(null)}
+            onConfirm={handleConfirm}
+            mode={mode}
+            libraryId={libraryId}
+          />
+        )}
+        {activeSheet === 'isbn' && (
+          <ISBNInputPanel
+            onClose={() => setActiveSheet(null)}
+            onConfirm={handleConfirm}
+            mode={mode}
+            libraryId={libraryId}
+          />
+        )}
+      </BottomSheetWrapper>
+
+      {isConfirmModalOpen && bookData && (
+        <ConfirmModal
+          open={isConfirmModalOpen}
+          book={bookData}
+          onSecondary={() => handleConfirmAction()}
+          onClose={() => setIsConfirmModalOpen(false)}
+        />
+      )}
+      
     </Wrap>
   );
 }

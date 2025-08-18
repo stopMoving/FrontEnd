@@ -3,10 +3,11 @@ import ConfirmPanel from "../../components/barcodeComponents/Panel/ConfirmPanel"
 
 export default function ConfirmModal({
   open,
-  step,
   mode= "give",       // ← give/take
   book,
   loading,
+  quantity,
+  onQuantityChange,
   onPrimary,
   onSecondary,
   onClose,
@@ -17,10 +18,11 @@ export default function ConfirmModal({
     <Overlay onClick={onClose}>
       <Sheet onClick={(e) => e.stopPropagation()}>
         <ConfirmPanel
-          step={step}
           mode={mode}
           book={book}
           loading={loading}
+          quantity={quantity}
+          onQuantityChange={onQuantityChange}
           onPrimary={onPrimary}
           onSecondary={onSecondary}
         />

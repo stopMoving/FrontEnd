@@ -43,7 +43,7 @@ const TopBar = styled.div`
   grid-template-columns: 56px 1fr 56px;
   align-items: center;
   padding: 0 10px;
-`
+`;
 
 const BackButton = styled.button`
   background: none;

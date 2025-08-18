@@ -1,8 +1,10 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import CameraScan from "../../components/barcodeComponents/CameraScan";
 import ConfirmModal from "./ConfirmModal";
+import useUserStore from "../../store/useUserStore";
+import useBookStore from "../../store/useBookStore";
 
 export default function ScanPage() {
   const navigate = useNavigate();
@@ -12,6 +14,26 @@ export default function ScanPage() {
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(false);
   const [retakeCount, setRetakeCount] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [isbnCart, setIsbnCart] = useState([]);
+  const [searchParams] = useSearchParams();
+
+  const libraryId = searchParams.get("branchId"); // LibrarySelectPage에서 넘어온 값
+  const token = useUserStore((state) => state.token);
+  const { addScannedBook } = useBookStore();
+
+  console.log("ScanPage에서 읽은 libraryId: ", libraryId);
+  
+  const formatIsbn = (isbn) => {
+    return isbn
+    ? isbn.replace(/^(\d{3})(\d{2})(\d{4})(\d{3})(\d{1})$/,
+        "$1-$2-$3-$4-$5")
+    : "-";
+    };
+
+  const handleQuantityChange = (change) => {
+    setQuantity(prev => Math.max(1, prev + change));
+  };
 
   // 스캔 성공 시 (조회))
   const handleDetected = async (text) => {
@@ -19,19 +41,31 @@ export default function ScanPage() {
     const digits = String(text).replace(/[^0-9]/g, "");
     if (!/^97[89]\d{10}$/.test(digits)) return;
 
-    const formatIsbn = (isbn) => {
-      if (!isbn) return "-";
-      return isbn.replace(
-        /^(\d{3})(\d{2})(\d{4})(\d{3})(\d{1})$/,
-        "$1-$2-$3-$4-$5"
-      );
-    };
+  const accessToken = token?.access_token;
+  if (!accessToken) {
+    alert("로그인이 필요해요. (토큰 없음)");
+    return;
+  }
 
     setLoading(true);
     try {
-        const res = await fetch(`https://stopmoving.p-e.kr/bookinfo/lookup/?isbn=${digits}`);
-        if (!res.ok) throw new Error("lookup failed");
-        const data = await res.json();
+        const url = `https://stopmoving.o-r.kr/bookinfo/donate/?isbn=${digits}`;
+        const res = await fetch(url, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        const textBody = await res.text();
+        const data = textBody ? JSON.parse(textBody) : null;
+        
+        if (!res.ok) {
+          if (res.status === 400) throw new Error("잘못된 요청입니다. ISBN을 확인해주세요.");
+          if (res.status === 502) throw new Error("외부 도서 API 오류입니다. 잠시 후 다시 시도해주세요.");
+          throw new Error(textBody || `조회 실패 (${res.status})`);
+        }
+
         console.log("lookup payload ▶", data);
 
         setBook({
@@ -39,12 +73,15 @@ export default function ScanPage() {
             title: data?.title ?? "제목 없음",
             author: data?.author ?? "-",
             publisher: data?.publisher ?? "-",
+            published_date: data?.published_date ?? "-",
             regular_price: data?.regular_price ?? "-",
-            price: data?.regular_price ? Math.round(data.regular_price * 0.2) : "-",
+            //내가 계산 x, 백엔드에서 넘겨주는 걸로
+            price: data?.regular_price ? Math.round(data.regular_price * 0.2) : null,
             isbn: formatIsbn(digits),
         });
 
         // 모달 열면 CameraScan에서 paused={modalOpen}으로 일시정지됨
+        setQuantity(1);
         setStep(1);
         setModalOpen(true);
     } catch (e) {
@@ -67,20 +104,51 @@ export default function ScanPage() {
   // === step 1 버튼: 확인 -> 등록 API 호출 후 step 2===
   const handleConfirm = async () => {
     if (!book?.isbn) return;
+
+    addScannedBook({
+      ...book,
+      quantity: quantity,
+      isbn: book.isbn
+    });
+    // setIsbnCart((prev) => {
+    //   const next = new Set(prev);
+    //   next.add(book.rawIsbn);
+    //   return Array.from(next);
+    // });
+    // setStep(2);
+    setModalOpen(false);
+    navigate(`/barcode/booklist/${mode}?branchId=${encodeURIComponent(libraryId)}`);
+  };
+
+  // === step 2 버튼: 아니오, 완료 ===
+  const handleFinish = async () => {
+    const accessToken = token?.access_token;
+    if(!accessToken) {
+      alert("로그인이 필요해요. (토큰 없음)");
+      return;
+    }
+    if (!libraryId) {
+      alert("도서관이 선택되지 않았어요.");
+      return;
+    }
+    if (isbnCart.length === 0) {
+      alert("담긴 ISBN이 없어요. ");
+      return;
+    }
+
     setLoading(true);
     try {
-        // 백엔드 스펙에 맞게 URL/메서드/바디 수정
-        const res = await fetch(`https://stopmoving.p-e.kr/books/donate`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                mode, // give | take -> 서버 입장에서 구분하기 위함
-                image: book.image,
-                title: book.title,
-                author: book.author,
-                publisher: book.publisher,
-                isbn: book.isbn,
-            }),
+      const payload = {
+        library_id: Number(libraryId),
+        isbn: isbnCart,
+      };
+      const res = await fetch(`https://stopmoving.o-r.kr/books/donate/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(payload),
         });
         if (!res.ok) throw new Error("register failed");
         setStep(2);
@@ -93,12 +161,12 @@ export default function ScanPage() {
   };
 
   // === step 2 버튼: 아니오, 완료 ===
-  const handleFinish = () => {
-    setModalOpen(false);          // 닫고 끝
-    setStep(1);
-    setBook(null);
-    navigate(`/barcode/booklist/${mode}`);
-  };
+  // const handleFinish = () => {
+  //   setModalOpen(false);          // 닫고 끝
+  //   setStep(1);
+  //   setBook(null);
+  //   navigate(`/barcode/booklist/${mode}`);
+  // };
 
   // === step 2 버튼: 네, 추가 ===
   const handleAddMore = () => {
@@ -133,11 +201,13 @@ export default function ScanPage() {
       <ConfirmModal
         open={modalOpen}
         step={step}
-        mode={mode} // give | take
+        mode={mode}
         book={book}
         loading={loading}
-        onPrimary={step === 1 ? handleRetake  : handleFinish}
-        onSecondary={step === 1 ? handleConfirm : handleAddMore}
+        quantity = {quantity}
+        onQuantityChange={handleQuantityChange}
+        onPrimary={handleRetake}
+        onSecondary={handleConfirm}
         onClose={() => setModalOpen(false)}
       />
     </Screen>

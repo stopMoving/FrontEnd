@@ -3,20 +3,18 @@ import styled from "styled-components";
 import useLibrarySidebarStore from "../../store/useLibrarySidebarStore";
 import { useNavigate } from "react-router-dom";
 
-// 아이콘 임포트 (경로는 실제 프로젝트에 맞게 수정)
 import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
 import { ReactComponent as BellIcon } from "../../assets/icons/bell.svg";
 import { ReactComponent as StarIcon } from "../../assets/icons/fullStarIcon.svg";
 
-// 개별 도서관 아이템 컴포넌트
 const LibraryItem = ({ library }) => {
   const navigate = useNavigate();
-  // 클릭 시 상세 페이지로 이동
-  const handleClick = () => navigate(`/library/${library.id}`);
+  const handleClick = () =>
+    navigate(`/library/${library.id}`, {
+      state: { name: library.name },
+    });
 
-  return (
-    <ItemContainer onClick={handleClick}>{library.place_name}</ItemContainer>
-  );
+  return <ItemContainer onClick={handleClick}>{library.name}</ItemContainer>;
 };
 
 const LibrarySidebar = () => {
@@ -24,29 +22,30 @@ const LibrarySidebar = () => {
     isOpen,
     toggleSidebar,
     myLibraries,
-    nearbyLibraries,
-    isLoading,
-    error,
-    fetchNearbyLibraries,
+    isMyLibrariesLoading,
+    myLibrariesError,
+    allLibraries,
+    isAllLibrariesLoading,
+    allLibrariesError,
+    fetchMyLibraries, // 내 도서관
+    fetchAllLibraries, // 전체 도서관
   } = useLibrarySidebarStore();
 
-  // 사이드바가 열릴 때마다 주변 도서관 데이터를 가져옵니다.
   useEffect(() => {
     if (isOpen) {
-      fetchNearbyLibraries();
+      fetchMyLibraries();
+      fetchAllLibraries();
     }
-  }, [isOpen, fetchNearbyLibraries]);
+  }, [isOpen, fetchMyLibraries, fetchAllLibraries]);
 
   return (
     <>
-      {/* 사이드바 뒤의 어두운 배경 */}
       <Backdrop $isOpen={isOpen} onClick={toggleSidebar} />
       <SidebarContainer $isOpen={isOpen}>
         <Header>
           <BackButton onClick={toggleSidebar}>
             <BackIcon width={24} height={24} />
           </BackButton>
-          <BellIcon width={24} height={24} />
         </Header>
 
         <Content>
@@ -54,18 +53,22 @@ const LibrarySidebar = () => {
             <SectionTitle>
               내 도서관 <StarIcon width={16} height={16} fill="#FFD700" />
             </SectionTitle>
-            {myLibraries.map((lib) => (
-              <LibraryItem key={lib.id} library={lib} />
-            ))}
+            {isMyLibrariesLoading && <StatusText>불러오는 중...</StatusText>}
+            {myLibrariesError && <StatusText>{myLibrariesError}</StatusText>}
+            {!isMyLibrariesLoading &&
+              !myLibrariesError &&
+              myLibraries.map((lib) => (
+                <LibraryItem key={lib.id} library={lib} />
+              ))}
           </Section>
 
           <Section>
             <SectionTitle>전체 도서관</SectionTitle>
-            {isLoading && <p>불러오는 중...</p>}
-            {error && <p>{error}</p>}
-            {!isLoading &&
-              !error &&
-              nearbyLibraries.map((lib) => (
+            {isAllLibrariesLoading && <StatusText>불러오는 중...</StatusText>}
+            {allLibrariesError && <StatusText>{allLibrariesError}</StatusText>}
+            {!isAllLibrariesLoading &&
+              !allLibrariesError &&
+              allLibraries.map((lib) => (
                 <LibraryItem key={lib.id} library={lib} />
               ))}
           </Section>
@@ -140,10 +143,17 @@ const SectionTitle = styled.h2`
 `;
 
 const ItemContainer = styled.div`
-  padding: 12px 0;
+  padding: 12px 8px;
   font-size: 16px;
   cursor: pointer;
+  border-radius: 6px;
+  transition: background-color: 0.2s
   &:hover {
-    color: #007bff;
+    color: #f0f2f5;
   }
+`;
+
+const StatusText = styled.p`
+  padding: 12px 8px;
+  color: #6f6f6f;
 `;

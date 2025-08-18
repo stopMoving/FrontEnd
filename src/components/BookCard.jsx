@@ -36,7 +36,7 @@ const ImageContainer = styled.div`
   padding-top: 140%;
   position: relative;
   background-color: #f0f0f0;
-  border-radius: 12px;
+  border-radius: 8px;
   margin-bottom: 8px;
   overflow: hidden;
 
@@ -58,20 +58,38 @@ const ImageContainer = styled.div`
 
 const TextContainer = styled.div`
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 `;
 
 const BookTitle = styled.h3`
   font-size: 14px;
   font-weight: bold;
   color: #000000;
-  /* 제목이 길 경우 말줄임표(...) 처리 */
-  white-space: nowrap;
+  margin-bottom: 4px;
+
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  min-height: 2.4em;
+  line-height: 1.2;
 `;
 
 const BookAuthor = styled.p`
   font-size: 12px;
   color: #868686;
+  margin: 0;
+  line-height: 1.4;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  min-height: 2.8em;
 `;

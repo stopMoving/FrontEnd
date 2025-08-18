@@ -3,10 +3,5 @@
 #POST 링크기입
 #Content-Type: application/json
 
-POST https://stopmoving.p-e.kr/accounts/login/
+GET https://stopmoving.o-r.kr/library/booklist/1
 Accept: application/json
-
-{
-    "username": "admin",
-    "password": "testuser",
-}

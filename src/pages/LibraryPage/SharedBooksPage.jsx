@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
+import { ReactComponent as SearchIcon } from "../../assets/icons/search.svg";
 
 const fetchLibraryPageData = async (libraryId) => {
   console.log(`${libraryId} 페이지 데이터 요청`);
@@ -62,6 +63,8 @@ const SharedBooksPage = () => {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
 
+  const [searchQuery, setSearchQuery] = useState("");
+
   useEffect(() => {
     const loadData = async () => {
       const pageData = await fetchLibraryPageData(libraryId);
@@ -76,6 +79,12 @@ const SharedBooksPage = () => {
 
   const { library, sharedBooks } = data;
 
+  const filteredBooks = sharedBooks.filter(
+    (book) =>
+      book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchQuery.toLocaleLowerCase())
+  );
+
   return (
     <PageWrapper>
       <TopNavBar>
@@ -87,8 +96,20 @@ const SharedBooksPage = () => {
       <ContentContainer>
         <ListHeader>{library.name}에 나눔된 모든 책</ListHeader>
 
+        <SearchInputContainer>
+          <SearchIconWrapper>
+            <SearchIcon fill={"#6F6F6F"} width={20} height={20} />
+          </SearchIconWrapper>
+          <SearchInput
+            type="text"
+            placeholder={`${library.name}에 있는 책을 검색해보세요!`}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </SearchInputContainer>
+
         <BookList>
-          {sharedBooks.map((book, index) => (
+          {filteredBooks.map((book, index) => (
             <BookListItem
               key={`${book.id}-${index}`}
               onClick={() => navigate(`/book/${book.id}`)}
@@ -135,6 +156,9 @@ const TopNavBar = styled.header`
   top: 0;
   background-color: #fff;
   z-index: 10;
+
+  left: 50%;
+  transform: translateX(-50%);
 `;
 
 const BackButton = styled.button`
@@ -210,4 +234,37 @@ const InfoText = styled.p`
   font-size: 14px;
   color: #555;
   margin: 0;
+`;
+
+const SearchInputContainer = styled.div`
+  position: relative;
+  margin-bottom: 24px;
+`;
+
+const SearchIconWrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  pointer-events: none; /* 아이콘 뒤로 클릭이 통과되도록 */
+`;
+
+const SearchInput = styled.input`
+  width: 100%;
+  height: 48px;
+  border-radius: 50px;
+  border: none;
+  background-color: #e6f4f0;
+  padding: 0 20px 0 48px;
+  font-size: 14px;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: #6f6f6f;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #11b55f;
+  }
 `;

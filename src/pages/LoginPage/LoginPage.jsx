@@ -75,11 +75,12 @@ const LoginPage = () => {
             onChange={handleChange}
           />
           <Button>로그인</Button>
-          <HorizontalRule>또는</HorizontalRule>
+          <HorizontalRule></HorizontalRule>
         </StyledForm>
-        <div style={{ textAlign: "center" }}>
-          계정이 아직 없으신가요? <Link to="/register">회원가입하기</Link>
-        </div>
+        <BottomContainer style={{ textAlign: "center" }}>
+          [북작북작] 계정이 아직 없으신가요?{" "}
+          <Link to="/register">회원가입</Link>
+        </BottomContainer>
       </LoginContainer>
     </>
   );
@@ -119,4 +120,9 @@ const Logo = styled.img`
 
 const GreenText = styled.span`
   color: #11b55f;
+`;
+
+const BottomContainer = styled.div`
+  text-align: center;
+  color: #6f6f6f;
 `;

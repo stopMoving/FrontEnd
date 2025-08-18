@@ -1,89 +1,71 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
 import { ReactComponent as SearchIcon } from "../../assets/icons/search.svg";
-
-const fetchLibraryPageData = async (libraryId) => {
-  console.log(`${libraryId} 페이지 데이터 요청`);
-  const sharedBooksData = [
-    {
-      id: 101,
-      title: "여행의 이유 (아주 긴 제목 테스트용 텍스트)",
-      author: "김영하",
-      publisher: "문학동네",
-      publicationDate: "2025.04.17",
-      imageUrl: "https://placehold.co/80x112?text=책1",
-    },
-    {
-      id: 102,
-      title: "달러구트 꿈 백화점",
-      author: "이미예",
-      publisher: "팩토리나인",
-      publicationDate: "2025.07.08",
-      imageUrl: "https://placehold.co/80x112?text=책2",
-    },
-    // ... 더 많은 책 데이터
-    {
-      id: 103,
-      title: "아몬드",
-      author: "손원평",
-      publisher: "창비",
-      publicationDate: "2025.03.31",
-      imageUrl: "https://placehold.co/80x112?text=책3",
-    },
-    {
-      id: 104,
-      title: "불편한 편의점",
-      author: "김호연",
-      publisher: "나무옆의자",
-      publicationDate: "2025.04.20",
-      imageUrl: "https://placehold.co/80x112?text=책4",
-    },
-    {
-      id: 105,
-      title: "코스모스",
-      author: "칼 세이건",
-      publisher: "사이언스북스",
-      publicationDate: "2024.12.20",
-      imageUrl: "https://placehold.co/80x112?text=책5",
-    },
-  ];
-  return {
-    library: {
-      id: libraryId,
-      name: "김영삼 도서관",
-    },
-    sharedBooks: [...sharedBooksData, ...sharedBooksData, ...sharedBooksData],
-  };
-};
+import axios from "../../lib/axios";
 
 const SharedBooksPage = () => {
   const { libraryId } = useParams();
   const navigate = useNavigate();
-  const [data, setData] = useState(null);
+  const { state } = useLocation();
+  const libraryName = state?.name || "도서관";
 
+  const [books, setBooks] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const loadData = async () => {
-      const pageData = await fetchLibraryPageData(libraryId);
-      setData(pageData);
+    const fetchBooks = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const response = await axios.get(`library/booklist/${libraryId}`);
+        setBooks(response.data);
+      } catch (err) {
+        if (err.response?.data?.message) {
+          setError(err.response.data.message);
+        } else {
+          setError("책 목록을 불러오는 데 실패했습니다.");
+        }
+        console.error("Failed to fetch book list:", err);
+      } finally {
+        setIsLoading(false);
+      }
     };
-    loadData();
+
+    fetchBooks();
   }, [libraryId]);
 
-  if (!data) {
-    return <PageWrapper>로딩 중...</PageWrapper>;
-  }
-
-  const { library, sharedBooks } = data;
-
-  const filteredBooks = sharedBooks.filter(
+  const filteredBooks = books.filter(
     (book) =>
       book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      book.author.toLowerCase().includes(searchQuery.toLocaleLowerCase())
+      book.author.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (isLoading)
+    return (
+      <PageWrapper>
+        <StatusContainer>로딩 중...</StatusContainer>
+      </PageWrapper>
+    );
+  if (error)
+    return (
+      <PageWrapper>
+        <TopNavBar>
+          <BackButton onClick={() => navigate(-1)}>
+            <BackIcon />
+          </BackButton>
+          {/* 에러 시 제목은 비워둡니다. */}
+        </TopNavBar>
+        <StatusContainer>
+          😥
+          <br />
+          {error}
+        </StatusContainer>
+      </PageWrapper>
+    );
 
   return (
     <PageWrapper>
@@ -91,38 +73,44 @@ const SharedBooksPage = () => {
         <BackButton onClick={() => navigate(-1)}>
           <BackIcon width={24} height={24} />
         </BackButton>
+        <PageTitle>{libraryName}의 모든 나눔 책</PageTitle>
       </TopNavBar>
 
       <ContentContainer>
-        <ListHeader>{library.name}에 나눔된 모든 책</ListHeader>
-
         <SearchInputContainer>
           <SearchIconWrapper>
             <SearchIcon fill={"#6F6F6F"} width={20} height={20} />
           </SearchIconWrapper>
           <SearchInput
             type="text"
-            placeholder={`${library.name}에 있는 책을 검색해보세요!`}
+            placeholder={`${libraryName}에 있는 책을 검색해보세요`}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            autoFocus
           />
         </SearchInputContainer>
 
         <BookList>
-          {filteredBooks.map((book, index) => (
-            <BookListItem
-              key={`${book.id}-${index}`}
-              onClick={() => navigate(`/book/${book.id}`)}
-            >
-              <BookImage src={book.imageUrl} alt={book.title} />
-              <BookInfo>
-                <BookTitle>{book.title}</BookTitle>
-                <InfoText>{book.author}</InfoText>
-                <InfoText>{book.publisher}</InfoText>
-                <InfoText>{book.publicationDate}</InfoText>
-              </BookInfo>
-            </BookListItem>
-          ))}
+          {filteredBooks.length > 0 ? (
+            filteredBooks.map((book) => (
+              // --- 1. key와 onClick 이벤트에 isbn 사용 ---
+              <BookListItem
+                key={book.isbn}
+                onClick={() => navigate(`/book/${book.isbn}`)}
+              >
+                <BookImage src={book.cover} alt={book.title} />
+                <BookInfo>
+                  <BookTitle>{book.title}</BookTitle>
+                  <InfoText>{book.author}</InfoText>
+                  <InfoText>{book.publisher}</InfoText>
+                </BookInfo>
+              </BookListItem>
+            ))
+          ) : (
+            <StatusContainer>
+              {searchQuery ? "검색 결과가 없습니다." : "나눔된 책이 없습니다."}
+            </StatusContainer>
+          )}
         </BookList>
       </ContentContainer>
     </PageWrapper>
@@ -136,7 +124,6 @@ export default SharedBooksPage;
 const PageWrapper = styled.div`
   width: 100%;
   max-width: 600px;
-  padding-top: 30px;
   min-height: 100%;
   margin: 0 auto;
   background-color: #fff;
@@ -145,44 +132,46 @@ const PageWrapper = styled.div`
 `;
 
 const TopNavBar = styled.header`
-  width: 100%;
-  padding-top: 50px;
-  max-width: 600px;
-  height: 60px;
   display: flex;
+  justify-content: center; /* 제목을 중앙 정렬하기 위함 */
   align-items: center;
-  justify-content: center;
   position: fixed;
   top: 0;
-  background-color: #fff;
-  z-index: 10;
-
   left: 50%;
   transform: translateX(-50%);
+
+  width: 100%;
+  max-width: 600px;
+  height: 60px;
+  background-color: #fff;
+  // border-bottom: 1px solid #f0f0f0;
+  z-index: 10;
 `;
 
 const BackButton = styled.button`
   position: absolute;
   left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
 `;
 
-const ContentContainer = styled.main`
-  padding: 60px 20px 20px;
-  width: 100%;
-  background-color: white;
-
-  @media (max-width: 480px) {
-    padding: 60px 16px 16px;
-  }
+const PageTitle = styled.h1`
+  font-size: 20px;
+  font-weight: 600;
+  color: black;
 `;
 
-const ListHeader = styled.h2`
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 24px;
+const ContentContainer = styled.main`
+  padding: 84px 20px 20px;
+  width: 100%;
+  box-sizing: border-box;
+
+  @media (max-width: 480px) {
+    padding: 84px 16px 16px;
+  }
 `;
 
 const BookList = styled.div`
@@ -198,6 +187,9 @@ const BookListItem = styled.div`
   border-bottom: 1px solid #f0f0f0;
   cursor: pointer;
 
+  &:hover {
+    background-color: #f9f9f9;
+  }
   &:last-child {
     border-bottom: none;
   }
@@ -264,7 +256,15 @@ const SearchInput = styled.input`
   }
 
   &:focus {
+    transition: 0.2s ease-in-out;
     outline: none;
     box-shadow: 0 0 0 2px #11b55f;
   }
+`;
+
+const StatusContainer = styled.div`
+  padding: 80px 20px;
+  text-align: center;
+  color: #6f6f6f;
+  line-height: 1.6;
 `;

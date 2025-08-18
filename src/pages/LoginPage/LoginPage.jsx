@@ -6,7 +6,7 @@ import HorizontalRule from "../../components/style/HorizontalRule";
 import Button from "../../components/style/Button";
 import styled from "styled-components";
 import useUserStore from "../../store/useUserStore";
-import codeitLogo from "../../assets/icons/codeit.png";
+import { ReactComponent as LogoSVG } from "../../assets/icons/logo.svg";
 import Link from "../../components/style/Link";
 import { useToaster } from "../../store/useToasterStore";
 
@@ -52,7 +52,9 @@ const LoginPage = () => {
   return (
     <>
       <LoginContainer>
-        <Logo src={codeitLogo} alt="codeit" />
+        <Logo>
+          <LogoSVG width={100} height={40} />
+        </Logo>
         <StyledForm onSubmit={handleSubmit}>
           <Label htmlFor="username">
             <GreenText>북작북작</GreenText> 로그인
@@ -93,7 +95,7 @@ const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   text-align: left;
-  gap: 16px; /* form 내부 요소들 간의 간격 */
+  gap: 16px;
 `;
 
 const LoginContainer = styled.div`
@@ -105,15 +107,15 @@ const LoginContainer = styled.div`
   padding: 60px 20px 20px 20px;
   text-align: center;
 
-  /* LoginContainer의 자식들(h1, form)을 정렬 */
   display: flex;
   flex-direction: column;
-  gap: 24px; /* 제목과 폼 사이의 간격 */
+  gap: 24px;
 `;
 
-const Logo = styled.img`
-  display: block;
-  width: 50%;
+const Logo = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
   max-width: 200px;
   margin: 0 auto 16px;
 `;

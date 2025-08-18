@@ -51,7 +51,7 @@ const App = () => {
           path="/library/:libraryId/shared"
           element={<SharedBooksPage />}
         />
-        <Route path="/book/:bookId" element={<BookDetailPage />} />
+        <Route path="/book/:isbnId" element={<BookDetailPage />} />
 
         <Route
           path="barcode/library/select/:mode"

@@ -8,7 +8,8 @@ import Link from "../../components/style/Link";
 import { useToaster } from "../../store/useToasterStore";
 import styled from "styled-components";
 import useUserStore from "../../store/useUserStore";
-import codeitLogo from "../../assets/icons/codeit.png";
+
+import { ReactComponent as LogoSVG } from "../../assets/icons/logo.svg";
 
 function RegisterPage() {
   const [values, setValues] = useState({
@@ -34,16 +35,19 @@ function RegisterPage() {
     e.preventDefault();
 
     try {
-      // ✅ 스토어의 register 함수에 state 객체를 그대로 전달합니다.
       await register(values);
-
-      // ✅ 회원가입과 자동 로그인이 모두 성공하면 welcome 페이지로 이동합니다.
       navigate("/welcome");
       toast("success", "회원가입 및 로그인에 성공했습니다!");
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || "회원가입 중 오류가 발생했습니다.";
-      toast("error", errorMessage);
+      const serverMessage = error.response?.data?.message;
+      let displayMessage;
+
+      if (typeof serverMessage === "object" && serverMessage !== null) {
+        displayMessage = Object.values(serverMessage).join(" ");
+      } else {
+        displayMessage = serverMessage || "회원가입 중 오류가 발생했습니다.";
+      }
+      toast("warn", displayMessage);
       console.error("회원가입 실패:", error);
     }
   }
@@ -52,7 +56,9 @@ function RegisterPage() {
     <>
       <RegisterContainer>
         <StyledForm onSubmit={handleSubmit}>
-          <Logo src={codeitLogo} alt="codeit" />
+          <Logo>
+            <LogoSVG width={100} heigt={40} />
+          </Logo>
           <Label>
             <GreenText>북작북작</GreenText> 회원가입
           </Label>
@@ -151,9 +157,10 @@ const RegisterContainer = styled.div`
   /* gap: 24px; */
 `;
 
-const Logo = styled.img`
-  display: block;
-  width: 50%;
+const Logo = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
   max-width: 200px;
   margin: 0 auto 16px;
 `;

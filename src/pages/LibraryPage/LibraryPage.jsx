@@ -21,24 +21,28 @@ import useUserStore from "../../store/useUserStore";
 const mockRecommendedBooks = [
   {
     id: 201,
+    isbn: "mock-isbn-201",
     title: "취향 맞춤 책 1",
     author: "저자1",
     imageUrl: "https://placehold.co/100x140?text=추천1",
   },
   {
     id: 202,
+    isbn: "mock-isbn-202",
     title: "취향 맞춤 책 2",
     author: "저자2",
     imageUrl: "https://placehold.co/100x140?text=추천2",
   },
   {
     id: 203,
+    isbn: "mock-isbn-203",
     title: "취향 맞춤 책 3",
     author: "저자3",
     imageUrl: "https://placehold.co/100x140?text=추천3",
   },
   {
     id: 204,
+    isbn: "mock-isbn-204",
     title: "취향 맞춤 책 4",
     author: "저자4",
     imageUrl: "https://placehold.co/100x140?text=추천4",
@@ -53,14 +57,13 @@ const LibraryPage = () => {
   const { state } = useLocation();
   const libraryName = state?.name;
 
-  const [sharedBooks, setSharedBooks] = useState([]); // API 나눔된 도서 목록
-  const [recommendedBooks, setRecommendedBooks] = useState([]); // Mock 추천 도서 목록
+  const [sharedBooks, setSharedBooks] = useState([]);
+  const [recommendedBooks, setRecommendedBooks] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  // 3. API 호출 로직 단순화
   useEffect(() => {
     if (!libraryName) {
       setError("도서관 정보를 찾을 수 없습니다.");
@@ -74,11 +77,10 @@ const LibraryPage = () => {
         setIsLoading(true);
         setError(null);
 
-        // API 호출: 나눔된 책 목록
         const response = await axios.get(`library/booklist/${libraryId}`);
         setSharedBooks(response.data);
+        console.log(sharedBooks);
 
-        // 추천 도서는 Mock 데이터 유지
         setRecommendedBooks(mockRecommendedBooks);
       } catch (err) {
         if (err.response && err.response.data && err.response.data.message) {
@@ -125,7 +127,7 @@ const LibraryPage = () => {
 
         <LibraryHeader>
           <LibraryImage />
-          <LibraryTitle to={`/library/${libraryId}`}>
+          <LibraryTitle to={`/library/detail/${libraryId}`}>
             {libraryName}
             <InfoIcon width={16} height={16} />
           </LibraryTitle>
@@ -147,7 +149,7 @@ const LibraryPage = () => {
               취향이 유사한 분들이 좋아한 책
             </SectionTitle>
           </SectionHeader>
-          {/* --- 수정: SwiperSection > CenteredSwiperWrapper 구조로 변경 --- */}
+
           <SwiperSection>
             <CenteredSwiperWrapper>
               <Swiper
@@ -163,7 +165,10 @@ const LibraryPage = () => {
               >
                 {recommendedBooks.map((book, index) => (
                   <SwiperSlide key={`rec-${index}`} style={{ width: "120px" }}>
-                    <BookCard book={book} />
+                    <BookCard
+                      book={book}
+                      onClick={() => navigate(`/book/${book.isbn}`)}
+                    />
                   </SwiperSlide>
                 ))}
               </Swiper>
@@ -191,7 +196,10 @@ const LibraryPage = () => {
           </SectionHeader>
           <HorizontalScroll>
             {sharedBooks.map((book, index) => (
-              <BookCardWrapper key={`shared-${index}`}>
+              <BookCardWrapper
+                key={`shared-${index}`}
+                onClick={() => navigate(`/book/${book.isbn}`)}
+              >
                 <BookCard book={{ ...book, imageUrl: book.cover }} />
               </BookCardWrapper>
             ))}
@@ -338,7 +346,9 @@ const HorizontalScroll = styled.div`
 `;
 
 const BookCardWrapper = styled.div`
-  flex: 0 0 110px; /* 카드 너비 고정 */
+  flex: 0 0 110px;
+  display: flex;
+  cursor: pointer;
 `;
 
 const SwiperSection = styled(Section)`

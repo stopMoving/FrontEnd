@@ -65,15 +65,15 @@ export default function BookListPage() {
       return;
     }
 
+     const isbnList = scannedBooks.map(book => ({
+      isbn: book.rawIsbn,
+      quantity: book.quantity
+    }));
+
     if (isbnList.length === 0) {
       alert("담긴 ISBN이 없어요. ");
       return;
     }
-
-    const isbnList = scannedBooks.map(book => ({
-      isbn: book.rawIsbn,
-      quantity: book.quantity
-    }));
 
     setLoading(true);
     try {

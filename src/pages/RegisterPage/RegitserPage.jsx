@@ -113,8 +113,8 @@ function RegisterPage() {
 
           <Button>회원가입</Button>
 
-          <HorizontalRule>또는</HorizontalRule>
-          <div style={{ textAlign: "center" }}>
+          <HorizontalRule></HorizontalRule>
+          <div style={{ textAlign: "center", color: "#6F6F6F" }}>
             이미 회원이신가요? <Link to="/login">로그인하기</Link>
           </div>
         </StyledForm>

@@ -22,14 +22,6 @@ export default function ScanPage() {
   const { addScannedBook, scannedBooks, clearScannedBooks } = useBookStore();
 
   console.log("ScanPage에서 읽은 libraryId: ", libraryId);
-  
-  //빼도 되나
-  const formatIsbn = (isbn) => {
-    return isbn
-    ? isbn.replace(/^(\d{3})(\d{2})(\d{4})(\d{3})(\d{1})$/,
-        "$1-$2-$3-$4-$5")
-    : "-";
-    };
 
   const handleQuantityChange = (change) => {
     setQuantity(prev => Math.max(1, prev + change));
@@ -55,7 +47,7 @@ export default function ScanPage() {
             regular_price: data?.regular_price ?? "-",
             //내가 계산 x, 백엔드에서 넘겨주는 걸로
             price: data?.regular_price ? Math.round(data.regular_price * 0.2) : null,
-            isbn: formatIsbn(digits),
+            isbn: utils.formatIsbn(digits),
             rawIsbn: digits,
         });
 

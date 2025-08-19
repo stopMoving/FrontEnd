@@ -27,6 +27,10 @@ export default function LibrarySelectPage() {
 
   const loading = false;
 
+  const onBack = () => {
+    navigate(-1);
+  }
+
   const handleNext = () => {
     if (!selected) return;
     // 선택값을 들고 다음 스텝으로
@@ -38,6 +42,7 @@ export default function LibrarySelectPage() {
       title={title}
       branches={branches}
       value={selected}
+      onBack={onBack}
       onChange={setSelected}
       onNext={handleNext}
       loading={loading}

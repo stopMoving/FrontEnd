@@ -9,22 +9,21 @@ import { bookAPI, utils } from "../../lib/axios";
 
 export default function ScanPage() {
   const navigate = useNavigate();
-  const { mode } = useParams(); // give | take
+  const { mode } = useParams();
   const [modalOpen, setModalOpen] = useState(false);
-  const [step, setStep] = useState(1);
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(false);
   const [retakeCount, setRetakeCount] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [isbnCart, setIsbnCart] = useState([]);
   const [searchParams] = useSearchParams();
 
   const libraryId = searchParams.get("branchId"); // LibrarySelectPage에서 넘어온 값
   const token = useUserStore((state) => state.token);
-  const { addScannedBook } = useBookStore();
+  const { addScannedBook, scannedBooks, clearScannedBooks } = useBookStore();
 
   console.log("ScanPage에서 읽은 libraryId: ", libraryId);
   
+  //빼도 되나
   const formatIsbn = (isbn) => {
     return isbn
     ? isbn.replace(/^(\d{3})(\d{2})(\d{4})(\d{3})(\d{1})$/,
@@ -57,11 +56,11 @@ export default function ScanPage() {
             //내가 계산 x, 백엔드에서 넘겨주는 걸로
             price: data?.regular_price ? Math.round(data.regular_price * 0.2) : null,
             isbn: formatIsbn(digits),
+            rawIsbn: digits,
         });
 
         // 모달 열면 CameraScan에서 paused={modalOpen}으로 일시정지됨
         setQuantity(1);
-        setStep(1);
         setModalOpen(true);
     } catch (e) {
         // 여기서 조회 실패라고 ui를 띄워줘야 하지 않을까?
@@ -72,73 +71,26 @@ export default function ScanPage() {
     }
   };
 
-  // === step 1 버튼: 다시 찍기 ===
+  // 첫 번째 버튼(다시 스캔): SelectPage로 이동
   const handleRetake = () => {
     setModalOpen(false);          // 모달 닫힘 → 카메라 재개
-    setStep(1);
     setBook(null);
     setRetakeCount((v) => v + 1); // 콜백 리셋(같은 코드 재스캔 대비)
+    navigate(`/barcode/select/${mode}`); // 다시 스캔 방법 선택 페이지로 이동
   };
 
-  // === step 1 버튼: 확인 -> 등록 API 호출 후 step 2===
+  // 두 번째 버튼(확인): 등록 API 호출 후 BookListPage로 이동
   const handleConfirm = async () => {
     if (!book?.isbn) return;
 
     addScannedBook({
       ...book,
       quantity: quantity,
-      isbn: book.isbn
+      rawIsbn: utils.extractDigits(book.isbn),
     });
-    // setIsbnCart((prev) => {
-    //   const next = new Set(prev);
-    //   next.add(book.rawIsbn);
-    //   return Array.from(next);
-    // });
-    // setStep(2);
+
     setModalOpen(false);
     navigate(`/barcode/booklist/${mode}?branchId=${encodeURIComponent(libraryId)}`);
-  };
-
-  // === step 2 버튼: 아니오, 완료 ===
-  const handleFinish = async () => {
-    const accessToken = token?.access_token;
-    
-    if (!libraryId) {
-      alert("도서관이 선택되지 않았어요.");
-      return;
-    }
-
-    if (isbnCart.length === 0) {
-      alert("담긴 ISBN이 없어요. ");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      await bookAPI.donateBooks(libraryId, isbnCart);
-        setStep(2);
-    } catch (error) {
-        console.error("등록 실패", error);
-        alert(error.message) // alert 말고 다르게 표시하자
-    } finally {
-        setLoading(false);
-    }
-  };
-
-  // === step 2 버튼: 아니오, 완료 ===
-  // const handleFinish = () => {
-  //   setModalOpen(false);          // 닫고 끝
-  //   setStep(1);
-  //   setBook(null);
-  //   navigate(`/barcode/booklist/${mode}`);
-  // };
-
-  // === step 2 버튼: 네, 추가 ===
-  const handleAddMore = () => {
-    setModalOpen(false);          // 닫고 다음 스캔 준비
-    setStep(1);
-    setBook(null);
-    setRetakeCount((v) => v + 1);
   };
 
   return (
@@ -165,7 +117,6 @@ export default function ScanPage() {
 
       <ConfirmModal
         open={modalOpen}
-        step={step}
         mode={mode}
         book={book}
         loading={loading}
@@ -230,8 +181,7 @@ const Hint = styled.p`
   color: #000000;
   text-align: center;
   font-size: 13px;
-//   설명필요
-  line-height: 5;
+  line-height: 1;
   opacity: .9;
   margin: 0;
 `;

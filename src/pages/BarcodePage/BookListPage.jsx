@@ -3,6 +3,8 @@ import BookListPanel from "../../components/barcodeComponents/Panel/BookListPane
 import CompleteModal from "./CompleteModal";
 import { useMemo, useState } from "react";
 import useBookStore from "../../store/useBookStore";
+import { bookAPI } from "../../lib/axios";
+import useUserStore from "../../store/useUserStore";
 
 export default function BookListPage() {
   const navigate = useNavigate();
@@ -11,7 +13,10 @@ export default function BookListPage() {
   const libraryId = searchParams.get("branchId");
 
   const [completeOpen, setCompleteOpen] = useState(false);
-  const { scannedBooks, updateBookQuantity } = useBookStore();
+  const [loading, setLoading] = useState(false);
+
+  const { scannedBooks, updateBookQuantity, clearScannedBooks } = useBookStore();
+  const token = useUserStore((state) => state.token);
 
   const {totalCount, totalPoints } = useMemo(() => {
     let count = 0;
@@ -39,9 +44,46 @@ export default function BookListPage() {
         buttonLabel: "결제하기",
       };
 
+  // === step 2 버튼: 네, 추가 ===
+  // const handleAddMore = () => {
+  //   setModalOpen(false);          // 닫고 다음 스캔 준비
+  //   setBook(null);
+  //   setRetakeCount((v) => v + 1);
+  // };
+
+  // 추가(+) 버튼
   const handleAddClick = () => {
     // SelectPage로 이동하면서 mode와 libraryId 값을 다시 전달
     navigate(`/barcode/select/${mode}?branchId=${encodeURIComponent(libraryId)}`);
+  };
+
+    // 나눔하기 버튼
+  const handleFinish = async () => {    
+    if (!libraryId) {
+      alert("도서관이 선택되지 않았어요.");
+      return;
+    }
+
+    const isbnList = scannedBooks.flatMap(book =>
+      Array(book.quantity).fill(book.rawIsbn)
+    );
+
+    if (isbnList.length === 0) {
+      alert("담긴 ISBN이 없어요. ");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await bookAPI.donateBooks(libraryId, isbnList);
+      clearScannedBooks();
+      setCompleteOpen(true);
+    } catch (error) {
+        console.error("등록 실패", error);
+        alert(error.message) // alert 말고 다르게 표시하자
+    } finally {
+        setLoading(false);
+    }
   };
 
   return (
@@ -49,10 +91,10 @@ export default function BookListPage() {
     <BookListPanel
       {...copy}
       items={scannedBooks}
-      onNext={() => setCompleteOpen(true)}
-      disabled={false}
+      onNext={handleFinish}
+      disabled={loading}
       onQuantityChange={updateBookQuantity} // 스토어에서 가져온 함수를 핸들러로 전달
-      onAddClick={handleAddClick} // ✅ AddButton 클릭 핸들러 추가
+      onAddClick={handleAddClick}
     />
 
     <CompleteModal
@@ -62,6 +104,7 @@ export default function BookListPage() {
       points={totalPoints}
       onPrimary={() => {
         setCompleteOpen(false);
+        navigate('/mypage');
       }}
       onClose={() => setCompleteOpen(false)}
     />

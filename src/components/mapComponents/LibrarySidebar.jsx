@@ -4,7 +4,6 @@ import useLibrarySidebarStore from "../../store/useLibrarySidebarStore";
 import { useNavigate } from "react-router-dom";
 
 import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
-import { ReactComponent as BellIcon } from "../../assets/icons/bell.svg";
 import { ReactComponent as StarIcon } from "../../assets/icons/fullStarIcon.svg";
 
 const LibraryItem = ({ library }) => {
@@ -79,8 +78,6 @@ const LibrarySidebar = () => {
 };
 
 export default LibrarySidebar;
-
-// --- Styled Components ---
 
 const Backdrop = styled.div`
   position: fixed;

@@ -34,14 +34,14 @@ const CardContainer = styled.div`
   cursor: pointer;
 
   /* 고정 크기 설정 */
-  width: 110px;
+  width: 106px;
   height: 170px;
 
   flex-shrink: 0; /* 크기 축소 방지 */
 `;
 
 const ImageContainer = styled.div`
-  width: 110px;
+  width: 106px;
   height: 130px;
   position: relative;
   background-color: #f0f0f0;
@@ -62,7 +62,7 @@ const ImageContainer = styled.div`
 
 const TextContainer = styled.div`
   text-align: left;
-  width: 110px;
+  width: 106px;
   overflow: hidden;
 
   /* 남은 공간 활용하되 고정 너비 유지 */
@@ -84,7 +84,7 @@ const BookTitle = styled.h3`
   text-overflow: ellipsis;
 
   /* 최대 너비 설정 */
-  max-width: 110px;
+  max-width: 106px;
   line-height: 1.2;
 `;
 
@@ -99,6 +99,6 @@ const BookAuthor = styled.p`
   text-overflow: ellipsis;
 
   /* 최대 너비 설정 */
-  max-width: 110px;
+  max-width: 106px;
   line-height: 1.2;
 `;

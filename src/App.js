@@ -56,7 +56,7 @@ const App = () => {
         <Route path="/ai/recommand" element={<AiRecommendPage />} />
 
         <Route path="search/book" element={<SearchPage />} />
-        <Route path="search/book-detail" element={<BookInfoWrap />} />
+        <Route path="search/book-detail" element={<BookInfoPage />} />
         <Route
           path="barcode/library/select/:mode"
           element={<LibrarySelectPage />}

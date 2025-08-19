@@ -4,7 +4,7 @@ import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
 export default function StepHeader({
   title = "",
   activeStep = 1,     // 1 | 2 | 3
-  onBack,             // 뒤로가기 콜백
+  onBack, 
 }) {
   return (
     <Wrap>
@@ -31,7 +31,7 @@ const Wrap = styled.header`
   transform: translateX(-50%);
   width: 100%;
   max-width: 600px;
-  background: #fff;
+  background: #FFFFFF;
   z-index: 30px;
   border-bottom: 1px solid #000000;
 `;
@@ -73,9 +73,9 @@ const Step = styled.div`
   ${({ $active }) =>
     $active &&
     `
-      color: #111;
+      color: #000000;
     `}
-  /* 활성 스텝 아래 초록 인디케이터 */
+
   ${({ $active }) =>
     $active &&
     `
@@ -86,7 +86,7 @@ const Step = styled.div`
         transform: translateX(-50%);
         bottom: -2px;
         height: 3.5px;
-        width: clamp(72px, 22vw, 140px); /* 가운데 짧은 밑줄 */
+        width: clamp(72px, 31vw, 140px); /* 가운데 짧은 밑줄 */
         background: #11B55F;
         border-radius: 999px;
       }

@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import GlobalStyle from "./Globalstyles/GlobalStyle";
 import { Route, Routes } from "react-router-dom";
 import MainPage from "./pages/MainPage";
-import styled from "styled-components";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import RegisterPage from "./pages/RegisterPage/RegitserPage";
 import WelcomePage from "./pages/RegisterPage/WelcomePage";
@@ -19,12 +18,11 @@ import BookInfoPage from "./pages/BookInfoPage";
 import SharedBooksPage from "./pages/LibraryPage/SharedBooksPage";
 import BookDetailPage from "./pages/LibraryPage/BookDetailPage";
 import MyPage from "./pages/MyPage";
+import AiRecommendPage from "./pages/AiPage/AiRecommendPage";
 
 const App = () => {
-  // ✅ 스토어에서 initializeAuth 함수와 상태를 가져옵니다.
   const { initializeAuth, isInitialized, fetchLocation } = useUserStore();
 
-  // ✅ 앱이 처음 마운트될 때 딱 한 번만 실행합니다.
   useEffect(() => {
     initializeAuth();
     fetchLocation();
@@ -38,9 +36,9 @@ const App = () => {
     <>
       <GlobalStyle />
       <Routes>
-        <Route path="login" element={<LoginPage />} />
-        <Route path="register" element={<RegisterPage />} />
-        <Route path="welcome" element={<WelcomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/welcome" element={<WelcomePage />} />
         <Route path="/" element={<MainPage />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/library/detail/:id" element={<LibraryDetailPage />} />
@@ -49,12 +47,16 @@ const App = () => {
         <Route path="search/book" element={<SearchPage />} />
         <Route path="search/book-detail" element={<BookInfoPage />} />
         <Route path="barcode/library/select/:mode" element={<LibrarySelectPage />} />
+
         <Route
           path="/library/:libraryId/shared"
           element={<SharedBooksPage />}
         />
-        <Route path="/book/:bookId" element={<BookDetailPage />} />
+        <Route path="/book/:isbn" element={<BookDetailPage />} />
+        <Route path="/ai/recommand" element={<AiRecommendPage />} />
 
+        <Route path="search/book" element={<SearchPage />} />
+        <Route path="search/book-detail" element={<BookInfoWrap />} />
         <Route
           path="barcode/library/select/:mode"
           element={<LibrarySelectPage />}

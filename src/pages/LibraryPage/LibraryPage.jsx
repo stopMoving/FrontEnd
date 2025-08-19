@@ -17,28 +17,34 @@ import { ReactComponent as SearchIcon } from "../../assets/icons/search.svg";
 import { ReactComponent as ChevronRightIcon } from "../../assets/icons/nextIcon.svg";
 import BookCard from "../../components/BookCard";
 import useUserStore from "../../store/useUserStore";
+import useLibrarySidebarStore from "../../store/useLibrarySidebarStore";
+import { useToaster } from "../../store/useToasterStore";
 
 const mockRecommendedBooks = [
   {
     id: 201,
+    isbn: "mock-isbn-201",
     title: "취향 맞춤 책 1",
     author: "저자1",
     imageUrl: "https://placehold.co/100x140?text=추천1",
   },
   {
     id: 202,
+    isbn: "mock-isbn-202",
     title: "취향 맞춤 책 2",
     author: "저자2",
     imageUrl: "https://placehold.co/100x140?text=추천2",
   },
   {
     id: 203,
+    isbn: "mock-isbn-203",
     title: "취향 맞춤 책 3",
     author: "저자3",
     imageUrl: "https://placehold.co/100x140?text=추천3",
   },
   {
     id: 204,
+    isbn: "mock-isbn-204",
     title: "취향 맞춤 책 4",
     author: "저자4",
     imageUrl: "https://placehold.co/100x140?text=추천4",
@@ -53,14 +59,27 @@ const LibraryPage = () => {
   const { state } = useLocation();
   const libraryName = state?.name;
 
-  const [sharedBooks, setSharedBooks] = useState([]); // API 나눔된 도서 목록
-  const [recommendedBooks, setRecommendedBooks] = useState([]); // Mock 추천 도서 목록
+  // toast 불러오기
+  const toast = useToaster();
 
+  // 도서관 전역상태 가져오기
+  const { myLibraries, fetchMyLibraries } = useLibrarySidebarStore();
+
+  const [sharedBooks, setSharedBooks] = useState([]);
+  const [recommendedBooks, setRecommendedBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isTogglingFavorite, setIsTogglingFavorite] = useState(false); // 즐겨찾기 버튼 로딩
 
-  // 3. API 호출 로직 단순화
+  // 즐겨찾기 되어있는지 확인
+  useEffect(() => {
+    if (myLibraries.length > 0) {
+      const isFav = myLibraries.some((lib) => lib.id === parseInt(libraryId));
+      setIsFavorite(isFav);
+    }
+  }, [myLibraries, libraryId]);
+
   useEffect(() => {
     if (!libraryName) {
       setError("도서관 정보를 찾을 수 없습니다.");
@@ -74,11 +93,10 @@ const LibraryPage = () => {
         setIsLoading(true);
         setError(null);
 
-        // API 호출: 나눔된 책 목록
         const response = await axios.get(`library/booklist/${libraryId}`);
+        console.log("서버로부터 받은 실제 데이터:", response.data);
         setSharedBooks(response.data);
 
-        // 추천 도서는 Mock 데이터 유지
         setRecommendedBooks(mockRecommendedBooks);
       } catch (err) {
         if (err.response && err.response.data && err.response.data.message) {
@@ -94,6 +112,22 @@ const LibraryPage = () => {
 
     loadBookList();
   }, [libraryId, libraryName, navigate]);
+
+  const handleToggleFavorite = async () => {
+    setIsTogglingFavorite(true);
+    try {
+      const response = await axios.post("users/my-libraries/modify/", {
+        library_id: parseInt(libraryId),
+      });
+      setIsFavorite(response.data.in_my_lib);
+      await fetchMyLibraries();
+    } catch (err) {
+      console.error("Failed to toggle favorite:", err);
+      toast(err, "내 도서관 등록/해제에 실패했습니다.");
+    } finally {
+      setIsTogglingFavorite(false);
+    }
+  };
 
   if (isLoading)
     return (
@@ -125,11 +159,14 @@ const LibraryPage = () => {
 
         <LibraryHeader>
           <LibraryImage />
-          <LibraryTitle to={`/library/${libraryId}`}>
+          <LibraryTitle to={`/library/detail/${libraryId}`}>
             {libraryName}
             <InfoIcon width={16} height={16} />
           </LibraryTitle>
-          <FavoriteButton onClick={() => setIsFavorite(!isFavorite)}>
+          <FavoriteButton
+            onClick={handleToggleFavorite}
+            disabled={isTogglingFavorite}
+          >
             {isFavorite ? (
               <StarIcon width={28} height={28} />
             ) : (
@@ -138,7 +175,6 @@ const LibraryPage = () => {
           </FavoriteButton>
         </LibraryHeader>
 
-        {/* --- 상단 스와이퍼 (추천 도서 - Mock) --- */}
         <Section>
           <SectionHeader>
             <SectionTitle>
@@ -147,7 +183,7 @@ const LibraryPage = () => {
               취향이 유사한 분들이 좋아한 책
             </SectionTitle>
           </SectionHeader>
-          {/* --- 수정: SwiperSection > CenteredSwiperWrapper 구조로 변경 --- */}
+
           <SwiperSection>
             <CenteredSwiperWrapper>
               <Swiper
@@ -157,13 +193,16 @@ const LibraryPage = () => {
                   disableOnInteraction: false,
                 }}
                 slidesPerView={"auto"}
-                spaceBetween={16}
+                spaceBetween={10}
                 centeredSlides={true}
                 navigation={true}
               >
                 {recommendedBooks.map((book, index) => (
                   <SwiperSlide key={`rec-${index}`} style={{ width: "120px" }}>
-                    <BookCard book={book} />
+                    <BookCard
+                      book={book}
+                      onClick={() => navigate(`/book/${book.isbn}`)}
+                    />
                   </SwiperSlide>
                 ))}
               </Swiper>
@@ -191,7 +230,10 @@ const LibraryPage = () => {
           </SectionHeader>
           <HorizontalScroll>
             {sharedBooks.map((book, index) => (
-              <BookCardWrapper key={`shared-${index}`}>
+              <BookCardWrapper
+                key={`shared-${index}`}
+                onClick={() => navigate(`/book/${book.isbn}`)}
+              >
                 <BookCard book={{ ...book, imageUrl: book.cover }} />
               </BookCardWrapper>
             ))}
@@ -283,7 +325,7 @@ const FavoriteButton = styled.button`
 `;
 
 const Section = styled.section`
-  margin-bottom: 32px;
+  margin-bottom: 4px;
   width: 100%;
 `;
 
@@ -338,12 +380,14 @@ const HorizontalScroll = styled.div`
 `;
 
 const BookCardWrapper = styled.div`
-  flex: 0 0 110px; /* 카드 너비 고정 */
+  flex: 0 0 110px;
+  display: flex;
+  cursor: pointer;
 `;
 
 const SwiperSection = styled(Section)`
   background-color: #e6f4f0;
-  padding: 20px;
+  padding: 30px; 20px;
   width: calc(100% + 40px);
   margin: 0 -20px 32px -20px;
   box-sizing: border-box;
@@ -356,6 +400,10 @@ const SwiperSection = styled(Section)`
 `;
 
 const CenteredSwiperWrapper = styled.div`
+  .swiper {
+    overflow: visible;
+  }
+
   .swiper-slide {
     transition: transform 0.3s ease-out;
     transform: scale(0.85);
@@ -363,7 +411,7 @@ const CenteredSwiperWrapper = styled.div`
   }
 
   .swiper-slide-active {
-    transform: scale(1);
+    transform: scale(1.08);
     opacity: 1;
   }
 

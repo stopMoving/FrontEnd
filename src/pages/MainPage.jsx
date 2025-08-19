@@ -1,9 +1,7 @@
-import React from "react";
 import styled from "styled-components";
 import { Outlet, useNavigate } from "react-router-dom";
 import BottomNavBar from "../components/Layout/BottomNavBar";
 import TopNavBar from "../components/Layout/TopNavBar";
-import codeit from "../assets/icons/codeit.png";
 import BookCard from "../components/BookCard";
 import BannerCard from "../components/BannerCard";
 import useUserStore from "../store/useUserStore";
@@ -18,6 +16,7 @@ import { ReactComponent as Library1 } from "../assets/icons/Library1.svg";
 import { ReactComponent as Library2 } from "../assets/icons/Library2.svg";
 import { ReactComponent as Library3 } from "../assets/icons/Library3.svg";
 import { ReactComponent as Library4 } from "../assets/icons/Library4.svg";
+import { ReactComponent as MainLogo } from "../assets/icons/logo.svg";
 
 const bannerData = [
   {
@@ -113,7 +112,11 @@ const MainPage = () => {
             <LibraryIcon fill={"#0D8847"} width={24} height={24} />{" "}
           </TopNavBar.IconButton>
         }
-        title={<LogoContainer src={codeit} />}
+        title={
+          <LogoContainer>
+            <MainLogo />
+          </LogoContainer>
+        }
         rightControls={
           <TopNavBar.IconButton
             onClick={handleNotificationClick}
@@ -185,8 +188,8 @@ const MainContainer = styled.main`
   }
 `;
 
-const LogoContainer = styled.img`
-  height: 20px;
+const LogoContainer = styled.div`
+  height: 30px;
   width: auto;
 `;
 
@@ -293,6 +296,6 @@ const GreenTitle = styled.span`
 const BookGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: 8px;
   width: 100%;
 `;

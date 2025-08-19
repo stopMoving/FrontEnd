@@ -5,6 +5,7 @@ import CameraScan from "../../components/barcodeComponents/CameraScan";
 import ConfirmModal from "./ConfirmModal";
 import useUserStore from "../../store/useUserStore";
 import useBookStore from "../../store/useBookStore";
+import { bookAPI, utils } from "../../lib/axios";
 
 export default function ScanPage() {
   const navigate = useNavigate();
@@ -38,35 +39,13 @@ export default function ScanPage() {
   // 스캔 성공 시 (조회))
   const handleDetected = async (text) => {
     if (loading || modalOpen) return; // 중복 스캔 가드
-    const digits = String(text).replace(/[^0-9]/g, "");
-    if (!/^97[89]\d{10}$/.test(digits)) return;
 
-  const accessToken = token?.access_token;
-  if (!accessToken) {
-    alert("로그인이 필요해요. (토큰 없음)");
-    return;
-  }
+    const digits = utils.extractDigits(text);
+    if (!utils.validateISBN(digits)) return;
 
     setLoading(true);
     try {
-        const url = `https://stopmoving.o-r.kr/bookinfo/donate/?isbn=${digits}`;
-        const res = await fetch(url, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        const textBody = await res.text();
-        const data = textBody ? JSON.parse(textBody) : null;
-        
-        if (!res.ok) {
-          if (res.status === 400) throw new Error("잘못된 요청입니다. ISBN을 확인해주세요.");
-          if (res.status === 502) throw new Error("외부 도서 API 오류입니다. 잠시 후 다시 시도해주세요.");
-          throw new Error(textBody || `조회 실패 (${res.status})`);
-        }
-
-        console.log("lookup payload ▶", data);
+        const data = await bookAPI.getBookByISBN(digits);
 
         setBook({
             image: data?.cover_url ?? null,
@@ -123,14 +102,12 @@ export default function ScanPage() {
   // === step 2 버튼: 아니오, 완료 ===
   const handleFinish = async () => {
     const accessToken = token?.access_token;
-    if(!accessToken) {
-      alert("로그인이 필요해요. (토큰 없음)");
-      return;
-    }
+    
     if (!libraryId) {
       alert("도서관이 선택되지 않았어요.");
       return;
     }
+
     if (isbnCart.length === 0) {
       alert("담긴 ISBN이 없어요. ");
       return;
@@ -138,23 +115,11 @@ export default function ScanPage() {
 
     setLoading(true);
     try {
-      const payload = {
-        library_id: Number(libraryId),
-        isbn: isbnCart,
-      };
-      const res = await fetch(`https://stopmoving.o-r.kr/books/donate/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(payload),
-        });
-        if (!res.ok) throw new Error("register failed");
+      await bookAPI.donateBooks(libraryId, isbnCart);
         setStep(2);
-    } catch (e) {
-        console.error("등록 실패", e);
-        alert("등록에 실패했어요. 잠시 후 다시 시도해 주세요.") // alert 말고 다르게 표시하자
+    } catch (error) {
+        console.error("등록 실패", error);
+        alert(error.message) // alert 말고 다르게 표시하자
     } finally {
         setLoading(false);
     }

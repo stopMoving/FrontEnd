@@ -124,9 +124,10 @@
 
 //   const disabled = isbn.length !== 13 || loading;
 
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 import useUserStore from "../../store/useUserStore";
+import { bookAPI } from "../../lib/axios";
 
 export default function ISBNInputPanel({ onClose, onConfirm }) { // ✅ onConfirm 프롭스를 받음
   const [isbn, setIsbn] = useState("");
@@ -143,33 +144,15 @@ export default function ISBNInputPanel({ onClose, onConfirm }) { // ✅ onConfir
     }
 
     setLoading(true);
-    const accessToken = token?.access_token;
-    if (!accessToken) {
-        alert("로그인이 필요해요. (토큰 없음)");
-        setLoading(false);
-        return;
-    }
 
     try {
-        const url = `https://stopmoving.o-r.kr/bookinfo/donate/?isbn=${isbn}`;
-        const res = await fetch(url, {
-          method: "GET",
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-
-        const textBody = await res.text();
-        const data = textBody ? JSON.parse(textBody) : null;
-        
-        if (!res.ok) {
-          throw new Error(data?.detail || `조회 실패 (${res.status})`);
-        }
+        const data = await bookAPI.getBookByISBN(isbn);
 
         onClose(); // ✅ 바텀 시트를 먼저 닫음
         onConfirm(data); // ✅ onConfirm 콜백으로 책 데이터 전달
-
-    } catch (e) {
-        console.error("조회 실패:", e);
-        alert(e.message || "도서 조회에 실패했어요. 잠시 후 다시 시도해 주세요.");
+    } catch (error) {
+        console.error("조회 실패:", error);
+        alert(error.message);
     } finally {
         setLoading(false);
     }

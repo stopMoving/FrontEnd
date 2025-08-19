@@ -186,6 +186,7 @@ import { useEffect, useRef, useState } from "react";
 import { BrowserMultiFormatReader } from "@zxing/library";
 import styled from "styled-components";
 import useUserStore from "../../store/useUserStore";
+import { bookAPI, utils } from "../../lib/axios";
 
 export default function ImageUploadPanel({
   onClose,
@@ -228,31 +229,13 @@ export default function ImageUploadPanel({
       try {
         const res = await codeReader.decodeFromImageElement(img);
         // ✅ 바코드에서 숫자만 추출
-        const digits = res.text.replace(/[^0-9]/g, "");
+        const digits = utils.extractDigits(res.text);
 
-        if (!/^97[89]\d{10}$/.test(digits)) {
+        if (!utils.validateISBN(digits)) {
           throw new Error("유효한 ISBN 바코드가 아닙니다.");
         }
 
-        const accessToken = token?.access_token;
-        if (!accessToken) {
-          throw new Error("로그인이 필요합니다.");
-        }
-
-        const url = `https://stopmoving.o-r.kr/bookinfo/donate/?isbn=${digits}`;
-        const fetchRes = await fetch(url, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-
-        const textBody = await fetchRes.text();
-        let data = textBody ? JSON.parse(textBody) : null;
-        
-        if (!fetchRes.ok) {
-          throw new Error(data?.detail || `조회 실패 (${fetchRes.status})`);
-        }
+        const data = await bookAPI.getBookByISBN(digits);
 
         onClose(); // ✅ API 호출 성공 시 바텀 시트 닫기
         onConfirm(data); // ✅ onConfirm 콜백으로 책 데이터 전달

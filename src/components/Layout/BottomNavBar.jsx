@@ -24,7 +24,7 @@ const navItems = [
     path: "/barcode/library/select/take",
   },
   { id: 3, Iconlabel: "홈", component: HomeIcon, path: "/" },
-  { id: 4, Iconlabel: "AI", component: AiIcon, path: "/" },
+  { id: 4, Iconlabel: "AI", component: AiIcon, path: "/ai/recommand" },
   { id: 5, Iconlabel: "마이페이지", component: MypageIcon, path: "/mypage" },
 ];
 
@@ -61,7 +61,7 @@ const BottomNav = styled.nav`
 
   width: 100%;
   max-width: 600px;
-  height: 70px; /* 하단 바 높이 */
+  height: 70px;
   background-color: white;
   border-top: 1px solid #dedede;
   z-index: 90;

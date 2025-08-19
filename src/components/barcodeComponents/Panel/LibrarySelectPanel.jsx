@@ -1,18 +1,16 @@
 import styled from "styled-components";
 import StepHeader from "../StepHeader";
 import CustomSelect from "../CustomSelect";
-import { useState } from "react";
 
 export default function LibrarySelectPanel({
-  title,                 // "나눔하기" | "데려가기"
-  branches = [],         // [{ id, name }]
-  value,                 // 선택된 id
-  onChange,              // (id) => void
-  onNext,                // 다음 버튼 클릭
-  loading = false,       // 목록 로딩 중이면 true
-  onBack,                // 뒤로가기 콜백
+  title, // "나눔하기" | "데려가기"
+  branches = [], // [{ id, name }]
+  value, // 선택된 id
+  onChange, // (id) => void
+  onNext, // 다음 버튼 클릭
+  loading = false, // 목록 로딩 중이면 true
+  onBack, // 뒤로가기 콜백
 }) {
-  const [open, setOpen] = useState(false); // select 열림 여부
   const disabled = !value || loading;
 
   return (
@@ -23,7 +21,7 @@ export default function LibrarySelectPanel({
         <SectionTitle>현재 도착한 도서관을 선택해주세요.</SectionTitle>
 
         <CustomSelect
-          options={branches.map(b => ({ value: b.libraryId, label: b.name }))}
+          options={branches.map((b) => ({ value: b.libraryId, label: b.name }))}
           value={value || ""}
           onChange={onChange}
           placeholder="도서관 선택"
@@ -49,7 +47,7 @@ const Wrap = styled.div`
   position: relative;
 
   /* 고정 헤더 공간 확보 + 하단 버튼 여유 */
-  padding-top: 180px; 
+  padding-top: 180px;
 `;
 
 const Inner = styled.div`

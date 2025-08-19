@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axios from "../lib/axios";
+import useUserStore from "./useUserStore";
 
 const useLibrarySidebarStore = create((set) => ({
   isOpen: false,
@@ -16,31 +17,41 @@ const useLibrarySidebarStore = create((set) => ({
 
   toggleSidebar: () => set((state) => ({ isOpen: !state.isOpen })),
 
-  // 내 도서관 연동 API
+  // 내 도서관 API
   fetchMyLibraries: async () => {
     set({ isMyLibrariesLoading: true, myLibrariesError: null });
-    try {
-      // --- TODO: 나중에 실제 '내 도서관' API 엔드포인트로 교체해주세요 ---
-      // const response = await axios.get("/api/my-libraries");
-      // set({ myLibraries: response.data, isMyLibrariesLoading: false });
 
-      // 지금은 샘플 데이터를 보여줍니다.
-      const sampleMyLibraries = [
-        { id: "my1", name: "김영삼도서관 (샘플)" },
-        { id: "my2", name: "사당솔밭도서관 (샘플)" },
-      ];
-      // API 연동 전까지 딜레이를 주어 로딩 상태를 확인하기 위함
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      set({ myLibraries: sampleMyLibraries, isMyLibrariesLoading: false });
-    } catch (err) {
+    const { token } = useUserStore.getState();
+
+    if (!token || !token.access_token) {
       set({
-        myLibrariesError: "'내 도서관' 목록을 불러오지 못했습니다.",
+        myLibrariesError: "로그인이 필요한 서비스입니다.",
         isMyLibrariesLoading: false,
       });
-      console.error("Failed to fetch my libraries:", err);
+      return;
+    }
+
+    try {
+      const response = await axios.get("users/my-libraries/list/", {
+        headers: {
+          Authorization: `Bearer ${token.access_token}`,
+        },
+      });
+
+      set({
+        myLibraries: response.data.libraries,
+        isMyLibrariesLoading: false,
+      });
+    } catch (error) {
+      set({
+        myLibrariesError: "'내도서관' 목록을 불러오지 못했습니다.",
+        isMyLibrariesLoading: false,
+      });
+      console.error("Failed to fetch my libraries:", error);
     }
   },
 
+  //전체 도서관 API
   fetchAllLibraries: async () => {
     set({ isAllLibrariesLoading: true, allLibrariesError: null });
 
@@ -51,7 +62,7 @@ const useLibrarySidebarStore = create((set) => ({
     } catch (err) {
       set({
         allLibrariesError: "전체 도서관 목록을 불러오는 데 실패했습니다.", // (O)
-        isAllLibrariesLoading: false, // (O)
+        isAllLibrariesLoading: false,
       });
       console.error("Failed to fetch libraries:", err);
     }

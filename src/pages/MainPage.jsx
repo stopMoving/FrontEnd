@@ -1,9 +1,7 @@
-import React from "react";
 import styled from "styled-components";
 import { Outlet, useNavigate } from "react-router-dom";
 import BottomNavBar from "../components/Layout/BottomNavBar";
 import TopNavBar from "../components/Layout/TopNavBar";
-import codeit from "../assets/icons/codeit.png";
 import BookCard from "../components/BookCard";
 import BannerCard from "../components/BannerCard";
 import useUserStore from "../store/useUserStore";
@@ -298,6 +296,6 @@ const GreenTitle = styled.span`
 const BookGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: 8px;
   width: 100%;
 `;

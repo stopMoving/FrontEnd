@@ -3,5 +3,6 @@
 #POST 링크기입
 #Content-Type: application/json
 
-GET https://stopmoving.o-r.kr/library/booklist/1
+
+GET https://stopmoving.o-r.kr/books/by-isbn/9788959985180/
 Accept: application/json

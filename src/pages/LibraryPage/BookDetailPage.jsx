@@ -2,40 +2,73 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
-
-const fetchBookDetail = async (bookId) => {
-  console.log(`${bookId} 책 상세 정보 요청`);
-  return {
-    id: bookId,
-    title: "어린이를 위한 습관의 힘",
-    author: "이소영",
-    publisher: "출판사A",
-    originalPrice: 18000,
-    discountedPrice: 3600,
-    isbn: "979-11-9691-803-3",
-    summary:
-      "이 책은 어린이들이 좋은 습관을 형성할 수 있도록 돕는 구체적인 방법들을 소개합니다. 줄거리가 길어질 경우, 이 텍스트는 네 번째 줄에서 잘리게 될 것입니다. 습관의 중요성을 깨닫고, 일상생활 속에서 작은 성공을 경험하며 자신감을 키울 수 있도록 안내합니다. 이 부분은 화면에 보이지 않아야 합니다.이 부분은 화면에 보이지 않아야 합니다.이 부분은 화면에 보이지 않아야 합니다.",
-    quantity: 2,
-    imageUrl: "https://placehold.co/199x253?text=초대형책",
-  };
-};
+import axios from "../../lib/axios";
 
 const BookDetailPage = () => {
-  const { bookId } = useParams();
+  const { isbn } = useParams();
   const navigate = useNavigate();
+
   const [book, setBook] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const loadBookData = async () => {
-      const data = await fetchBookDetail(bookId);
-      setBook(data);
-    };
-    loadBookData();
-  }, [bookId]);
+      console.log("페이지에서 받은 ISBN:", isbn);
+      if (!isbn) {
+        setError("책 정보를 찾을 수 없습니다.");
+        setIsLoading(false);
+        return;
+      }
 
-  if (!book) {
-    return <PageWrapper>로딩 중...</PageWrapper>;
-  }
+      try {
+        setIsLoading(true);
+        setError(null);
+        const response = await axios.get(`books/by-isbn/${isbn}/`);
+        console.log(response.data);
+        setBook(response.data);
+      } catch (err) {
+        if (err.response && err.response.data && err.response.data.detail) {
+          setError(err.response.data.detail);
+        } else {
+          setError("책 정보를 불러오는 데 실패했습니다.");
+        }
+        console.error("Failed to fetch book details:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadBookData();
+  }, [isbn]);
+
+  if (isLoading)
+    return (
+      <PageWrapper>
+        <StatusContainer>로딩 중...</StatusContainer>
+      </PageWrapper>
+    );
+  if (error)
+    return (
+      <PageWrapper>
+        <TopNavBar>
+          <BackButton onClick={() => navigate(-1)}>
+            <BackIcon />
+          </BackButton>
+        </TopNavBar>
+        <StatusContainer>
+          😥
+          <br />
+          {error}
+        </StatusContainer>
+      </PageWrapper>
+    );
+  if (!book)
+    return (
+      <PageWrapper>
+        <StatusContainer>책 정보가 없습니다.</StatusContainer>
+      </PageWrapper>
+    );
 
   return (
     <PageWrapper>
@@ -46,33 +79,61 @@ const BookDetailPage = () => {
       </TopNavBar>
 
       <ContentContainer>
-        <BookImage src={book.imageUrl} alt={book.title} />
-        <Title>{book.title}</Title>
+        <BookImageSection>
+          <BookImage src={book.cover_url} alt={book.title} />
+        </BookImageSection>
 
-        <InfoList>
-          <InfoItem>{book.author}</InfoItem>
-          <InfoItem>{book.publisher}</InfoItem>
-          <InfoItem>
-            <OriginalPrice>
-              {book.originalPrice.toLocaleString()}원
-            </OriginalPrice>
-          </InfoItem>
-        </InfoList>
+        <InfoWrapper>
+          <Title>{book.title}</Title>
+          <InfoList>
+            <InfoItem>{book.author}</InfoItem>
+            <InfoItem>{book.publisher}</InfoItem>
+            <InfoItem>{book.published_date}</InfoItem>
+            <InfoItem>
+              <OriginalPrice>
+                {book.regular_price.toLocaleString()}원
+              </OriginalPrice>
+            </InfoItem>
+          </InfoList>
 
-        <PriceInfo>{book.discountedPrice.toLocaleString()}원</PriceInfo>
+          <PriceInfo>{book.sale_price.toLocaleString()}원</PriceInfo>
+          <IsbnInfo>ISBN 코드 : {book.isbn}</IsbnInfo>
+          <Divider />
 
-        <IsbnInfo>ISBN 코드 : {book.isbn}</IsbnInfo>
+          <SummarySection>
+            <SectionTitle>책 소개</SectionTitle>
+            <SummaryText>
+              {book.description || "제공된 책 소개가 없습니다."}
+            </SummaryText>
+          </SummarySection>
 
-        <Divider />
-
-        <SummarySection>
-          <SectionTitle>책 소개</SectionTitle>
-          <SummaryText>{book.summary}</SummaryText>
-        </SummarySection>
+          {book.libraries && book.libraries.length > 0 && (
+            <>
+              {/* <Divider /> */}
+              {/* <SummarySection>
+              <SectionTitle>이 책을 볼 수 있는 도서관</SectionTitle>
+              {book.libraries.map((lib) => (
+                <LibraryItem key={lib.library_id}>
+                  <LibraryName>{lib.name}</LibraryName>
+                  <LibraryInfo>
+                    <span>{lib.distance_m}m</span>
+                    <span>보유: {lib.total_books}권</span>
+                    <span className="available">
+                      대여 가능: {lib.available_books}권
+                    </span>
+                  </LibraryInfo>
+                </LibraryItem>
+              ))}
+            </SummarySection> */}
+            </>
+          )}
+        </InfoWrapper>
       </ContentContainer>
 
       <BottomNavBar>
-        <QuantityButton>수량 : {book.quantity}권</QuantityButton>
+        <QuantityButton>
+          수량 : {book.libraries[0]?.available_books || 0}권
+        </QuantityButton>
         <ReserveButton>예약</ReserveButton>
       </BottomNavBar>
     </PageWrapper>
@@ -99,7 +160,7 @@ const TopNavBar = styled.header`
   align-items: center;
   position: fixed;
   top: 0;
-  background-color: #fff;
+  background-color: #e6f4f0;
   z-index: 10;
 
   left: 50%;
@@ -136,19 +197,33 @@ const BottomNavBar = styled.footer`
 
 const ContentContainer = styled.main`
   width: 100%;
-  padding: 60px 20px 100px;
+  padding-top: 60px;
+  padding-bottom: 100px;
   box-sizing: border-box;
   flex: 1;
   overflow-y: auto;
+`;
+
+const BookImageSection = styled.div`
+  width: 100%;
+  background-color: #e6f4f0;
+  padding: 24px 0;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
 `;
 
 const BookImage = styled.img`
   display: block;
   width: 199px;
   height: 253px;
-  margin: 24px auto 32px;
+  margin: 24px auto 16px;
   background-color: #f0f0f0;
   border-radius: 8px;
+`;
+
+const InfoWrapper = styled.div`
+  padding: 0 20px;
 `;
 
 const Title = styled.h1`
@@ -185,7 +260,7 @@ const PriceInfo = styled.p`
 
 const IsbnInfo = styled.p`
   font-size: 14px;
-  color: #6f6f6f;
+  color: black;
   margin-top: 8px;
 `;
 
@@ -234,4 +309,40 @@ const ReserveButton = styled(ActionButton)`
   background-color: #11b55f;
   font-size: 24px;
   color: white;
+`;
+
+// const LibraryItem = styled.div`
+//   border: 1px solid #f0f0f0;
+//   border-radius: 8px;
+//   padding: 16px;
+//   margin-bottom: 12px;
+// `;
+
+// const LibraryName = styled.h3`
+//   font-size: 16px;
+//   font-weight: 600;
+//   margin: 0 0 8px 0;
+// `;
+
+// const LibraryInfo = styled.div`
+//   display: flex;
+//   gap: 12px;
+//   font-size: 14px;
+//   color: #555;
+
+//   .available {
+//     color: #11b55f;
+//     font-weight: 500;
+//   }
+// `;
+
+const StatusContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+  color: #666;
+  text-align: center;
 `;

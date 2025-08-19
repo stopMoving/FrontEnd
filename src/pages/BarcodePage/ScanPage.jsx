@@ -111,7 +111,7 @@ export default function ScanPage() {
       <MaskBottom>
         <Title>바코드 인식</Title>
         <Hint>
-          인식이 어려우면 조명을 밝히고, 바코드와 카메라를 평행하게 맞춘 뒤 프레임 안에 꽉 차게 맞춰보세요.
+          인식이 어려우면 조명을 밝히고, 바코드와 카메라를 평행하게 맞춘 뒤<br />프레임 안에 꽉 차게 맞춰보세요.
         </Hint>
       </MaskBottom>
 
@@ -173,17 +173,16 @@ const Title = styled.div`
   text-align: center;
   font-weight: 700;
   font-size: 18px;
-//   설명필요
-  margin-bottom: -10px;
+  margin-bottom: 15px;
 `;
 
 const Hint = styled.p`
   color: #000000;
   text-align: center;
   font-size: 13px;
-  line-height: 1;
+  line-height: 1.5;
   opacity: .9;
-  margin: 0;
+  margin-bottom: 30px;
 `;
 
 const GuideLine = styled.div`

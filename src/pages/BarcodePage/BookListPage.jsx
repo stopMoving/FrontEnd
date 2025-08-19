@@ -14,6 +14,7 @@ export default function BookListPage() {
 
   const [completeOpen, setCompleteOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [completeData, setCompleteData] = useState({ count: 0, points: 0 });
 
   const { scannedBooks, updateBookQuantity, clearScannedBooks } = useBookStore();
   const token = useUserStore((state) => state.token);
@@ -64,18 +65,25 @@ export default function BookListPage() {
       return;
     }
 
-    const isbnList = scannedBooks.flatMap(book =>
-      Array(book.quantity).fill(book.rawIsbn)
-    );
-
     if (isbnList.length === 0) {
       alert("담긴 ISBN이 없어요. ");
       return;
     }
 
+    const isbnList = scannedBooks.map(book => ({
+      isbn: book.rawIsbn,
+      quantity: book.quantity
+    }));
+
     setLoading(true);
     try {
       await bookAPI.donateBooks(libraryId, isbnList);
+
+      setCompleteData({
+        count: totalCount,
+        points: totalPoints,
+      });
+
       clearScannedBooks();
       setCompleteOpen(true);
     } catch (error) {
@@ -100,8 +108,8 @@ export default function BookListPage() {
     <CompleteModal
       open={completeOpen}
       mode={mode}
-      count={totalCount}
-      points={totalPoints}
+      count={completeData.count}
+      points={completeData.points}
       onPrimary={() => {
         setCompleteOpen(false);
         navigate('/mypage');

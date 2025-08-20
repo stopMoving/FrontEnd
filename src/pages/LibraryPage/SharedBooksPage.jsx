@@ -79,7 +79,7 @@ const SharedBooksPage = () => {
       <ContentContainer>
         <SearchInputContainer>
           <SearchIconWrapper>
-            <SearchIcon fill={"#6F6F6F"} width={20} height={20} />
+            <SearchIcon fill={"#6F6F6F"} width={24} height={24} />
           </SearchIconWrapper>
           <SearchInput
             type="text"
@@ -129,11 +129,13 @@ const PageWrapper = styled.div`
   background-color: #fff;
   display: flex;
   flex-direction: column;
+
+  overflow: hidden;
 `;
 
 const TopNavBar = styled.header`
   display: flex;
-  justify-content: center; /* 제목을 중앙 정렬하기 위함 */
+  justify-content: center;
   align-items: center;
   position: fixed;
   top: 0;
@@ -165,12 +167,19 @@ const PageTitle = styled.h1`
 `;
 
 const ContentContainer = styled.main`
-  padding: 84px 20px 20px;
+  padding: 60px 20px 20px;
   width: 100%;
   box-sizing: border-box;
 
+  flex: 1;
+  overflow-y: auto;
+
   @media (max-width: 480px) {
-    padding: 84px 16px 16px;
+    padding: 60px 16px 16px;
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 `;
 
@@ -224,21 +233,22 @@ const BookTitle = styled.h3`
 
 const InfoText = styled.p`
   font-size: 14px;
-  color: #555;
+  color: #868686;
   margin: 0;
 `;
 
 const SearchInputContainer = styled.div`
   position: relative;
-  margin-bottom: 24px;
+  margin-top: 8px;
+  margin-bottom: 16px;
 `;
 
 const SearchIconWrapper = styled.div`
   position: absolute;
-  top: 50%;
+  top: 53%;
   left: 16px;
   transform: translateY(-50%);
-  pointer-events: none; /* 아이콘 뒤로 클릭이 통과되도록 */
+  pointer-events: none;
 `;
 
 const SearchInput = styled.input`
@@ -248,7 +258,8 @@ const SearchInput = styled.input`
   border: none;
   background-color: #e6f4f0;
   padding: 0 20px 0 48px;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
   box-sizing: border-box;
 
   &::placeholder {

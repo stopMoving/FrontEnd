@@ -1,12 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-/**
- * 메인 페이지 가이드 배너 카드 컴포넌트
- * @param {string} title - 배너 제목
- * @param {string} description - 배너 설명
- * @param {React.ComponentType} icon - 렌더링할 아이콘 컴포넌트
- */
 const BannerCard = ({ step, title, description, icon: IconComponent }) => {
   return (
     <CardContainer>
@@ -39,7 +33,7 @@ const CardContainer = styled.div`
   border-radius: 24px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 
-  color: #333;
+  color: black;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
 `;

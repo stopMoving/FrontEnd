@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import GlobalStyle from "./Globalstyles/GlobalStyle";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import RegisterPage from "./pages/RegisterPage/RegitserPage";
@@ -19,14 +19,22 @@ import SharedBooksPage from "./pages/LibraryPage/SharedBooksPage";
 import BookDetailPage from "./pages/LibraryPage/BookDetailPage";
 import MyPage from "./pages/MyPage";
 import AiRecommendPage from "./pages/AiPage/AiRecommendPage";
+import NotificationPage from "./pages/NotificationPage";
 
 const App = () => {
-  const { initializeAuth, isInitialized, fetchLocation } = useUserStore();
+  const { initializeAuth, isInitialized, fetchLocation, user } = useUserStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     initializeAuth();
     fetchLocation();
   }, [initializeAuth, fetchLocation]);
+
+  useEffect(() => {
+    if (isInitialized && !user) {
+      navigate("/login");
+    }
+  }, [isInitialized, user]);
 
   if (!isInitialized) {
     return <div>로딩 중...</div>;
@@ -43,7 +51,8 @@ const App = () => {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/library/detail/:id" element={<LibraryDetailPage />} />
         <Route path="/library/:libraryId" element={<LibraryPage />} />
-        
+        <Route path="/notifications" element={<NotificationPage />} />
+
         <Route path="search/book" element={<SearchPage />} />
         <Route path="search/book/info/:isbn" element={<BookInfoPage />} />
         <Route path="barcode/library/select/:mode" element={<LibrarySelectPage />} />

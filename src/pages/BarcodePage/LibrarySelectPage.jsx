@@ -28,7 +28,7 @@ export default function LibrarySelectPage() {
   const loading = false;
 
   const onBack = () => {
-    navigate(-1);
+    navigate("/");
   }
 
   const handleNext = () => {

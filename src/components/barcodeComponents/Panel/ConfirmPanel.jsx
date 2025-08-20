@@ -59,23 +59,22 @@ export default function ConfirmPanel({
 }
 
 const Wrap = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 335px;
-  min-height: 560px;
   border-radius: 10px;
   background: #ffffff;
-  padding: 40px 16px;
-  gap: 40px;
+  padding: 16px;
 `;
 
 const Title = styled.div`
   display: flex;
   font-size: 24px;
   font-weight: 600;
-  margin: 4px 0 16px;
-  line-height: 1;
   justify-content: center;
   align-items: center;
   text-align: center;
+  margin-bottom: 40px;
 `;
 
 const BookWrap = styled.div`
@@ -86,9 +85,7 @@ const BookWrap = styled.div`
   height: 177px;
   border-radius: 5px;
   margin: 0 auto;
-  margin-top: 30px;
-  margin-bottom: 15px;
-  gap: 10px;
+  margin-bottom: 8px;
 `;
 
 const Cover = styled.img`
@@ -107,22 +104,20 @@ const BookTitle = styled.div`
   display: flex;
   font-size: 24px;
   font-weight: 600;
-  margin: 4px 0 16px;
-  line-height: 1;
   justify-content: center;
   align-items: center;
   text-align: center;
-  gap: 8px;
+  margin-bottom: 8px;
 `;
 
 const Meta = styled.div`
   display: flex;
   flex-direction: column;
-  line-height: 1;
-  width: max-content;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  margin: 0 auto;
   gap: 4px;
+  margin-bottom: 8px;
 `;
 
 const Sub = styled.div`
@@ -136,11 +131,10 @@ const Point = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  line-height: 1;
   font-size: 14px;
   font-weight: 500;
   color: #000000;
-  margin: 10px;
+  margin-bottom: 4px;
 `;
 
 const Price = styled.div`
@@ -148,11 +142,10 @@ const Price = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  line-height: 1;
   font-size: 14px;
   font-weight: 500;
   color: #000000;
-  margin: 8px;
+  margin: 4px;
 `;
 
 const Isbn = styled.div`
@@ -160,18 +153,19 @@ const Isbn = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  line-height: 1;
   font-size: 18px;
   font-weight: 600;
   color: #000000;
-  margin-bottom: 15px;
 `;
 
 const QuantityWrap = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
+  margin: 40px 0;
+  gap: 75px;
 `;
 
 const QuantityBtn = styled.button`
@@ -193,18 +187,19 @@ const Quantity = styled.div`
 `;
 
 const Buttons = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   gap: 16px;
-  margin-top: 25px;
 `;
 
 const AgainBtn = styled.button`
+  width: 144px;
+  height: 47px;
   font-size: 18px;
   font-weight: 500;
-  padding: 12px 16px;
   border-radius: 10px;
-  line-height: 1;
   border: 1px solid #DEDEDE;
   color: #000000;
   background: #F4F4F4;
@@ -213,22 +208,14 @@ const AgainBtn = styled.button`
   &:active {
     transform: translateY(1px);
   }
-
-  ${({ $variant }) =>
-    $variant === "secondary" &&
-    css`
-      background: #11B55F;
-      color: #FFFFFF;
-      border-color: #11B55F;
-    `}
 `;
 
 const OkBtn = styled.button`
+  width: 144px;
+  height: 47px;
   font-size: 18px;
   font-weight: 500;
-  padding: 12px 16px;
   border-radius: 10px;
-  line-height: 1;
   border: 1px solid #11B55F;
   color: #FFFFFF;
   background: #11B55F;

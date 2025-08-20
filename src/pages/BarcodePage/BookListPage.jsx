@@ -19,6 +19,10 @@ export default function BookListPage() {
   const { scannedBooks, updateBookQuantity, clearScannedBooks } = useBookStore();
   const token = useUserStore((state) => state.token);
 
+  const onBack = () => {
+    navigate(`/barcode/select/${mode}?branchId=${encodeURIComponent(libraryId)}`);
+  }
+
   const {totalCount, totalPoints } = useMemo(() => {
     let count = 0;
     let points = 0;
@@ -45,13 +49,6 @@ export default function BookListPage() {
         buttonLabel: "결제하기",
       };
 
-  // === step 2 버튼: 네, 추가 ===
-  // const handleAddMore = () => {
-  //   setModalOpen(false);          // 닫고 다음 스캔 준비
-  //   setBook(null);
-  //   setRetakeCount((v) => v + 1);
-  // };
-
   // 추가(+) 버튼
   const handleAddClick = () => {
     // SelectPage로 이동하면서 mode와 libraryId 값을 다시 전달
@@ -65,29 +62,45 @@ export default function BookListPage() {
       return;
     }
 
-     const isbnList = scannedBooks.map(book => ({
-      isbn: book.rawIsbn,
-      quantity: book.quantity
-    }));
-
-    if (isbnList.length === 0) {
-      alert("담긴 ISBN이 없어요. ");
-      return;
-    }
-
     setLoading(true);
     try {
-      await bookAPI.donateBooks(libraryId, isbnList);
+      if (mode === "give") {
+        const donationList = scannedBooks.map(book => ({
+        isbn: book.rawIsbn,
+        quantity: book.quantity
+        }));
 
-      setCompleteData({
-        count: totalCount,
-        points: totalPoints,
-      });
+        if (donationList.length === 0) {
+          alert("담긴 ISBN이 없어요. ");
+          return;
+        }
 
-      clearScannedBooks();
-      setCompleteOpen(true);
+        await bookAPI.donateBooks(libraryId, donationList);
+
+        setCompleteData({
+          count: totalCount,
+          points: totalPoints,
+        });
+      } else if (mode === "take") {
+        const bookIdList = scannedBooks.flatMap(book =>
+          Array(book.quantity).fill(book.book_ids).flat() // quantity만큼 book_id를 반복
+        )
+
+        if (bookIdList.length === 0) {
+          throw new Error("담긴 책이 없어요.");
+        }
+
+        const response = await bookAPI.pickupBooks(bookIdList);
+
+        setCompleteData({
+          count: response.count_total,
+          points: 0, // 아예 없애면 안 되나?
+        });
+      }
+        clearScannedBooks();
+        setCompleteOpen(true);  
     } catch (error) {
-        console.error("등록 실패", error);
+        console.error("처리 실패", error);
         alert(error.message) // alert 말고 다르게 표시하자
     } finally {
         setLoading(false);
@@ -99,6 +112,7 @@ export default function BookListPage() {
     <BookListPanel
       {...copy}
       items={scannedBooks}
+      onBack={onBack}
       onNext={handleFinish}
       disabled={loading}
       onQuantityChange={updateBookQuantity} // 스토어에서 가져온 함수를 핸들러로 전달

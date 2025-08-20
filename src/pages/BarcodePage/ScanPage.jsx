@@ -36,7 +36,10 @@ export default function ScanPage() {
 
     setLoading(true);
     try {
-        const data = await bookAPI.getBookByISBN(digits);
+      let data;
+
+      if (mode === "give") {
+        data = await bookAPI.getBookByISBN(digits);
 
         setBook({
             image: data?.cover_url ?? null,
@@ -50,18 +53,37 @@ export default function ScanPage() {
             isbn: utils.formatIsbn(digits),
             rawIsbn: digits,
         });
-
-        // 모달 열면 CameraScan에서 paused={modalOpen}으로 일시정지됨
-        setQuantity(1);
-        setModalOpen(true);
-    } catch (e) {
-        // 여기서 조회 실패라고 ui를 띄워줘야 하지 않을까?
-        console.error("조회 실패", e);
-        alert("인식에 실패했어요. 잠시 후 다시 시도해 주세요.") // alert 말고 다르게 표시하자
-    } finally {
-        setLoading(false);
+      } else if (mode === "take") {
+        const res = await bookAPI.getPickupBookDetail(digits, libraryId);
+        data = res.data;
+        setBook({
+            image: data?.cover_url ?? null,
+            title: data?.title ?? "제목 없음",
+            author: data?.author ?? "-",
+            publisher: data?.publisher ?? "-",
+            published_date: data?.published_date ?? "-",
+            regular_price: data?.regular_price ?? "-",
+            price: data?.sale_price ?? "-",
+            isbn: utils.formatIsbn(digits),
+            rawIsbn: digits,
+            available_count: data?.available_count ?? 0,
+            book_ids: res?.book_ids ?? [],
+      });
+    } else {
+      throw new Error("잘못된 모드입니다.");
     }
-  };
+
+    // 모달 열면 CameraScan에서 paused={modalOpen}으로 일시정지됨
+    setQuantity(1);
+     setModalOpen(true);
+  } catch (e) {
+    // 여기서 조회 실패라고 ui를 띄워줘야 하지 않을까?
+    console.error("조회 실패", e);
+    alert("인식에 실패했어요. 잠시 후 다시 시도해 주세요.") // alert 말고 다르게 표시하자
+  } finally {
+    setLoading(false);
+  }
+};
 
   // 첫 번째 버튼(다시 스캔): SelectPage로 이동
   const handleRetake = () => {

@@ -267,12 +267,14 @@ const LibraryName = styled.div`
   font-size: 20px;
   font-weight: 600;
   color: #000000;
+  margin-bottom: 12px;
 `;
 
 const LibraryInfo = styled.div`
   display: flex;
-  flex-directioin: row;
+  flex-direction: row;
   font-size: 16px;
   font-weight: 600;
   color: #000000;
+  gap: 8px;
 `;

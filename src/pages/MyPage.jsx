@@ -93,6 +93,9 @@ const Wrap = styled.div`
   background: #FFFFFF;
   margin: 0 auto;
   padding: 30px 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
 `;
 
 const MyInfoWrap = styled.div`
@@ -100,6 +103,7 @@ const MyInfoWrap = styled.div`
   flex-direction: column;
   padding: 40px 20px 0;
   margin-bottom: 50px;
+  flex-shrink: 0;
 `;
 
 const ProfileContainer = styled.div`
@@ -153,12 +157,15 @@ const Reward = styled.div`
 const ReportWrap = styled.div`
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
+  min-height: 0;
 `;
 
 const TabContainer = styled.div`
   display: flex;
   justify-content: space-around;
   border-bottom: 1px solid #000000;
+  flex-shrink: 0;
 `;
 
 const TabButton = styled.button`
@@ -198,5 +205,7 @@ const TabButton = styled.button`
 `;
 
 const ContentWrap = styled.div`
-
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-bottom: 40px;
 `;

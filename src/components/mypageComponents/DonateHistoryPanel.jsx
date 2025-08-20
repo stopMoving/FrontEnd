@@ -71,7 +71,7 @@ const BookWrap = styled.div`
   height: 129px;
   display: flex;
   flex-direction: row;
-  gap: 16px;
+  gap: 8px;
 `;
 
 const BookCover = styled.div`
@@ -116,7 +116,7 @@ const Title = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 221px;
+  max-width: 260px;
 `;
 
 const Meta = styled.div`

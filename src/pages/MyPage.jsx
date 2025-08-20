@@ -90,19 +90,17 @@ export default function MyPage() {
 const Wrap = styled.div`
   width: 100%;
   max-width: 600px;
+  min-height: 100dvh;
   background: #FFFFFF;
-  margin: 0 auto;
-  padding: 30px 0;
+  padding: 40px 0;
   display: flex;
   flex-direction: column;
-  min-height: 100dvh;
 `;
 
 const MyInfoWrap = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 40px 20px 0;
-  margin-bottom: 50px;
+  padding: 0 20px 16px;
   flex-shrink: 0;
 `;
 
@@ -111,14 +109,14 @@ const ProfileContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
 `;
 
 const LeftWrap = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
 `;
 
 const Name = styled.div`
@@ -142,14 +140,17 @@ const HashTag = styled.div`
 `;
 
 const Reward = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   width: 71px;
   height: 35px;
   border-radius: 20px;
   padding: 0 8px;
   font-size: 16px;
   font-weight: 600;
-  text-align: center;
-  padding: 8px;
   color: #FFFFFF;
   background-color: #11B55F;
 `;
@@ -164,13 +165,13 @@ const ReportWrap = styled.div`
 const TabContainer = styled.div`
   display: flex;
   justify-content: space-around;
-  border-bottom: 1px solid #000000;
+  border-bottom: 1px solid #6F6F6F;
   flex-shrink: 0;
 `;
 
 const TabButton = styled.button`
   position: relative;
-  padding: 3px 6px 11px;
+  padding: 8px 0;
   font-family: inherit;
   font-size: 20px;
   font-weight: 500;
@@ -208,5 +209,5 @@ const TabButton = styled.button`
 const ContentWrap = styled.div`
   flex-grow: 1;
   overflow-y: auto;
-  padding-bottom: 40px;
+  padding-bottom: 20px;
 `;

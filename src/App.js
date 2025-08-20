@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import GlobalStyle from "./Globalstyles/GlobalStyle";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import RegisterPage from "./pages/RegisterPage/RegitserPage";
@@ -22,12 +22,19 @@ import AiRecommendPage from "./pages/AiPage/AiRecommendPage";
 import NotificationPage from "./pages/NotificationPage";
 
 const App = () => {
-  const { initializeAuth, isInitialized, fetchLocation } = useUserStore();
+  const { initializeAuth, isInitialized, fetchLocation, user } = useUserStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     initializeAuth();
     fetchLocation();
   }, [initializeAuth, fetchLocation]);
+
+  useEffect(() => {
+    if (isInitialized && !user) {
+      navigate("/login");
+    }
+  }, [isInitialized, user]);
 
   if (!isInitialized) {
     return <div>로딩 중...</div>;

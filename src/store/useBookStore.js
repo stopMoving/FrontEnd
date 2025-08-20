@@ -5,7 +5,7 @@ const useBookStore = create((set) => ({
 
     addScannedBook: (book) => {
         set((state) => {
-            const existingBook = state.scannedBooks.find(b => b.isbn === book.isbn);
+            const existingBook = state.scannedBooks.find(b => b.rawIsbn === book.rawIsbn);
             if (existingBook) {
                 return {
                     scannedBooks: state.scannedBooks.map(b =>

@@ -2,7 +2,6 @@ import styled, { css } from "styled-components";
 
 export default function ConfirmPanel({
   mode = "give",
-  step = 1,
   book,
   loading = false,
   quantity,
@@ -10,15 +9,10 @@ export default function ConfirmPanel({
   onPrimary,   // step1: 다시 찍기
   onSecondary, // step1: 확인 → step2로
 }) {
-  const STEP1_TITLE = "이 책이 맞는지 확인해주세요.";
-  const STEP1_PRIMARY = "다시 스캔";
-  const STEP1_SECONDARY = "확인";
-
   return (
-    <Wrap $step={step}>
-      {step === 1 && (
+    <Wrap>
         <>
-          <Title>{STEP1_TITLE}</Title>
+          <Title>이 책이 맞는지 확인해주세요.</Title>
 
           <BookWrap>
             {book?.image
@@ -52,14 +46,14 @@ export default function ConfirmPanel({
           
           <Buttons>
             <AgainBtn onClick={onPrimary} disabled={loading}>
-              {STEP1_PRIMARY}
+              다시 스캔
             </AgainBtn>
             <OkBtn onClick={onSecondary} disabled={loading}>
-              {STEP1_SECONDARY}
+              확인
             </OkBtn>
           </Buttons>
         </>
-      )}
+      
     </Wrap>
   );
 }

@@ -3,7 +3,7 @@ import { ReactComponent as BackIcon } from "../assets/icons/backIcon.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useUserStore from "../store/useUserStore";
-
+import { ReactComponent as SearchIcon } from "../assets/icons/search.svg";
 
 export default function BookInfoPage() {
     const navigate = useNavigate();

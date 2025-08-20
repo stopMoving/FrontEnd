@@ -14,10 +14,12 @@ import LibrarySelectPage from "./pages/BarcodePage/LibrarySelectPage";
 import LibraryDetailPage from "./pages/LibraryPage/LibraryDetailPage";
 import LibraryPage from "./pages/LibraryPage/LibraryPage";
 import SearchPage from "./pages/SearchPage";
-import BookInfoWrap from "./pages/BookInfoPage";
+import BookInfoPage from "./pages/BookInfoPage";
 import SharedBooksPage from "./pages/LibraryPage/SharedBooksPage";
 import BookDetailPage from "./pages/LibraryPage/BookDetailPage";
+import MyPage from "./pages/MyPage";
 import AiRecommendPage from "./pages/AiPage/AiRecommendPage";
+import NotificationPage from "./pages/NotificationPage";
 
 const App = () => {
   const { initializeAuth, isInitialized, fetchLocation } = useUserStore();
@@ -39,8 +41,18 @@ const App = () => {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/welcome" element={<WelcomePage />} />
         <Route path="/" element={<MainPage />} />
+        <Route path="/mypage" element={<MyPage />} />
         <Route path="/library/detail/:id" element={<LibraryDetailPage />} />
         <Route path="/library/:libraryId" element={<LibraryPage />} />
+        <Route path="/notifications" element={<NotificationPage />} />
+
+        <Route path="search/book" element={<SearchPage />} />
+        <Route path="search/book-detail" element={<BookInfoPage />} />
+        <Route
+          path="barcode/library/select/:mode"
+          element={<LibrarySelectPage />}
+        />
+
         <Route
           path="/library/:libraryId/shared"
           element={<SharedBooksPage />}
@@ -49,7 +61,7 @@ const App = () => {
         <Route path="/ai/recommand" element={<AiRecommendPage />} />
 
         <Route path="search/book" element={<SearchPage />} />
-        <Route path="search/book-detail" element={<BookInfoWrap />} />
+        <Route path="search/book-detail" element={<BookInfoPage />} />
         <Route
           path="barcode/library/select/:mode"
           element={<LibrarySelectPage />}

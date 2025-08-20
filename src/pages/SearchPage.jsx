@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { ReactComponent as BackIcon } from "../assets/icons/backIcon.svg";
 import { ReactComponent as SearchIcon } from "../assets/icons/search.svg";
 import useBookStore from "../store/useBookStore";
@@ -9,6 +9,7 @@ export default function SearchPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [isSearched, setIsSearched] = useState(false);
     const { scannedBooks } = useBookStore();
     const navigate = useNavigate();
 
@@ -29,11 +30,13 @@ export default function SearchPage() {
           );
         setBooks(filteredBooks);
         setLoading(false);
+        setIsSearched(true);
         }, 500);
 
         return () => clearTimeout(timer);
       } else {
         setBooks(scannedBooks);
+        setIsSearched(false);
       }
     }, [searchQuery, scannedBooks]);
     
@@ -58,7 +61,8 @@ export default function SearchPage() {
       </SearchContainer>
       
       <BookListWrap>
-        {books.map((book) => (
+        {books.length > 0 ? (
+          books.map((book) => (
           <BookWrap key={book.isbn} onClick={() => handleBookClick(book.isbn)}>
             <Cover>
               {book?.image
@@ -76,12 +80,44 @@ export default function SearchPage() {
               </SubWrap>
             </BookInfoWrap>
           </BookWrap>
-        ))}
+        ))
+      ) : isSearched ? (
+        <MessageWrap>
+          <SearchIcon width={72} height={72} />
+          <Notification>
+            <span className="highlight">"{searchQuery}"</span> 은 <br/>북작북작에 나눔되지 않았습니다.
+            </Notification>
+        </MessageWrap>
+      ) : (
+        <MessageWrap>
+          <Notification>검색어를 입력해 주세요.</Notification>
+        </MessageWrap>
+      )}
       </BookListWrap>
       
   </PageWrap>
   )
 }
+
+const MessageWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 100px;
+  gap: 30px;
+`;
+
+const Notification = styled.div`
+  font-size: 18px;
+  font-weight: 500;
+  color: #6F6F6F;
+
+  .highlight {
+    color: #000000;
+  }
+`;
 
 const PageWrap = styled.div`
   width: 100%;

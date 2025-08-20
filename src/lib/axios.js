@@ -149,6 +149,23 @@ export const userAPI = {
       throw new Error("프로필 정보를 불러오는 데 실패했습니다.");
     }
   },
+
+  getDonatedBooks: async () => {
+    try {
+      const response = await instance.get(`/users/donated-books/`);
+
+      if (response.data.isSuccess === true && response.data.meta?.count === 0) {
+        return [];
+      }
+      
+      return response.data;
+    } catch (error) {
+      if (error.response?.status === 401) {
+        throw new Error("인증이 필요합니다.");
+      }
+      throw new Error("나눔 내역을 불러오는 데 실패했습니다.");
+    }
+  },
 };
 // instance.interceptors.response.use(res => res, async (error) => {
 //   const originalRequest = error.config;

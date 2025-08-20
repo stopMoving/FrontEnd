@@ -77,9 +77,9 @@ export default function MyPage() {
               </TabButton>
           </TabContainer>
 
-          <ContetnWrap>
+          <ContentWrap>
             {renderPanel()}
-          </ContetnWrap>
+          </ContentWrap>
         </ReportWrap>
         
         <BottomNavBar />
@@ -197,6 +197,6 @@ const TabButton = styled.button`
     `}
 `;
 
-const ContetnWrap = styled.div`
+const ContentWrap = styled.div`
 
 `;

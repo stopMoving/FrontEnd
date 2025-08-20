@@ -1,42 +1,73 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { userAPI } from "../../lib/axios";
 
 export default function DonateHistoryPanel({
     activeTab = 1
 }) {
+    const [donatedBooks, setDonatedBooks] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchDonatedBooks = async () => {
+            try {
+                const books = await userAPI.getDonatedBooks();
+                setDonatedBooks(books);
+            } catch (error) {
+                console.error("나눔 내역 로딩 실패: ", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchDonatedBooks();
+    }, []);
+
+    if (isLoading) {
+        return <p>나눔 내역을 불러오는 중...</p>
+    }
+
+    if (donatedBooks.length === 0) {
+        return <p>나눔한 책이 없습니다.</p>
+    }
+    
     return (
       <Wrap>
-        <BookWrap>
-          <BookCover>
-          {/* <BookCover>
-            {book?.image
-              ? <CoverImg src={book?.image} alt="" />
+        {donatedBooks.map((book) => (
+          <BookWrap key={book.userbook_id}>
+            <BookCover>
+            {book?.cover
+              ? <CoverImg src={book?.cover} alt="" />
               : <CoverFallback />}
-          </BookCover> */}
-            <CoverFallback />
           </BookCover>
 
           <Info>
-            {/* <Title>{book?.title || "-"}</Title> */}
-            <Title>책 제목</Title>
+            <Title>{book?.book_title || "-"}</Title>
 
             <Meta>
-              <Sub>김영삼 도서관</Sub>
-              <Sub>2권</Sub>
-              <Sub>2025.08.02</Sub>
+              <Sub>{book?.library_name}</Sub>
+              <Sub>{book?.quantity}</Sub>
+              <Sub>{book?.created_at.split('T')[0]}</Sub>
               <Sub>+500P</Sub>
             </Meta>
           </Info>
         </BookWrap>
+        ))}
+        
       </Wrap>
     )
 }
 
 const Wrap = styled.div`
+  width: 100%;
+  max-width: 600px;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
   padding: 20px;
+  gap: 16px;
 `;
 
 const BookWrap = styled.div`
-  width: 335px;
   height: 129px;
   display: flex;
   flex-direction: row;
@@ -53,7 +84,7 @@ const CoverImg = styled.img`
   height: 100%;
   border-radius: 5px;
   object-fit: cover;
-`
+`;
 
 const CoverFallback = styled.div`
   width: 106px;
@@ -82,6 +113,10 @@ const Title = styled.div`
   font-weight: 600;
   color: #000000;
   margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 221px;
 `;
 
 const Meta = styled.div`

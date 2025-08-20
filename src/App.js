@@ -20,6 +20,7 @@ import BookDetailPage from "./pages/LibraryPage/BookDetailPage";
 import MyPage from "./pages/MyPage";
 import AiRecommendPage from "./pages/AiPage/AiRecommendPage";
 import NotificationPage from "./pages/NotificationPage";
+import DonateHistoryPanel from "./components/mypageComponents/DonateHistoryPanel";
 
 const App = () => {
   const { initializeAuth, isInitialized, fetchLocation, user } = useUserStore();
@@ -49,6 +50,7 @@ const App = () => {
         <Route path="/welcome" element={<WelcomePage />} />
         <Route path="/" element={<MainPage />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/mypage/donated-books" element={<DonateHistoryPanel />} />
         <Route path="/library/detail/:id" element={<LibraryDetailPage />} />
         <Route path="/library/:libraryId" element={<LibraryPage />} />
         <Route path="/notifications" element={<NotificationPage />} />

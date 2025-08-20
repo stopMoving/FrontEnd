@@ -35,19 +35,34 @@ export default function SelectPanel({
     // ✅ 바텀 시트를 닫고, ConfirmModal을 띄우기 위한 상태를 설정합니다.
     setActiveSheet(null);
 
-    setBook({
-      image: data?.cover_url ?? null,
-      title: data?.title ?? "제목 없음",
-      author: data?.author ?? "-",
-      publisher: data?.publisher ?? "-",
-      published_date: data?.published_date ?? "-",
-      regular_price: data?.regular_price ?? "-",
-      //내가 계산 x, 백엔드에서 넘겨주는 걸로
-      price: data?.regular_price ? Math.round(data.regular_price * 0.2) : null,
-      isbn: utils.formatIsbn(data?.isbn),
-      rawIsbn: utils.extractDigits(data?.isbn),
-    });
-
+    if (mode === 'give') {
+      setBook({
+        image: data?.cover_url ?? null,
+        title: data?.title ?? "제목 없음",
+        author: data?.author ?? "-",
+        publisher: data?.publisher ?? "-",
+        published_date: data?.published_date ?? "-",
+        regular_price: data?.regular_price ?? "-",
+        price: data?.regular_price ? Math.round(data.regular_price * 0.2) : null,
+        isbn: utils.formatIsbn(data?.isbn),
+        rawIsbn: utils.extractDigits(data?.isbn),
+      });
+    } else if (mode === 'take') {
+      setBook({
+        image: data?.cover_url ?? null,
+        title: data?.title ?? "제목 없음",
+        author: data?.author ?? "-",
+        publisher: data?.publisher ?? "-",
+        published_date: data?.published_date ?? "-",
+        regular_price: data?.regular_price ?? "-",
+        price: data?.regular_price ? Math.round(data.regular_price * 0.2) : null,
+        isbn: utils.formatIsbn(data?.isbn),
+        rawIsbn: utils.extractDigits(data?.isbn),
+        available_count: data?.data?.available_count ?? 0,
+        book_ids: data?.book_ids ?? [],
+      });
+    }
+    
     setQuantity(1);
     setModalOpen(true);
   };

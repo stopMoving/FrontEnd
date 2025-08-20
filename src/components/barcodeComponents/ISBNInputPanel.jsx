@@ -3,7 +3,12 @@ import styled from "styled-components";
 import useUserStore from "../../store/useUserStore";
 import { bookAPI } from "../../lib/axios";
 
-export default function ISBNInputPanel({ onClose, onConfirm }) { // ✅ onConfirm 프롭스를 받음
+export default function ISBNInputPanel({
+  onClose,
+  onConfirm,
+  mode,
+  libraryId
+}) { // ✅ onConfirm 프롭스를 받음
   const [isbn, setIsbn] = useState("");
   const [loading, setLoading] = useState(false);
   const token = useUserStore((state) => state.token);
@@ -20,10 +25,15 @@ export default function ISBNInputPanel({ onClose, onConfirm }) { // ✅ onConfir
     setLoading(true);
 
     try {
-        const data = await bookAPI.getBookByISBN(isbn);
-
-        onClose(); // ✅ 바텀 시트를 먼저 닫음
-        onConfirm(data); // ✅ onConfirm 콜백으로 책 데이터 전달
+      let data;
+      if (mode === "give") {
+        data = await bookAPI.getBookByISBN(isbn);
+      } else if (mode === "take") {
+        const res = await bookAPI.getPickupBookDetail(isbn, libraryId);
+        data = res;
+      }
+      onClose(); // ✅ 바텀 시트를 먼저 닫음
+      onConfirm(data); // ✅ onConfirm 콜백으로 책 데이터 전달
     } catch (error) {
         console.error("조회 실패:", error);
         alert(error.message);

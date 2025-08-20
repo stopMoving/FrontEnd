@@ -62,29 +62,45 @@ export default function BookListPage() {
       return;
     }
 
-     const isbnList = scannedBooks.map(book => ({
-      isbn: book.rawIsbn,
-      quantity: book.quantity
-    }));
-
-    if (isbnList.length === 0) {
-      alert("담긴 ISBN이 없어요. ");
-      return;
-    }
-
     setLoading(true);
     try {
-      await bookAPI.donateBooks(libraryId, isbnList);
+      if (mode === "give") {
+        const donationList = scannedBooks.map(book => ({
+        isbn: book.rawIsbn,
+        quantity: book.quantity
+        }));
 
-      setCompleteData({
-        count: totalCount,
-        points: totalPoints,
-      });
+        if (donationList.length === 0) {
+          alert("담긴 ISBN이 없어요. ");
+          return;
+        }
 
-      clearScannedBooks();
-      setCompleteOpen(true);
+        await bookAPI.donateBooks(libraryId, donationList);
+
+        setCompleteData({
+          count: totalCount,
+          points: totalPoints,
+        });
+      } else if (mode === "take") {
+        const bookIdList = scannedBooks.flatMap(book =>
+          Array(book.quantity).fill(book.book_ids).flat() // quantity만큼 book_id를 반복
+        )
+
+        if (bookIdList.length === 0) {
+          throw new Error("담긴 책이 없어요.");
+        }
+
+        const response = await bookAPI.pickupBooks(bookIdList);
+
+        setCompleteData({
+          count: response.count_total,
+          points: 0, // 아예 없애면 안 되나?
+        });
+      }
+        clearScannedBooks();
+        setCompleteOpen(true);  
     } catch (error) {
-        console.error("등록 실패", error);
+        console.error("처리 실패", error);
         alert(error.message) // alert 말고 다르게 표시하자
     } finally {
         setLoading(false);

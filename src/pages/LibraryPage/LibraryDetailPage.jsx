@@ -140,8 +140,6 @@ const LibraryDetailPage = () => {
 
 export default LibraryDetailPage;
 
-// --- Styled Components ---
-
 const PageWrapper = styled.div`
   width: 100%;
   max-width: 600px;

@@ -16,7 +16,8 @@ export default function SelectPanel({
   title,
   description,
   mode,
-  libraryId
+  libraryId,
+  onBack
 }) {
   const navigate = useNavigate();
   const [activeSheet, setActiveSheet] = useState(null);
@@ -81,7 +82,7 @@ export default function SelectPanel({
       <StepHeader
         title={title}     // 예: "책을 나눔할게요." / "책을 데려갈게요."
         activeStep={2}    // ← STEP 2 화면
-        onBack={() => navigate(-1)}
+        onBack={onBack}
       />
 
       <Inner>

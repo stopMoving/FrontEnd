@@ -19,6 +19,10 @@ export default function BookListPage() {
   const { scannedBooks, updateBookQuantity, clearScannedBooks } = useBookStore();
   const token = useUserStore((state) => state.token);
 
+  const onBack = () => {
+    navigate(`/barcode/select/${mode}?branchId=${encodeURIComponent(libraryId)}`);
+  }
+
   const {totalCount, totalPoints } = useMemo(() => {
     let count = 0;
     let points = 0;
@@ -44,13 +48,6 @@ export default function BookListPage() {
         description: "책 목록을 확인 후 결제해주세요.",
         buttonLabel: "결제하기",
       };
-
-  // === step 2 버튼: 네, 추가 ===
-  // const handleAddMore = () => {
-  //   setModalOpen(false);          // 닫고 다음 스캔 준비
-  //   setBook(null);
-  //   setRetakeCount((v) => v + 1);
-  // };
 
   // 추가(+) 버튼
   const handleAddClick = () => {
@@ -99,6 +96,7 @@ export default function BookListPage() {
     <BookListPanel
       {...copy}
       items={scannedBooks}
+      onBack={onBack}
       onNext={handleFinish}
       disabled={loading}
       onQuantityChange={updateBookQuantity} // 스토어에서 가져온 함수를 핸들러로 전달

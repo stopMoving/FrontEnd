@@ -9,6 +9,7 @@ export default function BookListPanel({
   items=[],
   buttonLabel,
   disabled = false,
+  onBack,
   onNext,
   onQuantityChange,
   onAddClick,
@@ -21,7 +22,7 @@ export default function BookListPanel({
       <StepHeader
         title={title}
         activeStep={3}    // ← STEP 3 화면
-        onBack={() => navigate(-1)}
+        onBack={onBack}
       />
 
       <Inner>

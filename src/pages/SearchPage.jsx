@@ -83,11 +83,9 @@ export default function SearchPage() {
             <BookInfoWrap>
               <Title>{book?.title || "-"}</Title>
 
-              <SubWrap>
-                <Author>{book?.author || "-"}</Author>
-                <Publisher>{book?.publisher || "-"}</Publisher>
-                <PublishedDate>{book?.published_date || "-"}</PublishedDate>
-              </SubWrap>
+              <Sub>{book?.author || "-"}</Sub>
+              <Sub>{book?.publisher || "-"}</Sub>
+              <Sub>{book?.published_date || "-"}</Sub>
             </BookInfoWrap>
           </BookWrap>
         ))
@@ -133,15 +131,18 @@ const Notification = styled.div`
 const PageWrap = styled.div`
   width: 100%;
   max-width: 600px;
-  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  // justify-content: center;
   margin: 0 auto;
-  padding: 30px 0;
+  background: #FFFFFF;
+  padding: 38px 20px 0;
 `;
 
 const Header = styled.div`
   display: flex;
   align-items: center;
-  padding: 16px;
+  margin-bottom: 16px;
 `;
 
 const BackButton = styled.button`
@@ -158,20 +159,15 @@ const SectionTitle = styled.div`
 
 const SearchContainer = styled.div`
   display: flex;
+  justify-content: center;
   align-items: center;
-  width: 93%;
+  width: 100%;
   height: 42px;
   background-color: #E6F4F0;
   border: none;
   border-radius: 20px;
-  padding: 8px 20px;
-  margin: 10px auto;
-  margin-bottom: 10px;
-
-  svg {
-    margin-right: 8px;
-    color: #888;
-  }
+  padding: 4px 16px;
+  margin-bottom: 16px;
 `;
 
 const SearchInput = styled.input`
@@ -183,23 +179,22 @@ const SearchInput = styled.input`
   border: none;
   color: #000000;
   cursor: pointer;
-  padding: 16px 10px;
+  padding: 8px 10px;
 `;
 
 const BookListWrap = styled.div`
-  width: min(520px, 92vw);
+  width: 100%;
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
-  padding: 0 10px;
+  justify-content: center;
   gap: 8px;
 `;
 
 const BookWrap = styled.div`
   display: flex;
   flex-direction: row;
-  height: 117px;
-  gap: 16px;
+  height: 101px;
+  gap: 8px;
   align-items: center;
   cursor: pointer;
 `;
@@ -214,11 +209,11 @@ const CoverImg = styled.img`
   height: 100%;
   border-radius: 5px;
   object-fit: cover;
-`
+`;
 
 const CoverFallback = styled.div`
   width: 79px;
-  height: 117px;
+  height: 101px;
   border-radius: 5px;
   background-color: #D9D9D9;
   overflow: hidden;
@@ -237,13 +232,6 @@ const BookInfoWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  line-height: 1;
-  gap: 8px;
-`;
-
-const SubWrap = styled.div`
-  display: flex;
-  flex-direction: column;
 `;
 
 const Title = styled.div`
@@ -252,23 +240,8 @@ const Title = styled.div`
   color: #000000;
 `;
 
-const Author = styled.div`
+const Sub = styled.div`
   font-size: 12px;
   font-weight: 400;
   color: #868686;
-  margin-bottom: 4px;
-`;
-
-const Publisher = styled.div`
-  font-size: 12px;
-  font-weight: 400;
-  color: #868686;
-  margin-bottom: 4px;
-`;
-
-const PublishedDate = styled.div`
-  font-size: 12px;
-  font-weight: 400;
-  color: #868686;
-  margin-bottom: 4px;
 `;

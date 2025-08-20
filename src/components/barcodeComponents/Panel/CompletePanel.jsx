@@ -43,29 +43,27 @@ export default function CompletePanel({
 const Card = styled.div`
   width: 335px;
   height: 352px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   border-radius: 10px;
   background: #FFFFFF;
   padding: 40px 16px;
-  display: flex;
-  flex-direction: column;
 `;
 
 const Title = styled.div`
-  margin: 0;
-  text-align: center;
   font-size: 24px;
   font-weight: 600;
-  line-height: 1;
-  margin-bottom: 15px;
+  color: #000000;
+  margin-bottom: 12px;
 `;
 
-const Sub = styled.p`
-  margin: 0;
-  text-align: center;
-  color: #000000;
+const Sub = styled.div`
   font-size: 16px;
   font-weight: 400;
-  line-height: 1;
+  color: #000000;
 
   .highlight-text {
     font-size: 18px;
@@ -77,15 +75,14 @@ const Sub = styled.p`
 const IconWrap = styled.div`
   display: flex;
   justify-content: center;
-  margin: 40px 0 5px;
+  margin: 40px 0;
 `;
 
 const Highlight = styled.div`
-  text-align: center;
   font-size: 24px;
   font-weight: 600;
   color: #000000;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 
   .highlight-text {
     font-size: 20px;

@@ -115,6 +115,54 @@ export const bookAPI = {
       throw new Error("도서 정보를 불러오는 데 실패했습니다. 잠시 후 다시 시도해 주세요.");
     }
   },
+
+  getPickupBookDetail: async (isbn, libraryId) => {
+    const token = getAuthToken();
+    if (!token?.access_token) {
+      throw new Error("로그인이 필요해요.");
+    }
+
+    try{
+      const response = await instance.get(`/books/pickup/detail/`, {
+        params: {
+          isbn: isbn,
+          library_id: libraryId,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      // if (error.response?.data?.error === "해당 책 정보가 없습니다.") {
+      //  throw new Error("해당 ISBN의 책 정보가 없습니다.");
+      // }
+
+    }
+  },
+
+  pickupBooks: async (bookIds) => {
+    const token = getAuthToken();
+    if (!token?.access_token) {
+      throw new Error("로그인이 필요해요.");
+    }
+
+    try {
+      const payload = {
+        book_id: bookIds,
+      };
+      const response = await instance.post(`/books/pickup`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      // 207 Multi-Status, 409 Conflict 등의 상태 코드도 포함하여 처리합니다.
+      // API 응답의 `message`를 에러 메시지로 사용합니다.
+      throw new Error(error.response?.data?.message || "픽업 처리에 실패했어요. 잠시 후 다시 시도해 주세요.");
+    }
+  },
 };
 
 export const utils = {
@@ -167,14 +215,5 @@ export const userAPI = {
     }
   },
 };
-// instance.interceptors.response.use(res => res, async (error) => {
-//   const originalRequest = error.config;
-//   if (error.response?.status === 401 && !originalRequest._retry) {
-//     await instance.post('/auth/token/refresh', undefined, { _retry: true });
-//     originalRequest._retry = true;
-//     return instance(originalRequest);
-//   }
-//   return Promise.reject(error);
-// });
 
 export default instance;

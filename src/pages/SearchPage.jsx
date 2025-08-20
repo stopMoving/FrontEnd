@@ -109,6 +109,7 @@ export default function SearchPage() {
   );
 }
 
+// 두 줄로 나오는 거 수정
 const MessageWrap = styled.div`
   display: flex;
   flex-direction: column;

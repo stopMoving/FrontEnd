@@ -1,14 +1,31 @@
 import styled from "styled-components"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BottomNavBar from "../components/Layout/BottomNavBar"
 import DonateHistoryPanel from "../components/mypageComponents/DonateHistoryPanel"
 import TakeHistoryPanel from "../components/mypageComponents/TakeHistoryPanel"
 import PointPanel from "../components/mypageComponents/PointPanel"
+import { userAPI } from "../lib/axios";
 import { ReactComponent as ProfileImage } from "../assets/images/profileImage.svg";
 import { ReactComponent as PointIcon } from "../assets/icons/pointIcon.svg"
 
 export default function MyPage() {
     const [activeTab, setActiveTap] = useState('donate');
+    const [userProfile, setUserProfile] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+      const fetchUserProfile = async () => {
+        try {
+          const profileData = await userAPI.getUserProfile();
+          setUserProfile(profileData);
+        } catch (error) {
+          console.error("사용자 프로필 로딩 실패: ", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchUserProfile();
+    }, []);
 
     const renderPanel = () => {
         if (activeTab === 'donate') {
@@ -23,25 +40,30 @@ export default function MyPage() {
         return null;
     };
 
+    if (isLoading) {
+        return <div>로딩 중...</div>;
+    }
+
+    if (!userProfile) {
+        return <div>사용자 정보를 불러올 수 없습니다.</div>;
+    }
+
     return (
       <Wrap>
         <MyInfoWrap>
           <ProfileContainer>
             <LeftWrap>
               <ProfileImage width={70} height={70}/>
-              <Name>닉네임님</Name>
+              <Name>{userProfile.nickname}님</Name>
             </LeftWrap>
 
-            <Reward>3400 P</Reward>
+            <Reward>{userProfile.points} P</Reward>
           </ProfileContainer>
 
           <HashTagContainer>
-            <HashTag>#자기계발</HashTag>
-            <HashTag>#재태크</HashTag>
-            <HashTag>#연애</HashTag>
-            <HashTag>#소설</HashTag>
-            <HashTag>#컴퓨터</HashTag>
-            <HashTag>#여행</HashTag>
+            {userProfile.keywords.map((tag, index) => (
+                <HashTag key={index}>#{tag}</HashTag>
+            ))}
           </HashTagContainer>
         </MyInfoWrap>
         
@@ -55,9 +77,9 @@ export default function MyPage() {
               </TabButton>
           </TabContainer>
 
-          <ContetnWrap>
+          <ContentWrap>
             {renderPanel()}
-          </ContetnWrap>
+          </ContentWrap>
         </ReportWrap>
         
         <BottomNavBar />
@@ -71,6 +93,9 @@ const Wrap = styled.div`
   background: #FFFFFF;
   margin: 0 auto;
   padding: 30px 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
 `;
 
 const MyInfoWrap = styled.div`
@@ -78,6 +103,7 @@ const MyInfoWrap = styled.div`
   flex-direction: column;
   padding: 40px 20px 0;
   margin-bottom: 50px;
+  flex-shrink: 0;
 `;
 
 const ProfileContainer = styled.div`
@@ -131,12 +157,15 @@ const Reward = styled.div`
 const ReportWrap = styled.div`
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
+  min-height: 0;
 `;
 
 const TabContainer = styled.div`
   display: flex;
   justify-content: space-around;
   border-bottom: 1px solid #000000;
+  flex-shrink: 0;
 `;
 
 const TabButton = styled.button`
@@ -175,6 +204,8 @@ const TabButton = styled.button`
     `}
 `;
 
-const ContetnWrap = styled.div`
-
+const ContentWrap = styled.div`
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-bottom: 40px;
 `;

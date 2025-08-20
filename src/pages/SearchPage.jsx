@@ -4,6 +4,7 @@ import { ReactComponent as BackIcon } from "../assets/icons/backIcon.svg";
 import { ReactComponent as SearchIcon } from "../assets/icons/search.svg";
 import useBookStore from "../store/useBookStore";
 import { useNavigate } from "react-router-dom";
+import { bookAPI } from "../lib/axios";
 
 export default function SearchPage() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -18,27 +19,32 @@ export default function SearchPage() {
     }
 
     const handleBookClick = (isbn) => {
-      navigate(`/search/book-detail/${isbn}`)
+      navigate(`/search/book/info/${isbn}`)
     }
 
     useEffect(() => {
       if (searchQuery.length > 0) {
         setLoading(true);
-        const timer = setTimeout(() => {
-          const filteredBooks = scannedBooks.filter((book) =>
-            book.title.includes(searchQuery)
-          );
-        setBooks(filteredBooks);
-        setLoading(false);
-        setIsSearched(true);
+        const timer = setTimeout(async () => {
+          try {
+            const data = await bookAPI.searchBooks(searchQuery);
+            setBooks(data.results);
+            setIsSearched(true);
+          } catch (error) {
+            console.error("검색 오류: ", error);
+            setBooks([]);
+            setIsSearched(true);
+          } finally {
+            setLoading(false);
+          }
         }, 500);
 
         return () => clearTimeout(timer);
       } else {
-        setBooks(scannedBooks);
+        setBooks([]);
         setIsSearched(false);
       }
-    }, [searchQuery, scannedBooks]);
+    }, [searchQuery]);
     
     return (
     <PageWrap>
@@ -61,12 +67,16 @@ export default function SearchPage() {
       </SearchContainer>
       
       <BookListWrap>
-        {books.length > 0 ? (
+        {loading ? (
+          <MessageWrap>
+            <Notification>검색 중입니다...</Notification>
+          </MessageWrap>
+        ) : books.length > 0 ? (
           books.map((book) => (
           <BookWrap key={book.isbn} onClick={() => handleBookClick(book.isbn)}>
             <Cover>
-              {book?.image
-              ? <CoverImg src={book?.image} alt="" />
+              {book?.cover_url
+              ? <CoverImg src={book?.cover_url} alt="" />
               : <CoverFallback />}
             </Cover>
 
@@ -96,7 +106,7 @@ export default function SearchPage() {
       </BookListWrap>
       
   </PageWrap>
-  )
+  );
 }
 
 const MessageWrap = styled.div`
@@ -155,6 +165,7 @@ const SearchContainer = styled.div`
   border-radius: 20px;
   padding: 8px 20px;
   margin: 10px auto;
+  margin-bottom: 10px;
 
   svg {
     margin-right: 8px;
@@ -179,6 +190,7 @@ const BookListWrap = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  padding: 0 10px;
   gap: 8px;
 `;
 
@@ -187,7 +199,7 @@ const BookWrap = styled.div`
   flex-direction: row;
   height: 117px;
   gap: 16px;
-  align-items: flex-start;
+  align-items: center;
   cursor: pointer;
 `;
 
@@ -223,12 +235,14 @@ const BookInfoWrap = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   line-height: 1;
-  gap: 4px;
+  gap: 8px;
 `;
 
 const SubWrap = styled.div`
-  gap: 8px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Title = styled.div`

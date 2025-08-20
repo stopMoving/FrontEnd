@@ -87,17 +87,17 @@ export default function BookInfoPage() {
               {book?.libraries.length > 0 && 
                 book.libraries.map((library) => (
                   <LibraryWrap key={library.library_id}>
-                    <Library>{library.name}</Library>
+                    <LibraryName>{library.name}</LibraryName>
                     <LibraryInfo>
                         <span>{library.distance_m}m</span>
                         <span>수량: {library.total_books}권</span>
                     </LibraryInfo>
-              </LibraryWrap>
+                  </LibraryWrap>
                 ))
             }
-            </LibraryInfoWrap>
+          </LibraryInfoWrap>
 
-          </BookInfoContainer>
+        </BookInfoContainer>
         </BookDetailWrap>
 
       </PageWrap>
@@ -105,29 +105,30 @@ export default function BookInfoPage() {
 }
 
 const PageWrap = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 600px;
   min-height: 100dvh;
   background: #E6F4F0;
-  margin: 0 auto;
-  padding: 30px 0;
 `;
 
+// SectionTitle이 정확히 가운데 오도록 하는 스타일
+// 다른 데에는 밑에 스타일로 적용되어 있음
 const Header = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 16px;
+  margin: 38px 20px 14px;
 `;
 
 const BackButton = styled.button`
   background: none;
   border: 0;
   cursor: pointer;
-  padding: 0;
   position: absolute;
-  left: 16px;
+  left: 0;
   top: 50%;
   transform: translateY(-50%);
 `;
@@ -137,12 +138,31 @@ const SectionTitle = styled.div`
   font-weight: 500;
 `;
 
+// const Header = styled.div`
+//   display: flex;
+//   align-items: center;
+//   margin-bottom: 16px;
+// `;
+
+// const BackButton = styled.button`
+//   background: none;
+//   border: 0;
+//   cursor: pointer;
+// `;
+
+// const SectionTitle = styled.div`
+//   font-size: 20px;
+//   font-weight: 500;
+//   margin: 0 auto;
+// `;
+
 const BookDetailWrap = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
-  margin-top: 10px;
-  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+  gap: 16px;
   flex: 1;
   min-height: calc(100dvh - 60px);
 `;
@@ -150,7 +170,6 @@ const BookDetailWrap = styled.div`
 const Cover = styled.div`
   width: 199px;
   height: 253px;
-  margin: 0 auto;
 `;
 
 const CoverImg = styled.img`
@@ -178,7 +197,7 @@ const CoverFallback = styled.div`
 
 const BookInfoContainer = styled.div`
   width: 100%;
-  padding: 20px 25px;
+  padding: 8px 20px 0;
   background-color: #FFFFFF;
   flex: 1;
 `;
@@ -187,20 +206,19 @@ const BookInfoWrap = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  line-height: 1;
-  gap: 16px;
 `;
 
 const Title = styled.div`
   font-size: 24px;
   font-weight: 600;
   color: #000000;
+  margin-bottom: 8px;
 `;
 
 const Meta = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  margin-bottom: 8px;
 `;
 
 const Sub = styled.div`
@@ -212,7 +230,6 @@ const Sub = styled.div`
 const Highlight = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
   margin-bottom: 40px;
 `;
 
@@ -226,14 +243,14 @@ const LibraryInfoWrap = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  color: #000000;
+  // align-items: center;
 `;
 
 const Desc = styled.div`
   font-size: 20px;
   font-weight: 600;
   color: #000000;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 `;
 
 const LibraryWrap = styled.div`
@@ -243,17 +260,19 @@ const LibraryWrap = styled.div`
   color: #000000;
   border-radius: 5px;
   padding: 20px 30px;
-  gap: 8px;
-;`
+  margin-bottom: 4px;
+`;
 
-const Library = styled.div`
+const LibraryName = styled.div`
   font-size: 20px;
   font-weight: 600;
+  color: #000000;
 `;
 
 const LibraryInfo = styled.div`
   display: flex;
-  gap: 20px;
+  flex-directioin: row;
   font-size: 16px;
   font-weight: 600;
+  color: #000000;
 `;

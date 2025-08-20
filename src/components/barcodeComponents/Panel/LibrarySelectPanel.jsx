@@ -42,7 +42,7 @@ const Wrap = styled.div`
   width: 100%;
   max-width: 600px;
   min-height: 100dvh;
-  background: #fff;
+  background: #FFFFFF;
   margin: 0 auto;
   position: relative;
 
@@ -57,18 +57,16 @@ const Inner = styled.div`
 const SectionTitle = styled.div`
   font-size: 20px;
   font-weight: 600;
-  line-height: 1;
-  margin: 10px 0 20px;
+  margin-bottom: 16px;
 `;
 
 const BottomBar = styled.div`
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 20px;
+  bottom: 0px;
   width: 100%;
-  max-width: 600px;
-  padding: 0 20px;
+  padding: 16px 20px;
 `;
 
 const NextButton = styled.button`
@@ -78,7 +76,7 @@ const NextButton = styled.button`
   font-size: 18px;
   font-weight: 600;
   border: 0;
-  color: #fff;
+  color: #FFFFFF;
   background: ${(p) => (p.disabled ? "#DEDEDE" : "#11B55F")};
   cursor: ${(p) => (p.disabled ? "not-allowed" : "pointer")};
   transition: background 0.2s ease;

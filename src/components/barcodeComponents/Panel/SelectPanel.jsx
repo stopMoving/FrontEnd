@@ -162,7 +162,7 @@ const Wrap = styled.div`
   max-width: 600px;
   min-height: 100dvh;
   margin: 0 auto;
-  background: #fff;
+  background: #FFFFFF;
   position: relative;
 
   /* 고정 StepHeader 높이만큼 여백 확보 */
@@ -170,25 +170,23 @@ const Wrap = styled.div`
 `;
 
 const Inner = styled.div`
-  padding: 0 16px;
-  display: grid;
-  gap: 20px;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 `;
 
 const SectionTitle = styled.div`
-  width: min(520px, 92vw);
   font-size: 20px;
   font-weight: 600;
-  margin: 0 auto;
 `;
 
 const Buttons = styled.div`
-  width: min(520px, 92vw);
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 8px;
-  margin: 0 auto;
 `;
 
 const Btn = styled.button`
@@ -197,7 +195,6 @@ const Btn = styled.button`
   width: 100%;
   height: 57px;
   padding: 0 16px;
-  line-height: 1;
   border: none;
   border-radius: 5px;
   background: #E6F4F0;

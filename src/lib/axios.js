@@ -134,6 +134,22 @@ export const utils = {
   },
 };
 
+export const userAPI = {
+  getUserProfile: async () => {
+    try {
+      const response = await instance.get(`/users/profile/`);
+      return response.data;
+    } catch (error) {
+      if (error.response?.status === 404) {
+        throw new Error("사용자 정보를 찾을 수 있습니다.");
+      }
+      if (error.response?.status === 401) {
+        throw new Error("인증이 필요합니다.");
+      }
+      throw new Error("프로필 정보를 불러오는 데 실패했습니다.");
+    }
+  },
+};
 // instance.interceptors.response.use(res => res, async (error) => {
 //   const originalRequest = error.config;
 //   if (error.response?.status === 401 && !originalRequest._retry) {

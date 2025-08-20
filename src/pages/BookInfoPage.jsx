@@ -10,7 +10,8 @@ export default function BookInfoPage() {
     const {isbn} = useParams();
     const [book, setBook] = useState(null);
     const [loading, setLoading] = useState(false);
-    const token = useUserStore((state) => state.token)
+    const token = useUserStore((state) => state.token);
+    const { location } = useUserStore();
 
     const onBack = () => {
         navigate(-1);
@@ -25,7 +26,8 @@ export default function BookInfoPage() {
     const fetchBookInfo = async (bookIsbn) => {
         setLoading(true);
         try {
-            const data = await bookAPI.getBookInfoByISBN(bookIsbn, 37.5665, 126.9780);
+            const data = await bookAPI.getBookInfoByISBN(bookIsbn, location.latitude, location.longitude);
+            console.log(location.latitude, location.longitude);
 
             setBook({
                 ...data,

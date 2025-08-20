@@ -171,6 +171,7 @@ const TabContainer = styled.div`
 const TabButton = styled.button`
   position: relative;
   padding: 3px 6px 11px;
+  font-family: inherit;
   font-size: 20px;
   font-weight: 500;
   color: #6F6F6F;

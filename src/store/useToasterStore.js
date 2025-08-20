@@ -37,7 +37,7 @@ const ToastContainer = styled.div`
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
-  pointer-events: none; /* 컨테이너는 클릭되지 않도록 */
+  pointer-events: none;
 `;
 
 const Icon = styled.img`
@@ -53,16 +53,14 @@ const StyledToast = styled.div`
   align-items: center;
   gap: 8px;
   color: #ffffff;
-  pointer-events: all; /* 토스트 자체는 클릭 가능하도록 */
+  pointer-events: all;
   cursor: pointer;
 
-  /* 애니메이션을 위한 초기 상태 */
   position: relative;
   top: -8px;
   opacity: 0;
   transition: top 0.2s ease-in-out, opacity 0.2s ease-in-out;
 
-  /* isMounted prop에 따른 마운트 애니메이션 */
   ${(props) =>
     props.isMounted &&
     css`
@@ -70,7 +68,6 @@ const StyledToast = styled.div`
       opacity: 1;
     `}
 
-  /* type prop에 따른 배경색 동적 변경 */
   ${(props) => {
     switch (props.type) {
       case "info":
@@ -89,14 +86,11 @@ const StyledToast = styled.div`
   }}
 `;
 
-// --- 4. 개별 Toast 컴포넌트 ---
-// 애니메이션 상태를 자체적으로 관리합니다.
 function Toast({ type, message, onClick }) {
   const [isMounted, setIsMounted] = useState(false);
 
-  // 마운트 직후 애니메이션을 트리거합니다.
   useEffect(() => {
-    const timer = setTimeout(() => setIsMounted(true), 10); // 아주 짧은 딜레이 후 실행
+    const timer = setTimeout(() => setIsMounted(true), 10);
     return () => clearTimeout(timer);
   }, []);
 
@@ -110,8 +104,6 @@ function Toast({ type, message, onClick }) {
   );
 }
 
-// --- 5. Toaster 전체 컨테이너 컴포넌트 ---
-// 스토어의 상태를 구독하고, 토스트 목록을 렌더링합니다.
 export function Toaster() {
   const toasts = useToasterStore((state) => state.toasts);
   const removeToast = useToasterStore((state) => state.removeToast);

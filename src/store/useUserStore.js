@@ -2,9 +2,10 @@ import { create } from "zustand";
 import axios from "../lib/axios"; // 프로젝트의 axios 인스턴스 경로
 
 const useUserStore = create((set, get) => ({
-  user: null, // 로그인된 사용자 정보 (예: { id, name })
-  token: null, // 인증 토큰 (JWT)
-  isInitialized: false, // 로컬 스토리지에서 토큰을 확인했는지 여부
+  //사용자 정보
+  user: null,
+  token: null,
+  isInitialized: false,
 
   // 사용자 위치정보
   location: null,
@@ -12,11 +13,9 @@ const useUserStore = create((set, get) => ({
   locationError: null,
 
   setUserAndToken: (user, token) => {
-    // axios의 모든 요청 헤더에 인증 토큰을 기본으로 포함시킵니다.
     axios.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${token.access_token}`;
-    // 로컬 스토리지에 토큰을 저장하여 페이지를 새로고침해도 로그인 유지
     localStorage.setItem("authToken", JSON.stringify(token));
     set({ user, token });
   },
@@ -33,7 +32,6 @@ const useUserStore = create((set, get) => ({
     }
   },
 
-  // 회원가입 함수
   register: async (userData) => {
     try {
       await axios.post("accounts/join/", userData);
@@ -47,7 +45,6 @@ const useUserStore = create((set, get) => ({
     }
   },
 
-  //로그인 함수
   logout: () => {
     delete axios.defaults.headers.common["Authorization"];
     localStorage.removeItem("authToken");
@@ -58,14 +55,13 @@ const useUserStore = create((set, get) => ({
     const storedToken = localStorage.getItem("authToken");
     if (storedToken) {
       try {
-        const token = JSON.parse(storedToken); // 저장된 문자열을 다시 객체로 변환
+        const token = JSON.parse(storedToken);
         axios.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${token.access_token}`;
-        const response = await axios.get("/users/profile/"); // 내 정보를 가져오는 API
+        const response = await axios.get("users/profile");
         set({ user: response.data, token });
       } catch (error) {
-        // 토큰이 유효하지 않은 경우 (만료 등), 로그아웃 처리
         get().logout();
       }
     }
@@ -77,11 +73,11 @@ const useUserStore = create((set, get) => ({
     if (!navigator.geolocation) {
       set({
         locationError: "Geolocation을 지원하지 않는 브라우저입니다.",
-        isLocationLoading: false, // 로딩 상태를 다시 false로 변경
+        isLocationLoading: false,
       });
       return;
     }
-    //위치 정보 가져오기 성공 시 실행되는 콜백 함수
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
@@ -92,7 +88,6 @@ const useUserStore = create((set, get) => ({
         });
       },
 
-      //위치 정보 가져오기 실패 시 실행되는 콜백 함수
       (error) => {
         set({
           locationError: error.message,

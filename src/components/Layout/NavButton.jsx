@@ -22,7 +22,6 @@ const ButtonContainer = styled.button`
 `;
 
 function NavButton({ component: IconComponent, label, onClick, isActive }) {
-  // 활성화 상태에 따라 아이콘에 전달할 색상을 결정합니다.
   const iconColor = isActive ? "#11B55F" : "#6F6F6F";
 
   return (

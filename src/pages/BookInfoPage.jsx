@@ -3,7 +3,7 @@ import { ReactComponent as BackIcon } from "../assets/icons/backIcon.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useUserStore from "../store/useUserStore";
-import { ReactComponent as SearchIcon } from "../assets/icons/search.svg";
+import { bookAPI } from "../lib/axios";
 
 export default function BookInfoPage() {
     const navigate = useNavigate();
@@ -24,29 +24,13 @@ export default function BookInfoPage() {
 
     const fetchBookInfo = async (bookIsbn) => {
         setLoading(true);
-        const accessToken = token?.access_token;
-        if (!accessToken) {
-            alert("로그인이 필요합니다.");
-            setLoading(false);
-            return;
-        }
-
         try {
-            const url = `https://stopmoving.o-r.kr/bookinfo/donate/?isbn=${bookIsbn}`;
-            const res = await fetch(url, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                },
+            const data = await bookAPI.getBookInfoByISBN(bookIsbn, 37.5665, 126.9780);
+
+            setBook({
+                ...data,
+                libraries: data?.libraries || [],
             });
-
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.detail || `조회 실패 (${res.status})`);
-            }
-
-            const data = await res.json();
-            setBook(data);
         } catch (e) {
             console.error("도서 정보 조회 실패: ", e);
             alert(e.message || "도서 정보를 불러오는 데 실패했습니다.");
@@ -54,6 +38,12 @@ export default function BookInfoPage() {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (isbn && token) {
+            fetchBookInfo(isbn);
+        }
+    }, [isbn, token]);
 
     return (
     <PageWrap>
@@ -67,24 +57,24 @@ export default function BookInfoPage() {
       
       <BookDetailWrap>
         <Cover>
-            {book?.image
-            ? <CoverImg src={book?.image} alt="" />
+            {book?.cover_url
+            ? <CoverImg src={book?.cover_url} alt="" />
             : <CoverFallback />}
         </Cover>
 
         <BookInfoContainer>
             <BookInfoWrap>
-              <Title>어린이를 위한 습관의 힘{book?.title || "-"}</Title>
+              <Title>{book?.title || "-"}</Title>
 
               <Meta>
-                <Sub>저자{book?.author || "-"}</Sub>
-                <Sub>출판사{book?.publisher || "-"}</Sub>
-                <Sub>출판일{book?.published_date || "-"}</Sub>
-                <Sub><del>가격{book?.regular_price || "-"}</del></Sub>
+                <Sub>{book?.author || "-"}</Sub>
+                <Sub>{book?.publisher || "-"}</Sub>
+                <Sub>{book?.published_date || "-"}</Sub>
+                <Sub><del>{book?.regular_price || "-"}</del>원</Sub>
               </Meta>
 
               <Highlight>
-                <Info>3600{book?.price || "-"} 원</Info>
+                <Info>{book?.sale_price || "-"} 원</Info>
                 <Info>ISBN 코드 : {book?.isbn || "-"}</Info>
               </Highlight>
             </BookInfoWrap>
@@ -92,10 +82,17 @@ export default function BookInfoPage() {
             <LibraryInfoWrap>
               <Desc>이 책이 있는 도서관</Desc>
 
-              <LibraryWrap>
-                <Library>김영삼도서관</Library>
-                <LibraryInfo>150m</LibraryInfo>
+              {book?.libraries.length > 0 && 
+                book.libraries.map((library) => (
+                  <LibraryWrap key={library.library_id}>
+                    <Library>{library.name}</Library>
+                    <LibraryInfo>
+                        <span>{library.distance_m}m</span>
+                        <span>수량: {library.total_books}권</span>
+                    </LibraryInfo>
               </LibraryWrap>
+                ))
+            }
             </LibraryInfoWrap>
 
           </BookInfoContainer>
@@ -253,6 +250,8 @@ const Library = styled.div`
 `;
 
 const LibraryInfo = styled.div`
+  display: flex;
+  gap: 20px;
   font-size: 16px;
   font-weight: 600;
 `;

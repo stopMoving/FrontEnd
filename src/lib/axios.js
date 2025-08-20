@@ -89,6 +89,32 @@ export const bookAPI = {
       throw new Error("등록에 실패했어요. 잠시 후 다시 시도해 주세요.");
     }
   },
+
+  searchBooks: async (query) => {
+    try {
+      const response = await instance.get(`/bookinfo/search/?q=${query}`);
+      return response.data;
+    } catch (error) {
+      throw new Error("검색에 실패했어요. 잠시 후 다시 시도해 주세요.");
+    }
+  },
+
+  getBookInfoByISBN: async(isbn, lat, lng) => {
+    try {
+      let url = `/books/by-isbn/${isbn}/`;
+      //위도와 경도 파라미터가 있으면 URL에 추가
+      if (lat && lng) {
+        url += `?lat=${lat}&lng=${lng}`;
+      }
+      const resposne = await instance.get(url);
+      return resposne.data;
+    } catch (error) {
+      if (error.message?.status === 404) {
+        throw new Error("존재하지 않는 ISBN입니다.");
+      }
+      throw new Error("도서 정보를 불러오는 데 실패했습니다. 잠시 후 다시 시도해 주세요.");
+    }
+  },
 };
 
 export const utils = {

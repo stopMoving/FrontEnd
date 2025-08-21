@@ -104,10 +104,18 @@ export default function BookInfoPage() {
                   </LibraryWrap>
                 ))
             }
-          </LibraryInfoWrap>
+            </LibraryInfoWrap>
+
+            <BookIntroduceWrap>
+              <Desc>책 소개</Desc>
+
+              <Introduce>
+
+              </Introduce>
+            </BookIntroduceWrap>
 
         </BookInfoContainer>
-        </BookDetailWrap>
+      </BookDetailWrap>
 
       </PageWrap>
   )
@@ -239,7 +247,6 @@ const Sub = styled.div`
 const Highlight = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 40px;
 `;
 
 const Info = styled.div`
@@ -249,10 +256,12 @@ const Info = styled.div`
 `;
 
 const LibraryInfoWrap = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   // align-items: center;
+  margin: 40px 0;
 `;
 
 const Desc = styled.div`
@@ -286,4 +295,18 @@ const LibraryInfo = styled.div`
   font-weight: 600;
   color: #000000;
   gap: 8px;
+`;
+
+const BookIntroduceWrap = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  // justify-content: center;
+  // align-items: center;
+`;
+
+const Introduce = styled.div`
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
 `;

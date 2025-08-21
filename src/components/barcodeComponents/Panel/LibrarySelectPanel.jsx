@@ -62,10 +62,10 @@ const SectionTitle = styled.div`
 
 const BottomBar = styled.div`
   position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
   bottom: 0px;
   width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
   padding: 16px 20px;
 `;
 

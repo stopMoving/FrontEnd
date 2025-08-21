@@ -163,7 +163,7 @@ export const bookAPI = {
       };
       const response = await instance.post(`/books/pickup`, payload, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token.access_token}`,
         },
       });
       return response.data;

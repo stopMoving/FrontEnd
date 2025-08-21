@@ -129,15 +129,25 @@ export const bookAPI = {
           library_id: libraryId,
         },
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token.access_token}`,
         },
       });
       return response.data;
     } catch (error) {
-      // if (error.response?.data?.error === "해당 책 정보가 없습니다.") {
-      //  throw new Error("해당 ISBN의 책 정보가 없습니다.");
-      // }
-
+      if (error.response?.status === 404) {
+        // API 명세서의 에러 메시지를 활용하여 구체적으로 처리
+        if (error.response?.data?.error === "해당 isbn의 책 정보가 없습니다.") {
+          throw new Error("해당 책 정보가 없습니다.");
+        }
+        if (error.response?.data?.error === "구매 불가 상품입니다.") {
+          throw new Error("픽업이 불가능한 책입니다.");
+        }
+        if (error.response?.data?.error === "해당 도서관이 존재하지 않습니다.") {
+          throw new Error("도서관 정보를 찾을 수 없습니다.");
+        }
+      }
+      // 그 외 일반적인 오류
+      throw new Error("책 상세 정보를 불러오는 데 실패했습니다.");
     }
   },
 

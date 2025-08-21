@@ -8,7 +8,7 @@ export default function ISBNInputPanel({
   onConfirm,
   mode,
   libraryId
-}) { // ✅ onConfirm 프롭스를 받음
+}) {
   const [isbn, setIsbn] = useState("");
   const [loading, setLoading] = useState(false);
   const token = useUserStore((state) => state.token);
@@ -26,12 +26,19 @@ export default function ISBNInputPanel({
 
     try {
       let data;
+
       if (mode === "give") {
         data = await bookAPI.getBookByISBN(isbn);
-      } else if (mode === "take") {
-        const res = await bookAPI.getPickupBookDetail(isbn, libraryId);
-        data = res;
       }
+      
+      else if (mode === "take") {
+        const res = await bookAPI.getPickupBookDetail(isbn, libraryId);
+        data = {
+          bookData: res.data,
+          bookIds: res.book_ids,
+        };
+      }
+
       onClose(); // ✅ 바텀 시트를 먼저 닫음
       onConfirm(data); // ✅ onConfirm 콜백으로 책 데이터 전달
     } catch (error) {

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { BrowserMultiFormatReader } from "@zxing/library";
 import styled from "styled-components";
 import useUserStore from "../../store/useUserStore";
-import { bookAPI, utils } from "../../lib/axios";
+import { bookAPI, utils } from "../../lib/api";
 
 export default function ImageUploadPanel({
   onClose,
@@ -39,7 +39,9 @@ export default function ImageUploadPanel({
     const reader = new FileReader();
     const img = new Image();
 
-    reader.onload = () => { img.src = reader.result; };
+    reader.onload = () => {
+      img.src = reader.result;
+    };
     img.onload = async () => {
       const codeReader = new BrowserMultiFormatReader();
       try {
@@ -55,7 +57,6 @@ export default function ImageUploadPanel({
 
         onClose(); // ✅ API 호출 성공 시 바텀 시트 닫기
         onConfirm(data); // ✅ onConfirm 콜백으로 책 데이터 전달
-
       } catch (err) {
         console.error("❌ 이미지 인식 실패:", err);
         alert(err.message || "이미지에서 바코드 인식 실패");
@@ -67,15 +68,19 @@ export default function ImageUploadPanel({
     reader.readAsDataURL(file);
   };
 
-  const resetValue = (e) => { e.target.value = ""; };
+  const resetValue = (e) => {
+    e.target.value = "";
+  };
 
   return (
     <PanelWrap>
       <TopBar />
-      
+
       <InputContainer>
         <Title>바코드 사진 업로드</Title>
-        <Description>바코드가 선명하게 보이는 사진을 업로드해주세요.</Description>
+        <Description>
+          바코드가 선명하게 보이는 사진을 업로드해주세요.
+        </Description>
 
         <input
           ref={inputRef}
@@ -85,7 +90,7 @@ export default function ImageUploadPanel({
           onClick={resetValue}
           style={{ display: "none" }}
         />
-        
+
         <BottomBar>
           {!isProcessing && (
             <OpenBtn type="button" onClick={openPicker}>
@@ -104,7 +109,7 @@ const PanelWrap = styled.div`
   width: 100%;
   max-width: 600px;
   min-height: 521px;
-  background: #FFFFFF;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -115,7 +120,7 @@ const PanelWrap = styled.div`
 const TopBar = styled.div`
   width: 80px;
   height: 4px;
-  background-color: #11B55F;
+  background-color: #11b55f;
   border-radius: 2px;
   margin-top: 16px;
   margin-bottom: 24px;
@@ -130,7 +135,7 @@ const Title = styled.div`
 
 const Description = styled.p`
   font-size: 14px;
-  color: #6B7280;
+  color: #6b7280;
   text-align: center;
 `;
 
@@ -152,14 +157,14 @@ const BottomBar = styled.div`
   padding: 0 20px;
 `;
 
-const OpenBtn= styled.button`
+const OpenBtn = styled.button`
   width: 100%;
   height: 52px;
   border-radius: 5px;
   font-size: 18px;
   font-weight: 600;
   border: 0;
-  color: #FFFFFF;
-  background: #11B55F;
+  color: #ffffff;
+  background: #11b55f;
   cursor: pointer;
 `;

@@ -1,43 +1,43 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { userAPI } from "../../lib/axios";
+import { userAPI } from "../../lib/api";
 
-export default function DonateHistoryPanel({
-    activeTab = 1
-}) {
-    const [donatedBooks, setDonatedBooks] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+export default function DonateHistoryPanel({ activeTab = 1 }) {
+  const [donatedBooks, setDonatedBooks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchDonatedBooks = async () => {
-            try {
-                const books = await userAPI.getDonatedBooks();
-                setDonatedBooks(books);
-            } catch (error) {
-                console.error("나눔 내역 로딩 실패: ", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchDonatedBooks();
-    }, []);
+  useEffect(() => {
+    const fetchDonatedBooks = async () => {
+      try {
+        const books = await userAPI.getDonatedBooks();
+        setDonatedBooks(books);
+      } catch (error) {
+        console.error("나눔 내역 로딩 실패: ", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchDonatedBooks();
+  }, []);
 
-    if (isLoading) {
-        return <p>나눔 내역을 불러오는 중...</p>
-    }
+  if (isLoading) {
+    return <p>나눔 내역을 불러오는 중...</p>;
+  }
 
-    if (donatedBooks.length === 0) {
-        return <p>나눔한 책이 없습니다.</p>
-    }
-    
-    return (
-      <Wrap>
-        {donatedBooks.map((book) => (
-          <BookWrap key={book.userbook_id}>
-            <BookCover>
-            {book?.cover
-              ? <CoverImg src={book?.cover} alt="" />
-              : <CoverFallback />}
+  if (donatedBooks.length === 0) {
+    return <p>나눔한 책이 없습니다.</p>;
+  }
+
+  return (
+    <Wrap>
+      {donatedBooks.map((book) => (
+        <BookWrap key={book.userbook_id}>
+          <BookCover>
+            {book?.cover ? (
+              <CoverImg src={book?.cover} alt="" />
+            ) : (
+              <CoverFallback />
+            )}
           </BookCover>
 
           <Info>
@@ -46,21 +46,20 @@ export default function DonateHistoryPanel({
             <Meta>
               <Sub>{book?.library_name}</Sub>
               <Sub>{book?.quantity}</Sub>
-              <Sub>{book?.created_at.split('T')[0]}</Sub>
+              <Sub>{book?.created_at.split("T")[0]}</Sub>
               <Sub>+500P</Sub>
             </Meta>
           </Info>
         </BookWrap>
-        ))}
-        
-      </Wrap>
-    )
+      ))}
+    </Wrap>
+  );
 }
 
 const Wrap = styled.div`
   width: 100%;
   max-width: 600px;
-  background: #FFFFFF;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -90,7 +89,7 @@ const CoverFallback = styled.div`
   width: 106px;
   height: 129px;
   border-radius: 5px;
-  background-color: #D9D9D9;
+  background-color: #d9d9d9;
   overflow: hidden;
   flex-shrink: 0;
 

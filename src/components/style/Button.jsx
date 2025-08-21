@@ -9,11 +9,12 @@ const Button = styled.button`
   color: #ffffff;
   cursor: pointer;
   font-size: 18px;
+  font-weight: 600;
   padding: 16px;
 
   width: 100%;
   margin: 16px 0 0 0;
-
+  font-family: inherit;
   transition: background-color 0.2s ease-in-out;
 
   &:hover {

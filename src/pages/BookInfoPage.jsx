@@ -10,24 +10,17 @@ export default function BookInfoPage() {
     const {isbn} = useParams();
     const [book, setBook] = useState(null);
     const [loading, setLoading] = useState(false);
-    const token = useUserStore((state) => state.token);
     const { location } = useUserStore();
 
     const onBack = () => {
         navigate(-1);
     }
 
-    useEffect(() => {
-        if (isbn) {
-            fetchBookInfo(isbn);
-        }
-    }, [isbn, token]); //isbn 또는 token이 변경될 때마다 실행
-
-    const fetchBookInfo = async (bookIsbn) => {
+    const fetchBookInfo = async (bookIsbn, lat, lng) => {
         setLoading(true);
         try {
-            const data = await bookAPI.getBookInfoByISBN(bookIsbn, location.latitude, location.longitude);
-            console.log(location.latitude, location.longitude);
+            const data = await bookAPI.getBookInfoByISBN(bookIsbn, lat, lng);
+            console.log("Received Book Data: ", data);
 
             setBook({
                 ...data,
@@ -42,10 +35,26 @@ export default function BookInfoPage() {
     };
 
     useEffect(() => {
-        if (isbn && token) {
-            fetchBookInfo(isbn);
+        if (isbn && location?.latitude && location?.longitude) {
+            fetchBookInfo(isbn, location.latitude, location.longitude);
         }
-    }, [isbn, token]);
+    }, [isbn, location]);
+
+    if (!location?.latitude || !location?.longitude) {
+      return (
+        <PageWrap>
+          <Header>
+            <BackButton type="button" onClick={onBack}>
+              <BackIcon width={24} height={24} />
+            </BackButton>
+
+            <SectionTitle>책 정보</SectionTitle>
+          </Header>
+
+          <p>위치 정보를 불러오는 중...</p>
+        </PageWrap>
+      );
+    }
 
     return (
     <PageWrap>
@@ -250,7 +259,7 @@ const Desc = styled.div`
   font-size: 20px;
   font-weight: 600;
   color: #000000;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 `;
 
 const LibraryWrap = styled.div`

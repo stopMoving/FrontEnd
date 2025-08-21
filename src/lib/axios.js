@@ -109,7 +109,7 @@ export const bookAPI = {
       const resposne = await instance.get(url);
       return resposne.data;
     } catch (error) {
-      if (error.message?.status === 404) {
+      if (error.response?.status === 404) {
         throw new Error("존재하지 않는 ISBN입니다.");
       }
       throw new Error("도서 정보를 불러오는 데 실패했습니다. 잠시 후 다시 시도해 주세요.");

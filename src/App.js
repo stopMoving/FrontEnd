@@ -1,6 +1,13 @@
 import { useEffect } from "react";
 import GlobalStyle from "./Globalstyles/GlobalStyle";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import RegisterPage from "./pages/RegisterPage/RegitserPage";
@@ -21,20 +28,25 @@ import MyPage from "./pages/MyPage";
 import AiRecommendPage from "./pages/AiPage/AiRecommendPage";
 import NotificationPage from "./pages/NotificationPage";
 
+const PrivateRoutes = () => {
+  const { user, isInitialized } = useUserStore();
+
+  if (!isInitialized) {
+    return <div>로딩 중...</div>;
+  }
+
+  return user ? <Outlet /> : <Navigate to="/login" />;
+};
+
 const App = () => {
   const { initializeAuth, isInitialized, fetchLocation, user } = useUserStore();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  // const location = useLocation();
 
   useEffect(() => {
     initializeAuth();
     fetchLocation();
   }, [initializeAuth, fetchLocation]);
-
-  useEffect(() => {
-    if (isInitialized && !user) {
-      navigate("/login");
-    }
-  }, [isInitialized, user]);
 
   if (!isInitialized) {
     return <div>로딩 중...</div>;
@@ -47,35 +59,38 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/welcome" element={<WelcomePage />} />
-        <Route path="/" element={<MainPage />} />
-        <Route path="/mypage" element={<MyPage />} />
-        <Route path="/library/detail/:id" element={<LibraryDetailPage />} />
-        <Route path="/library/:libraryId" element={<LibraryPage />} />
-        <Route path="/notifications" element={<NotificationPage />} />
 
-        <Route path="search/book" element={<SearchPage />} />
-        <Route path="search/book-detail" element={<BookInfoPage />} />
-        <Route
-          path="barcode/library/select/:mode"
-          element={<LibrarySelectPage />}
-        />
+        <Route element={<PrivateRoutes />}>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/library/detail/:id" element={<LibraryDetailPage />} />
+          <Route path="/library/:libraryId" element={<LibraryPage />} />
+          <Route path="/notifications" element={<NotificationPage />} />
 
-        <Route
-          path="/library/:libraryId/shared"
-          element={<SharedBooksPage />}
-        />
-        <Route path="/book/:isbn" element={<BookDetailPage />} />
-        <Route path="/ai/recommand" element={<AiRecommendPage />} />
+          <Route path="search/book" element={<SearchPage />} />
+          <Route path="search/book-detail" element={<BookInfoPage />} />
+          <Route
+            path="barcode/library/select/:mode"
+            element={<LibrarySelectPage />}
+          />
 
-        <Route path="search/book" element={<SearchPage />} />
-        <Route path="search/book-detail" element={<BookInfoPage />} />
-        <Route
-          path="barcode/library/select/:mode"
-          element={<LibrarySelectPage />}
-        />
-        <Route path="barcode/select/:mode" element={<SelectPage />} />
-        <Route path="barcode/scan/:mode" element={<ScanPage />} />
-        <Route path="barcode/booklist/:mode" element={<BookListPage />} />
+          <Route
+            path="/library/:libraryId/shared"
+            element={<SharedBooksPage />}
+          />
+          <Route path="/book/:isbn" element={<BookDetailPage />} />
+          <Route path="/ai/recommand" element={<AiRecommendPage />} />
+
+          <Route path="search/book" element={<SearchPage />} />
+          <Route path="search/book-detail" element={<BookInfoPage />} />
+          <Route
+            path="barcode/library/select/:mode"
+            element={<LibrarySelectPage />}
+          />
+          <Route path="barcode/select/:mode" element={<SelectPage />} />
+          <Route path="barcode/scan/:mode" element={<ScanPage />} />
+          <Route path="barcode/booklist/:mode" element={<BookListPage />} />
+        </Route>
       </Routes>
       <Toaster />
     </>

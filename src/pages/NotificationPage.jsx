@@ -5,7 +5,7 @@ import axios from "../lib/axios";
 import useUserStore from "../store/useUserStore";
 
 import { ReactComponent as BackIcon } from "../assets/icons/backIcon.svg";
-import { ReactComponent as BellIcon } from "../assets/icons/bell.svg";
+import { ReactComponent as BellIcon } from "../assets/icons/bell_icons_gray.svg";
 import { ReactComponent as PointIcon } from "../assets/icons/pointChat.svg";
 import { ReactComponent as BookHandChatIcon } from "../assets/icons/bookHandChat.svg";
 import { ReactComponent as BookChatIcon } from "../assets/icons/bookChat.svg";
@@ -21,6 +21,29 @@ const getNotificationIcon = (type) => {
     default:
       return BellIcon;
   }
+};
+
+const formatMessage = (message) => {
+  const match = message.match(/(.*)《(.*)》(.*)/s);
+
+  if (!match) {
+    return message;
+  }
+
+  const beforeText = match[1];
+  let title = match[2];
+  const afterText = match[3];
+
+  if (title.length > 5) {
+    title = title.substring(0, 5) + "...";
+  }
+  return (
+    <>
+      {beforeText}
+      <BookTitle>{`《${title}》`}</BookTitle>
+      {afterText}
+    </>
+  );
 };
 
 const NotificationPage = () => {
@@ -87,7 +110,7 @@ const NotificationPage = () => {
     if (notifications.length === 0) {
       return (
         <EmptyStateContainer>
-          <BellIcon fill="#B5E8CD" width={48} height={48} />
+          <BellIcon fill="#B5E8CD" width={72} height={72} />
           <p>받은 알림이 없습니다.</p>
         </EmptyStateContainer>
       );
@@ -99,11 +122,11 @@ const NotificationPage = () => {
         {notifications.map((noti) => {
           const IconComponent = getNotificationIcon(noti.type);
           return (
-            <NotificationItem ket={noti.id}>
+            <NotificationItem key={noti.id}>
               <IconWrapper>
-                <IconComponent width={24} height={24} />
+                <IconComponent width={64} height={64} />
               </IconWrapper>
-              <Message>{noti.message}</Message>
+              <Message>{formatMessage(noti.message)}</Message>
             </NotificationItem>
           );
         })}
@@ -155,7 +178,7 @@ const TopNavBar = styled.header`
 `;
 const BackButton = styled.h1`
   position: absolute;
-  left: 16px;
+  left: 20px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -163,14 +186,17 @@ const BackButton = styled.h1`
   cursor: pointer;
 `;
 const PageTitle = styled.h1`
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 500;
 `;
 
 const ContentContainer = styled.main`
   padding: 60px 0 0;
   height: 100vh;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const NotificationList = styled.div`
@@ -186,8 +212,8 @@ const NotificationItem = styled.div`
 `;
 
 const IconWrapper = styled.div`
-  width: 40px;
-  height: 40px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   background-color: #fff;
   display: flex;
@@ -197,14 +223,15 @@ const IconWrapper = styled.div`
 `;
 
 const Message = styled.p`
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 500;
   line-height: 1.6;
   color: black;
   white-space: pre-wrap; // 줄바꿈 렌더링
 `;
 
 const FooterText = styled.p`
-  font-size: 12px;
+  font-size: 14px;
   color: #949494;
   text-align: center;
   padding: 20px;
@@ -223,5 +250,10 @@ const StatusContainer = styled.div`
 const EmptyStateContainer = styled(StatusContainer)`
   flex-direction: column;
   background-color: white;
+  color: #6f6f6f;
   gap: 16px;
+`;
+
+const BookTitle = styled.strong`
+  font-weight: 600;
 `;

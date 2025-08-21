@@ -44,7 +44,7 @@ const useLibrarySidebarStore = create((set) => ({
       });
     } catch (error) {
       set({
-        myLibrariesError: "'내도서관' 목록을 불러오지 못했습니다.",
+        myLibrariesError: "",
         isMyLibrariesLoading: false,
       });
       console.error("Failed to fetch my libraries:", error);

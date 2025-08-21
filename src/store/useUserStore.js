@@ -20,6 +20,28 @@ const useUserStore = create((set, get) => ({
     set({ user, token });
   },
 
+  initializeAuth: async () => {
+    const storedToken = localStorage.getItem("authToken");
+    if (storedToken) {
+      try {
+        const token = JSON.parse(storedToken);
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${token.access_token}`;
+
+        const response = await axios.get("users/profile/");
+        console.log(response.data);
+        set({ user: response.data, token });
+      } catch (error) {
+        get().logout();
+      } finally {
+        set({ isInitialized: true });
+      }
+    } else {
+      set({ isInitialized: true });
+    }
+  },
+
   login: async (credentials) => {
     try {
       const response = await axios.post("accounts/login/", credentials);
@@ -51,22 +73,6 @@ const useUserStore = create((set, get) => ({
     set({ user: null, token: null });
   },
 
-  initializeAuth: async () => {
-    const storedToken = localStorage.getItem("authToken");
-    if (storedToken) {
-      try {
-        const token = JSON.parse(storedToken);
-        axios.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${token.access_token}`;
-        const response = await axios.get("users/profile");
-        set({ user: response.data, token });
-      } catch (error) {
-        get().logout();
-      }
-    }
-    set({ isInitialized: true });
-  },
   fetchLocation: () => {
     set({ isLocationLoading: true, locationError: null });
 

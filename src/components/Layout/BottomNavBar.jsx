@@ -10,22 +10,48 @@ import { ReactComponent as HomeIcon } from "../../assets/icons/homeIcon.svg";
 import { ReactComponent as AiIcon } from "../../assets/icons/AI.svg";
 import { ReactComponent as MypageIcon } from "../../assets/icons/mypageIcon.svg";
 
+import { ReactComponent as BookShareIconActive } from "../../assets/icons/shareIcon2.svg";
+import { ReactComponent as BookTakeIconActive } from "../../assets/icons/takeIcon2.svg";
+import { ReactComponent as HomeIconActive } from "../../assets/icons/homeIcon2.svg";
+import { ReactComponent as AiIconActive } from "../../assets/icons/Ai2.svg";
+import { ReactComponent as MypageIconActive } from "../../assets/icons/mypageIcon2.svg";
+
 const navItems = [
   {
     id: 1,
-    Iconlabel: "책 나눔하기",
+    label: "책 나눔하기",
     component: BookShareIcon,
+    activeComponent: BookShareIconActive,
     path: "/barcode/library/select/give",
   },
   {
     id: 2,
-    Iconlabel: "책 데려가기",
+    label: "책 데려가기",
     component: BookTakeIcon,
+    activeComponent: BookTakeIconActive,
     path: "/barcode/library/select/take",
   },
-  { id: 3, Iconlabel: "홈", component: HomeIcon, path: "/" },
-  { id: 4, Iconlabel: "AI", component: AiIcon, path: "/ai/recommand" },
-  { id: 5, Iconlabel: "마이페이지", component: MypageIcon, path: "/mypage" },
+  {
+    id: 3,
+    label: "홈",
+    component: HomeIcon,
+    activeComponent: HomeIconActive,
+    path: "/",
+  },
+  {
+    id: 4,
+    label: "AI",
+    component: AiIcon,
+    activeComponent: AiIconActive,
+    path: "/ai/recommand",
+  },
+  {
+    id: 5,
+    label: "마이페이지",
+    component: MypageIcon,
+    activeComponent: MypageIconActive,
+    path: "/mypage",
+  },
 ];
 
 const BottomNavBar = () => {
@@ -34,20 +60,23 @@ const BottomNavBar = () => {
   const currentPath = location.pathname; // 현재 URL 경로
 
   return (
-    <>
-      <BottomNav>
-        {navItems.map((item) => (
+    <BottomNav>
+      {navItems.map((item) => {
+        // 현재경로 & 버튼경로 일치 확인
+        const isActive = currentPath === item.path;
+        const IconComponent = isActive ? item.activeComponent : item.component;
+
+        return (
           <NavButton
             key={item.id}
-            label={item.Iconlabel}
-            component={item.component}
+            label={item.label}
+            component={IconComponent}
             onClick={() => navigate(item.path)}
-            // 현재 경로와 버튼의 경로가 일치하는지 확인하여 활성화 상태를 전달
-            isActive={currentPath === item.path}
+            isActive={isActive}
           />
-        ))}
-      </BottomNav>
-    </>
+        );
+      })}
+    </BottomNav>
   );
 };
 

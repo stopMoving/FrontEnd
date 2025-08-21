@@ -3,7 +3,7 @@ import BookListPanel from "../../components/barcodeComponents/Panel/BookListPane
 import CompleteModal from "./CompleteModal";
 import { useMemo, useState } from "react";
 import useBookStore from "../../store/useBookStore";
-import { bookAPI } from "../../lib/axios";
+import { bookAPI } from "../../lib/api";
 import useUserStore from "../../store/useUserStore";
 
 export default function BookListPage() {
@@ -16,14 +16,15 @@ export default function BookListPage() {
   const [loading, setLoading] = useState(false);
   const [completeData, setCompleteData] = useState({ count: 0, points: 0 });
 
-  const { scannedBooks, updateBookQuantity, clearScannedBooks } = useBookStore();
+  const { scannedBooks, updateBookQuantity, clearScannedBooks } =
+    useBookStore();
   const token = useUserStore((state) => state.token);
 
-  const {totalCount, totalPoints } = useMemo(() => {
+  const { totalCount, totalPoints } = useMemo(() => {
     let count = 0;
     let points = 0;
 
-    scannedBooks.forEach(book => {
+    scannedBooks.forEach((book) => {
       count += book.quantity;
 
       if (mode === "give") {
@@ -33,17 +34,18 @@ export default function BookListPage() {
     return { totalCount: count, totalPoints: points };
   }, [scannedBooks, mode]);
 
-  const copy = mode === "give"
-    ? {
-        title: "나눔하기",
-        description: "책 목록을 확인 후 나눔해주세요.",
-        buttonLabel: "나눔하기",
-      }
-    : {
-        title: "데려가기",
-        description: "책 목록을 확인 후 결제해주세요.",
-        buttonLabel: "결제하기",
-      };
+  const copy =
+    mode === "give"
+      ? {
+          title: "나눔하기",
+          description: "책 목록을 확인 후 나눔해주세요.",
+          buttonLabel: "나눔하기",
+        }
+      : {
+          title: "데려가기",
+          description: "책 목록을 확인 후 결제해주세요.",
+          buttonLabel: "결제하기",
+        };
 
   // === step 2 버튼: 네, 추가 ===
   // const handleAddMore = () => {
@@ -55,19 +57,21 @@ export default function BookListPage() {
   // 추가(+) 버튼
   const handleAddClick = () => {
     // SelectPage로 이동하면서 mode와 libraryId 값을 다시 전달
-    navigate(`/barcode/select/${mode}?branchId=${encodeURIComponent(libraryId)}`);
+    navigate(
+      `/barcode/select/${mode}?branchId=${encodeURIComponent(libraryId)}`
+    );
   };
 
-    // 나눔하기 버튼
-  const handleFinish = async () => {    
+  // 나눔하기 버튼
+  const handleFinish = async () => {
     if (!libraryId) {
       alert("도서관이 선택되지 않았어요.");
       return;
     }
 
-     const isbnList = scannedBooks.map(book => ({
+    const isbnList = scannedBooks.map((book) => ({
       isbn: book.rawIsbn,
-      quantity: book.quantity
+      quantity: book.quantity,
     }));
 
     if (isbnList.length === 0) {
@@ -87,35 +91,35 @@ export default function BookListPage() {
       clearScannedBooks();
       setCompleteOpen(true);
     } catch (error) {
-        console.error("등록 실패", error);
-        alert(error.message) // alert 말고 다르게 표시하자
+      console.error("등록 실패", error);
+      alert(error.message); // alert 말고 다르게 표시하자
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
   return (
-  <>
-    <BookListPanel
-      {...copy}
-      items={scannedBooks}
-      onNext={handleFinish}
-      disabled={loading}
-      onQuantityChange={updateBookQuantity} // 스토어에서 가져온 함수를 핸들러로 전달
-      onAddClick={handleAddClick}
-    />
+    <>
+      <BookListPanel
+        {...copy}
+        items={scannedBooks}
+        onNext={handleFinish}
+        disabled={loading}
+        onQuantityChange={updateBookQuantity} // 스토어에서 가져온 함수를 핸들러로 전달
+        onAddClick={handleAddClick}
+      />
 
-    <CompleteModal
-      open={completeOpen}
-      mode={mode}
-      count={completeData.count}
-      points={completeData.points}
-      onPrimary={() => {
-        setCompleteOpen(false);
-        navigate('/mypage');
-      }}
-      onClose={() => setCompleteOpen(false)}
-    />
-  </>
+      <CompleteModal
+        open={completeOpen}
+        mode={mode}
+        count={completeData.count}
+        points={completeData.points}
+        onPrimary={() => {
+          setCompleteOpen(false);
+          navigate("/mypage");
+        }}
+        onClose={() => setCompleteOpen(false)}
+      />
+    </>
   );
 }

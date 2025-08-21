@@ -146,7 +146,7 @@ const MainPage = () => {
           <ActionButton2 onClick={handle데려가기Button}>데려가기</ActionButton2>
         </ButtonWrapper>
         <Title2>
-          AI가 고른 {userNickName || "아기사자"}님 취향 맞춤 책 리스트
+          {`AI가 고른 ${userNickName || "아기사자"}님 \n취향 맞춤 책 리스트`}
         </Title2>
         <BookGrid>
           {bookListData.slice(0, 6).map((book) => (
@@ -166,6 +166,8 @@ export default MainPage;
 
 const PageWrapper = styled.div`
   width: 100%;
+  position: relative;
+  overflow: hidden;
   max-width: 600px;
   min-height: 100%;
   display: flex;
@@ -178,7 +180,7 @@ const MainContainer = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 8px;
   width: 100%;
   padding: 80px 20px 80px 20px;
   flex-grow: 1;
@@ -205,8 +207,11 @@ const SearchButton = styled.button`
   border-radius: 50px;
   color: #6f6f6f;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
   padding: 16px 16px;
+  font-family: inherit;
+  margin-bottom: 8px;
 `;
 
 const ActionButton = styled.button`
@@ -222,6 +227,8 @@ const ActionButton = styled.button`
   transition: opacity 0.2s;
   padding: 0 8px;
   white-space: nowrap;
+  font-family: inherit;
+  margin-bottom: 32px;
 `;
 
 const ActionButton1 = styled(ActionButton)`
@@ -264,15 +271,16 @@ const ButtonWrapper = styled.div`
 const Title = styled.h1`
   width: 100%;
   text-align: left;
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 22px;
+  font-weight: 600;
 `;
 
 const Title2 = styled.h2`
   width: 100%;
   text-align: left;
-  font-size: 19px;
-  font-weight: bold;
+  font-size: 20px;
+  font-weight: 600;
+  white-space: pre-line;
 `;
 
 const BannerWrapper = styled.div`

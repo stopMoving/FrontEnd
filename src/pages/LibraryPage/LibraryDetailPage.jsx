@@ -8,6 +8,7 @@ import KakaoMap from "../../components/mapComponents/KakaoMap";
 import LibraryMarker from "../../components/mapComponents/LibraryMarker";
 import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
 import { ReactComponent as InfoIcon } from "../../assets/icons/infoIcon.svg";
+import { ReactComponent as InstaGreenIcon } from "../../assets/icons/instaGreen.svg";
 import instagramIcon from "../../assets/images/instaLogo.png";
 
 const LibraryDetailPage = () => {
@@ -93,14 +94,16 @@ const LibraryDetailPage = () => {
         <InfoSection>
           <InfoTitle>연락처</InfoTitle>
           <InfoContent>
-            <SubLabel>전화</SubLabel> {library.contact}
+            <SubLabel>전화</SubLabel>
+            {library.contact}
           </InfoContent>
         </InfoSection>
 
         <InfoSection>
           <InfoTitle>휴관일</InfoTitle>
           <InfoContent>
-            <SubLabel>정기휴관</SubLabel> {library.closed_days.closed_days}
+            <SubLabel>정기휴관</SubLabel>
+            {library.closed_days.closed_days}
           </InfoContent>
         </InfoSection>
 
@@ -127,7 +130,7 @@ const LibraryDetailPage = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={instagramIcon} alt="인스타그램" />
+                <InstaGreenIcon width={24} height={24} />
                 <span>인스타그램 바로가기</span>
               </SnsLink>
             </InfoContent>
@@ -147,6 +150,10 @@ const PageWrapper = styled.div`
   margin: 0 auto;
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Header = styled.header`
@@ -169,7 +176,7 @@ const BackButton = styled.button`
 `;
 
 const ContentContainer = styled.main`
-  padding: 60px 20px 20px;
+  padding: 60px 20px 12px;
 `;
 
 const Title = styled.div`
@@ -258,16 +265,12 @@ const SnsLink = styled.a`
   align-items: center;
   gap: 8px;
   text-decoration: none;
-  color: #333;
-  font-size: 14px;
+  font-size: 16px;
 
-  img {
-    width: 24px;
-    height: 24px;
-  }
+  color: #6f6f6f;
 
   &:hover {
-    text-decoration: underline;
+    text-decoration: none;
   }
 `;
 

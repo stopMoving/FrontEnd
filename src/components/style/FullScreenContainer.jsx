@@ -9,7 +9,8 @@ const FullScreenContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 24px;
+  gap: 16px;
+  padding: 20px;
 
   background-color: #ffffff;
 `;

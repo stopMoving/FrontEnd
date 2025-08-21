@@ -6,18 +6,13 @@ import BottomSheetWrapper from "./BottomSheetWrapper";
 import ImageUploadPanel from "../ImageUploadPanel";
 import ISBNInputPanel from "../ISBNInputPanel";
 import { ReactComponent as CameraIcon } from "../../../assets/icons/camera.svg";
-import { ReactComponent as ImageUploadIcon} from "../../../assets/icons/imageUpload.svg";
-import { ReactComponent as InputISBNIcon} from "../../../assets/icons/inputISBN.svg";
+import { ReactComponent as ImageUploadIcon } from "../../../assets/icons/imageUpload.svg";
+import { ReactComponent as InputISBNIcon } from "../../../assets/icons/inputISBN.svg";
 import ConfirmModal from "../../../pages/BarcodePage/ConfirmModal";
 import useBookStore from "../../../store/useBookStore";
-import { utils } from "../../../lib/axios";
+import { utils } from "../../../lib/api";
 
-export default function SelectPanel({
-  title,
-  description,
-  mode,
-  libraryId
-}) {
+export default function SelectPanel({ title, description, mode, libraryId }) {
   const navigate = useNavigate();
   const [activeSheet, setActiveSheet] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -27,7 +22,7 @@ export default function SelectPanel({
 
   const handleOpenSheet = (sheetType) => {
     setActiveSheet(sheetType);
-  }
+  };
 
   // ✅ ISBNInputPanel, ImageUploadPanel에서 호출될 콜백
   const handleBookData = (data) => {
@@ -53,12 +48,12 @@ export default function SelectPanel({
 
   // 첫 번째 버튼(다시 스캔): SelectPage로 이동
   const handleRetake = () => {
-    setModalOpen(false);          // 모달 닫힘 → 카메라 재개
+    setModalOpen(false); // 모달 닫힘 → 카메라 재개
     setBook(null);
     setQuantity(1);
     navigate(`/barcode/select/${mode}`); // 다시 스캔 방법 선택 페이지로 이동
   };
-  
+
   // 두 번째 버튼(확인): 등록 API 호출 후 BookListPage로 이동
   const handleConfirm = () => {
     if (!book?.isbn) return;
@@ -66,21 +61,23 @@ export default function SelectPanel({
     addScannedBook({
       ...book,
       quantity: quantity,
-      isbn: book.isbn
+      isbn: book.isbn,
     });
     setModalOpen(false);
-    navigate(`/barcode/booklist/${mode}?branchId=${encodeURIComponent(libraryId)}`);
+    navigate(
+      `/barcode/booklist/${mode}?branchId=${encodeURIComponent(libraryId)}`
+    );
   };
 
   const handleQuantityChange = (change) => {
-    setQuantity(prev => Math.max(1, prev + change));
+    setQuantity((prev) => Math.max(1, prev + change));
   };
-  
+
   return (
     <Wrap>
       <StepHeader
-        title={title}     // 예: "책을 나눔할게요." / "책을 데려갈게요."
-        activeStep={2}    // ← STEP 2 화면
+        title={title} // 예: "책을 나눔할게요." / "책을 데려갈게요."
+        activeStep={2} // ← STEP 2 화면
         onBack={() => navigate(-1)}
       />
 
@@ -88,25 +85,36 @@ export default function SelectPanel({
         <SectionTitle>{description}</SectionTitle>
 
         <Buttons>
-          <Btn onClick={() => navigate(`/barcode/scan/${mode}?branchId=${encodeURIComponent(libraryId)}`)}>
+          <Btn
+            onClick={() =>
+              navigate(
+                `/barcode/scan/${mode}?branchId=${encodeURIComponent(
+                  libraryId
+                )}`
+              )
+            }
+          >
             <CameraIcon width={32} height={32} />
             카메라로 바코드 인식
           </Btn>
 
-          <Btn onClick={() => handleOpenSheet('image')}>
+          <Btn onClick={() => handleOpenSheet("image")}>
             <ImageUploadIcon width={32} height={32} />
             바코드 사진 업로드
           </Btn>
 
-          <Btn onClick={() => handleOpenSheet('isbn')}>
+          <Btn onClick={() => handleOpenSheet("isbn")}>
             <InputISBNIcon width={32} height={32} />
             ISBN 코드 직접 입력
           </Btn>
         </Buttons>
       </Inner>
 
-      <BottomSheetWrapper isOpen={activeSheet !== null} onClose={() => setActiveSheet(null)}>
-        {activeSheet === 'image' && (
+      <BottomSheetWrapper
+        isOpen={activeSheet !== null}
+        onClose={() => setActiveSheet(null)}
+      >
+        {activeSheet === "image" && (
           <ImageUploadPanel
             onClose={() => setActiveSheet(null)}
             onConfirm={handleBookData}
@@ -114,7 +122,7 @@ export default function SelectPanel({
             libraryId={libraryId}
           />
         )}
-        {activeSheet === 'isbn' && (
+        {activeSheet === "isbn" && (
           <ISBNInputPanel
             onClose={() => setActiveSheet(null)}
             onConfirm={handleBookData}
@@ -136,7 +144,6 @@ export default function SelectPanel({
           onClose={() => setModalOpen(false)}
         />
       )}
-      
     </Wrap>
   );
 }
@@ -184,7 +191,7 @@ const Btn = styled.button`
   line-height: 1;
   border: none;
   border-radius: 5px;
-  background: #E6F4F0;
+  background: #e6f4f0;
   font-size: 18px;
   font-weight: 500;
   color: #000000;

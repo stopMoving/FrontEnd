@@ -277,7 +277,7 @@ const LibraryWrap = styled.div`
   background-color: #E6F4F0;
   color: #000000;
   border-radius: 5px;
-  padding: 20px 30px;
+  padding: 20px;
   margin-bottom: 4px;
 `;
 

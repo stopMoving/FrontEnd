@@ -125,7 +125,7 @@ export default function BookListPage() {
       points={completeData.points}
       onPrimary={() => {
         setCompleteOpen(false);
-        navigate('/mypage');
+        navigate('/mypage', { state: { initialTab: 'point' } });
       }}
       onClose={() => setCompleteOpen(false)}
     />

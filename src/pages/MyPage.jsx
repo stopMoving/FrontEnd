@@ -7,9 +7,13 @@ import PointPanel from "../components/mypageComponents/PointPanel"
 import { userAPI } from "../lib/axios";
 import { ReactComponent as ProfileImage } from "../assets/images/profileImage.svg";
 import { ReactComponent as PointIcon } from "../assets/icons/pointIcon.svg"
+import { useLocation } from "react-router-dom";
 
 export default function MyPage() {
-    const [activeTab, setActiveTap] = useState('donate');
+    const location = useLocation();
+    const initialTab = location.state?.initialTab || 'donate';
+
+    const [activeTab, setActiveTap] = useState(initialTab);
     const [userProfile, setUserProfile] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 

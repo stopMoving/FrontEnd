@@ -75,7 +75,7 @@ const Sub = styled.div`
 const IconWrap = styled.div`
   display: flex;
   justify-content: center;
-  margin: 40px 0;
+  margin-top: 40px;
 `;
 
 const Highlight = styled.div`
@@ -91,6 +91,7 @@ const Highlight = styled.div`
 `;
 
 const Button = styled.button`
+  width: 100%;
   height: 47px;
   border: none;
   border-radius: 10px;

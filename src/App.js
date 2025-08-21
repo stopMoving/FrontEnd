@@ -71,6 +71,12 @@ const App = () => {
           <Route path="/library/detail/:id" element={<LibraryDetailPage />} />
           <Route path="/library/:libraryId" element={<LibraryPage />} />
           <Route path="/notifications" element={<NotificationPage />} />
+          <Route path="/ai/recommand" element={<AiRecommendPage />} />
+          <Route path="/book/:isbn" element={<BookDetailPage />} />
+          <Route
+            path="/library/:libraryId/shared"
+            element={<SharedBooksPage />}
+          />
 
           <Route path="search/book" element={<SearchPage />} />
           <Route path="search/book/info/:isbn" element={<BookInfoPage />} />

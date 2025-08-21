@@ -36,22 +36,44 @@ export default function ScanPage() {
 
     setLoading(true);
     try {
-      const data = await bookAPI.getBookByISBN(digits);
+      let data;
 
-      setBook({
-        image: data?.cover_url ?? null,
-        title: data?.title ?? "제목 없음",
-        author: data?.author ?? "-",
-        publisher: data?.publisher ?? "-",
-        published_date: data?.published_date ?? "-",
-        regular_price: data?.regular_price ?? "-",
-        //내가 계산 x, 백엔드에서 넘겨주는 걸로
-        price: data?.regular_price
-          ? Math.round(data.regular_price * 0.2)
-          : null,
-        isbn: utils.formatIsbn(digits),
-        rawIsbn: digits,
-      });
+      if (mode === "give") {
+        data = await bookAPI.getBookByISBN(digits);
+
+        setBook({
+          image: data?.cover_url ?? null,
+          title: data?.title ?? "제목 없음",
+          author: data?.author ?? "-",
+          publisher: data?.publisher ?? "-",
+          published_date: data?.published_date ?? "-",
+          regular_price: data?.regular_price ?? "-",
+          //내가 계산 x, 백엔드에서 넘겨주는 걸로
+          price: data?.regular_price
+            ? Math.round(data.regular_price * 0.2)
+            : null,
+          isbn: utils.formatIsbn(digits),
+          rawIsbn: digits,
+        });
+      } else if (mode === "take") {
+        const res = await bookAPI.getPickupBookDetail(digits, libraryId);
+        data = res.data;
+        setBook({
+          image: data?.cover_url ?? null,
+          title: data?.title ?? "제목 없음",
+          author: data?.author ?? "-",
+          publisher: data?.publisher ?? "-",
+          published_date: data?.published_date ?? "-",
+          regular_price: data?.regular_price ?? "-",
+          price: data?.sale_price ?? "-",
+          isbn: utils.formatIsbn(digits),
+          rawIsbn: digits,
+          available_count: data?.available_count ?? 0,
+          book_ids: res?.book_ids ?? [],
+        });
+      } else {
+        throw new Error("잘못된 모드입니다.");
+      }
 
       // 모달 열면 CameraScan에서 paused={modalOpen}으로 일시정지됨
       setQuantity(1);

@@ -9,6 +9,7 @@ export default function BookListPanel({
   items=[],
   buttonLabel,
   disabled = false,
+  onBack,
   onNext,
   onQuantityChange,
   onAddClick,
@@ -21,7 +22,7 @@ export default function BookListPanel({
       <StepHeader
         title={title}
         activeStep={3}    // ← STEP 3 화면
-        onBack={() => navigate(-1)}
+        onBack={onBack}
       />
 
       <Inner>
@@ -81,26 +82,25 @@ const Wrap = styled.div`
   width: 100%;
   max-width: 600px;
   min-height: 100dvh;
+  background: #FFFFFF;
   margin: 0 auto;
-  background: #fff;
   position: relative;
 
-  /* 고정 StepHeader 높이만큼 여백 확보 */
-  padding-top: 180px;
+  /* 고정 헤더 공간 확보 + 하단 버튼 여유 */
+  padding-top: 156px;
 `;
 
 const Inner = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 22px;
-  gap: 20px;
+  padding: 0 20px;
 `;
 
 const SectionTitle = styled.div`
   width: 100%;
   font-size: 20px;
   font-weight: 600;
-  margin-top: -15px;
+  margin-bottom: 16px;
 `;
 
 const BookListWrap = styled.div`
@@ -114,8 +114,7 @@ const BookWrap = styled.div`
   display: flex;
   flex-direction: row;
   height: 117px;
-  gap: 16px;
-  align-items: flex-start;
+  gap: 8px;
 `;
 
 const Cover = styled.div`
@@ -128,7 +127,7 @@ const CoverImg = styled.img`
   height: 100%;
   border-radius: 5px;
   object-fit: cover;
-`
+`;
 
 const CoverFallback = styled.div`
   width: 79px;
@@ -150,7 +149,6 @@ const BookInfoWrap = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  line-height: 1;
   gap: 4px;
 `;
 
@@ -175,17 +173,18 @@ const Isbn = styled.div`
 `;
 
 const SubWrap = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
 `;
 
 const QuantityWrap = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 16px;
 `;
 
 const QuantityBtn = styled.button`
@@ -204,7 +203,6 @@ const QuantityBtn = styled.button`
 const Quantity = styled.div`
   font-size: 16px;
   font-weight: 400;
-  width: 54px;
   text-align: center;
 `;
 
@@ -223,9 +221,10 @@ const Price = styled.div`
 const AddButton = styled.button`
   position: absolute;
   right: 20px;
-  bottom: 100px;
+  bottom: 84px;
   width: 60px;
   height: 60px;
+  margin-bottom: 16px;
   color: #FFFFFF;
   background-color: #11B55F;
   border-radius: 50px;
@@ -239,16 +238,16 @@ const BottomBar = styled.div`
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 20px;
+  border-top: 1px solid #DEDEDE;
+  bottom: 0;
   width: 100%;
-  max-width: 600px;
-  padding: 0 20px;
+  padding: 16px 20px;
   z-index: 10;
 `;
 
 const NextBtn = styled.button`
   width: 100%;
-  height: 47px;
+  height: 52px;
   border-radius: 5px;
   font-size: 18px;
   font-weight: 500;

@@ -32,15 +32,20 @@ export default function DonateHistoryPanel({
 }
 
 const Wrap = styled.div`
+  width: 100%;
+  max-width: 600px;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
   padding: 20px;
+  gap: 16px;
 `;
 
 const BookWrap = styled.div`
-  width: 335px;
   height: 129px;
   display: flex;
   flex-direction: row;
-  gap: 16px;
+  gap: 8px;
 `;
 
 const BookCover = styled.div`
@@ -53,7 +58,7 @@ const CoverImg = styled.img`
   height: 100%;
   border-radius: 5px;
   object-fit: cover;
-`
+`;
 
 const CoverFallback = styled.div`
   width: 106px;
@@ -82,6 +87,10 @@ const Title = styled.div`
   font-weight: 600;
   color: #000000;
   margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
 `;
 
 const Meta = styled.div`

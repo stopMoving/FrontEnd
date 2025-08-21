@@ -1,83 +1,118 @@
-import styled from "styled-components"
-import { useState } from "react";
-import BottomNavBar from "../components/Layout/BottomNavBar"
-import DonateHistoryPanel from "../components/mypageComponents/DonateHistoryPanel"
-import TakeHistoryPanel from "../components/mypageComponents/TakeHistoryPanel"
-import PointPanel from "../components/mypageComponents/PointPanel"
+import styled from "styled-components";
+import { useEffect, useState } from "react";
+import BottomNavBar from "../components/Layout/BottomNavBar";
+import DonateHistoryPanel from "../components/mypageComponents/DonateHistoryPanel";
+import TakeHistoryPanel from "../components/mypageComponents/TakeHistoryPanel";
+import PointPanel from "../components/mypageComponents/PointPanel";
+import { userAPI } from "../lib/api";
 import { ReactComponent as ProfileImage } from "../assets/images/profileImage.svg";
-import { ReactComponent as PointIcon } from "../assets/icons/pointIcon.svg"
+import { ReactComponent as PointIcon } from "../assets/icons/pointIcon.svg";
 
 export default function MyPage() {
-    const [activeTab, setActiveTap] = useState('donate');
+  const [activeTab, setActiveTap] = useState("donate");
+  const [userProfile, setUserProfile] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-    const renderPanel = () => {
-        if (activeTab === 'donate') {
-            return <DonateHistoryPanel />
-        }
-        if (activeTab === 'take') {
-            return <TakeHistoryPanel />
-        }
-        if (activeTab === 'point' ) {
-            return <PointPanel />
-        }
-        return null;
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const profileData = await userAPI.getUserProfile();
+        setUserProfile(profileData);
+      } catch (error) {
+        console.error("사용자 프로필 로딩 실패: ", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
+    fetchUserProfile();
+  }, []);
 
-    return (
-      <Wrap>
-        <MyInfoWrap>
-          <ProfileContainer>
-            <LeftWrap>
-              <ProfileImage width={70} height={70}/>
-              <Name>닉네임님</Name>
-            </LeftWrap>
+  const renderPanel = () => {
+    if (activeTab === "donate") {
+      return <DonateHistoryPanel />;
+    }
+    if (activeTab === "take") {
+      return <TakeHistoryPanel />;
+    }
+    if (activeTab === "point") {
+      return <PointPanel />;
+    }
+    return null;
+  };
 
-            <Reward>3400 P</Reward>
-          </ProfileContainer>
+  if (isLoading) {
+    return <div>로딩 중...</div>;
+  }
 
-          <HashTagContainer>
-            <HashTag>#자기계발</HashTag>
-            <HashTag>#재태크</HashTag>
-            <HashTag>#연애</HashTag>
-            <HashTag>#소설</HashTag>
-            <HashTag>#컴퓨터</HashTag>
-            <HashTag>#여행</HashTag>
-          </HashTagContainer>
-        </MyInfoWrap>
-        
-        <ReportWrap>
-          <TabContainer>
-              <TabButton onClick={() => setActiveTap('donate')} $active={activeTab === 'donate'}>나눔 내역</TabButton>
-              <TabButton onClick={() => setActiveTap('take')} $active={activeTab === 'take'}>데려간 내역</TabButton>
-              <TabButton onClick={() => setActiveTap('point')} $active={activeTab === 'point'}>
-                <PointIcon width={25} height={25} />
-                포인트
-              </TabButton>
-          </TabContainer>
+  if (!userProfile) {
+    return <div>사용자 정보를 불러올 수 없습니다.</div>;
+  }
 
-          <ContetnWrap>
-            {renderPanel()}
-          </ContetnWrap>
-        </ReportWrap>
-        
-        <BottomNavBar />
-        </Wrap>
-    )
+  return (
+    <Wrap>
+      <MyInfoWrap>
+        <ProfileContainer>
+          <LeftWrap>
+            <ProfileImage width={70} height={70} />
+            <Name>{userProfile.nickname}님</Name>
+          </LeftWrap>
+
+          <Reward>{userProfile.points} P</Reward>
+        </ProfileContainer>
+
+        <HashTagContainer>
+          {userProfile.keywords.map((tag, index) => (
+            <HashTag key={index}>#{tag}</HashTag>
+          ))}
+        </HashTagContainer>
+      </MyInfoWrap>
+
+      <ReportWrap>
+        <TabContainer>
+          <TabButton
+            onClick={() => setActiveTap("donate")}
+            $active={activeTab === "donate"}
+          >
+            나눔 내역
+          </TabButton>
+          <TabButton
+            onClick={() => setActiveTap("take")}
+            $active={activeTab === "take"}
+          >
+            데려간 내역
+          </TabButton>
+          <TabButton
+            onClick={() => setActiveTap("point")}
+            $active={activeTab === "point"}
+          >
+            <PointIcon width={25} height={25} />
+            포인트
+          </TabButton>
+        </TabContainer>
+
+        <ContentWrap>{renderPanel()}</ContentWrap>
+      </ReportWrap>
+
+      <BottomNavBar />
+    </Wrap>
+  );
 }
 
 const Wrap = styled.div`
   width: 100%;
   max-width: 600px;
-  background: #FFFFFF;
-  margin: 0 auto;
-  padding: 30px 0;
+  min-height: 100dvh;
+  background: #ffffff;
+  padding: 40px 0;
+  display: flex;
+  flex-direction: column;
 `;
 
 const MyInfoWrap = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 40px 20px 0;
-  margin-bottom: 50px;
+  padding: 0 20px 16px;
+  flex-shrink: 0;
 `;
 
 const ProfileContainer = styled.div`
@@ -85,14 +120,14 @@ const ProfileContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
 `;
 
 const LeftWrap = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
 `;
 
 const Name = styled.div`
@@ -112,40 +147,47 @@ const HashTagContainer = styled.div`
 const HashTag = styled.div`
   font-size: 16px;
   font-weight: 500;
-  color: #063F21;
+  color: #063f21;
 `;
 
 const Reward = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   width: 71px;
   height: 35px;
   border-radius: 20px;
   padding: 0 8px;
   font-size: 16px;
   font-weight: 600;
-  text-align: center;
-  padding: 8px;
-  color: #FFFFFF;
-  background-color: #11B55F;
+  color: #ffffff;
+  background-color: #11b55f;
 `;
 
 const ReportWrap = styled.div`
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
+  min-height: 0;
 `;
 
 const TabContainer = styled.div`
   display: flex;
   justify-content: space-around;
-  border-bottom: 1px solid #000000;
+  border-bottom: 1px solid #6f6f6f;
+  flex-shrink: 0;
 `;
 
 const TabButton = styled.button`
   position: relative;
-  padding: 3px 6px 11px;
+  padding: 8px 0;
+  font-family: inherit;
   font-size: 20px;
   font-weight: 500;
-  color: #6F6F6F;
-  background-color: #FFFFFF;
+  color: #6f6f6f;
+  background-color: #ffffff;
   border: none;
 
   display: flex;
@@ -175,6 +217,8 @@ const TabButton = styled.button`
     `}
 `;
 
-const ContetnWrap = styled.div`
-
+const ContentWrap = styled.div`
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-bottom: 20px;
 `;

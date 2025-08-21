@@ -12,7 +12,13 @@ import ConfirmModal from "../../../pages/BarcodePage/ConfirmModal";
 import useBookStore from "../../../store/useBookStore";
 import { utils } from "../../../lib/api";
 
-export default function SelectPanel({ title, description, mode, libraryId }) {
+export default function SelectPanel({
+  title,
+  description,
+  mode,
+  libraryId,
+  onBack,
+}) {
   const navigate = useNavigate();
   const [activeSheet, setActiveSheet] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -29,18 +35,37 @@ export default function SelectPanel({ title, description, mode, libraryId }) {
     // ✅ 바텀 시트를 닫고, ConfirmModal을 띄우기 위한 상태를 설정합니다.
     setActiveSheet(null);
 
-    setBook({
-      image: data?.cover_url ?? null,
-      title: data?.title ?? "제목 없음",
-      author: data?.author ?? "-",
-      publisher: data?.publisher ?? "-",
-      published_date: data?.published_date ?? "-",
-      regular_price: data?.regular_price ?? "-",
-      //내가 계산 x, 백엔드에서 넘겨주는 걸로
-      price: data?.regular_price ? Math.round(data.regular_price * 0.2) : null,
-      isbn: utils.formatIsbn(data?.isbn),
-      rawIsbn: utils.extractDigits(data?.isbn),
-    });
+    if (mode === "give") {
+      setBook({
+        image: data?.cover_url ?? null,
+        title: data?.title ?? "제목 없음",
+        author: data?.author ?? "-",
+        publisher: data?.publisher ?? "-",
+        published_date: data?.published_date ?? "-",
+        regular_price: data?.regular_price ?? "-",
+        price: data?.regular_price
+          ? Math.round(data.regular_price * 0.2)
+          : null,
+        isbn: utils.formatIsbn(data?.isbn),
+        rawIsbn: utils.extractDigits(data?.isbn),
+      });
+    } else if (mode === "take") {
+      setBook({
+        image: data?.cover_url ?? null,
+        title: data?.title ?? "제목 없음",
+        author: data?.author ?? "-",
+        publisher: data?.publisher ?? "-",
+        published_date: data?.published_date ?? "-",
+        regular_price: data?.regular_price ?? "-",
+        price: data?.regular_price
+          ? Math.round(data.regular_price * 0.2)
+          : null,
+        isbn: utils.formatIsbn(data?.isbn),
+        rawIsbn: utils.extractDigits(data?.isbn),
+        available_count: data?.data?.available_count ?? 0,
+        book_ids: data?.book_ids ?? [],
+      });
+    }
 
     setQuantity(1);
     setModalOpen(true);
@@ -78,7 +103,7 @@ export default function SelectPanel({ title, description, mode, libraryId }) {
       <StepHeader
         title={title} // 예: "책을 나눔할게요." / "책을 데려갈게요."
         activeStep={2} // ← STEP 2 화면
-        onBack={() => navigate(-1)}
+        onBack={onBack}
       />
 
       <Inner>
@@ -153,7 +178,7 @@ const Wrap = styled.div`
   max-width: 600px;
   min-height: 100dvh;
   margin: 0 auto;
-  background: #fff;
+  background: #ffffff;
   position: relative;
 
   /* 고정 StepHeader 높이만큼 여백 확보 */
@@ -161,25 +186,23 @@ const Wrap = styled.div`
 `;
 
 const Inner = styled.div`
-  padding: 0 16px;
-  display: grid;
-  gap: 20px;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 `;
 
 const SectionTitle = styled.div`
-  width: min(520px, 92vw);
   font-size: 20px;
   font-weight: 600;
-  margin: 0 auto;
 `;
 
 const Buttons = styled.div`
-  width: min(520px, 92vw);
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 8px;
-  margin: 0 auto;
 `;
 
 const Btn = styled.button`
@@ -188,7 +211,6 @@ const Btn = styled.button`
   width: 100%;
   height: 57px;
   padding: 0 16px;
-  line-height: 1;
   border: none;
   border-radius: 5px;
   background: #e6f4f0;

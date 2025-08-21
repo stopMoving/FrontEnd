@@ -27,6 +27,7 @@ import BookDetailPage from "./pages/LibraryPage/BookDetailPage";
 import MyPage from "./pages/MyPage";
 import AiRecommendPage from "./pages/AiPage/AiRecommendPage";
 import NotificationPage from "./pages/NotificationPage";
+import DonateHistoryPanel from "./components/mypageComponents/DonateHistoryPanel";
 
 const PrivateRoutes = () => {
   const { user, isInitialized } = useUserStore();
@@ -63,9 +64,20 @@ const App = () => {
         <Route element={<PrivateRoutes />}>
           <Route path="/" element={<MainPage />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route
+            path="/mypage/donated-books"
+            element={<DonateHistoryPanel />}
+          />
           <Route path="/library/detail/:id" element={<LibraryDetailPage />} />
           <Route path="/library/:libraryId" element={<LibraryPage />} />
           <Route path="/notifications" element={<NotificationPage />} />
+
+          <Route path="search/book" element={<SearchPage />} />
+          <Route path="search/book/info/:isbn" element={<BookInfoPage />} />
+          <Route
+            path="barcode/library/select/:mode"
+            element={<LibrarySelectPage />}
+          />
 
           <Route path="search/book" element={<SearchPage />} />
           <Route path="search/book-detail" element={<BookInfoPage />} />
@@ -73,16 +85,6 @@ const App = () => {
             path="barcode/library/select/:mode"
             element={<LibrarySelectPage />}
           />
-
-          <Route
-            path="/library/:libraryId/shared"
-            element={<SharedBooksPage />}
-          />
-          <Route path="/book/:isbn" element={<BookDetailPage />} />
-          <Route path="/ai/recommand" element={<AiRecommendPage />} />
-
-          <Route path="search/book" element={<SearchPage />} />
-          <Route path="search/book-detail" element={<BookInfoPage />} />
           <Route
             path="barcode/library/select/:mode"
             element={<LibrarySelectPage />}

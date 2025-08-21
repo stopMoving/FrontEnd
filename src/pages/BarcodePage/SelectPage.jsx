@@ -1,10 +1,16 @@
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import SelectPanel from "../../components/barcodeComponents/Panel/SelectPanel";
 
 export default function SelectPage() {
   const { mode } = useParams(); // 'give' | 'take'
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
   const libraryId = searchParams.get("branchId");
+
+  const onBack = () => {
+    navigate(`/barcode/library/select/${mode}`);
+  }
 
   const copy = mode === "give"
     ? {
@@ -26,5 +32,12 @@ export default function SelectPage() {
         ),
       };
 
-  return <SelectPanel {...copy} mode={mode} libraryId={libraryId}/>;
+  return (
+    <SelectPanel
+      {...copy}
+      mode={mode}
+      libraryId={libraryId}
+      onBack={onBack}
+    />
+  );
 }

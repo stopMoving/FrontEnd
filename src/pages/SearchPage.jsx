@@ -202,6 +202,7 @@ const BookWrap = styled.div`
 const Cover = styled.div`
   width: 79px;
   height: 101px;
+  flex-shrink: 0;
 `;
 
 const CoverImg = styled.img`
@@ -238,6 +239,11 @@ const Title = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: #000000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 75%;
+  width: 100%;
 `;
 
 const Sub = styled.div`

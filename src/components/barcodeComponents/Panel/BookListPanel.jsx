@@ -50,15 +50,10 @@ export default function BookListPanel({
                   <QuantityBtn onClick={() => onQuantityChange(book.isbn, 1)}>+</QuantityBtn>
                 </QuantityWrap>
 
-                {/* {mode === "give" ? (
+                {mode === "give" ? (
                   <Point>500P</Point>
                 ) : (
                 <Price>{book?.price || "2000"}원</Price>
-                )} */}
-                {mode === "give" ? (
-                  <Price>{book?.price || "2000"}원</Price>
-                ) : (
-                <Point>500P</Point>
                 )}
               </SubWrap>
             </BookInfoWrap>

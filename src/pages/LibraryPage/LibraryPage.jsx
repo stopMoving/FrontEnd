@@ -196,6 +196,7 @@ const LibraryPage = () => {
                 spaceBetween={10}
                 centeredSlides={true}
                 navigation={true}
+                initialSlide={1}
               >
                 {recommendedBooks.map((book, index) => (
                   <SwiperSlide key={`rec-${index}`} style={{ width: "120px" }}>
@@ -260,7 +261,7 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 50px 20px 20px;
+  padding: 20px 20px 20px;
   flex-grow: 1;
   overflow-y: auto;
   overflow-x: hidden;
@@ -354,14 +355,15 @@ const MoreLink = styled(Link)`
 const SearchPlaceholder = styled.div`
   width: 100%;
   padding: 12px 16px;
-  background-color: #f5f5f5;
+  background-color: #e6f4f0;
   border-radius: 50px;
   color: #6f6f6f;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
   margin-bottom: 32px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  flex-start: left;
   gap: 8px;
   cursor: pointer;
 `;

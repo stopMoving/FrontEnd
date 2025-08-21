@@ -9,7 +9,6 @@ const LibraryMarker = ({ library, map }) => {
       console.log("Missing dependencies:", { map, kakao, library });
       return;
     }
-
     console.log("Creating marker for:", library.name);
     const marker = new kakao.maps.Marker({
       map: map,

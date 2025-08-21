@@ -136,9 +136,10 @@ const StyledForm = styled.form`
   flex-direction: column;
   text-align: left;
   gap: 16px;
-  padding: 20px; /* 패딩을 Form으로 이동 */
-  flex: 1; /* 남은 공간을 모두 차지하도록 설정 */
-  overflow-y: auto; /* 내용이 길어지면 세로 스크롤 생성 */
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+  overflow: hidden;
 `;
 
 const RegisterContainer = styled.div`
@@ -147,7 +148,7 @@ const RegisterContainer = styled.div`
   height: 100vh;
   background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 60px 20px 20px 20px;
+  padding: 20px 20px 20px 20px;
   text-align: center;
 
   /* registerContainer의 자식들(h1, form)을 정렬 */

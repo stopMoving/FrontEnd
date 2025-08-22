@@ -81,7 +81,8 @@ const AiRecommendPage = () => {
       </PlaceholderSection>
 
       <SectionTitle>OO님을 잘 아는 AI의 큐레이션</SectionTitle>
-      <CurationSection>
+
+      <DisplaySection>
         {activeBook && (
           <ActiveBookDisplay>
             <ActiveBookImage src={activeBook.imageUrl} alt={activeBook.title} />
@@ -89,7 +90,9 @@ const AiRecommendPage = () => {
             <ActiveBookAuthor>{activeBook.author}</ActiveBookAuthor>
           </ActiveBookDisplay>
         )}
+      </DisplaySection>
 
+      <CurationSection>
         <SwiperWrapper>
           <Swiper
             modules={[Autoplay]}
@@ -97,7 +100,7 @@ const AiRecommendPage = () => {
             autoplay={{ delay: 3000, disableOnInteraction: false }}
             slidesPerView={"auto"}
             centeredSlides={true}
-            spaceBetween={16}
+            spaceBetween={8}
             onSlideChange={(swiper) => {
               setActiveBook(mockAiBooks[swiper.realIndex]);
             }}
@@ -148,16 +151,19 @@ const PlaceholderSection = styled.div`
   padding: 40px 20px;
   text-align: center;
   color: #aaa;
-  font-size: 14px;
+  font-size: 12px;
 `;
 
 const CurationSection = styled.section`
-  padding: 24px 0;
-  background-color: #e6f4f0;
+  padding: 100px 20px 30px;
+  margin: 0 20px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  background-color: #fff;
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   padding: 0 20px;
   margin-bottom: 24px;
@@ -198,14 +204,23 @@ const ActiveBookImage = styled.img`
   height: 177px;
   border-radius: 8px;
   background-color: #d9d9d9;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 `;
 const ActiveBookTitle = styled.h3`
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 24px;
+  font-weight: 600;
   margin-bottom: 4px;
 `;
 const ActiveBookAuthor = styled.p`
-  font-size: 14px;
-  color: #555;
+  font-size: 12px;
+  color: #868686;
+`;
+
+const DisplaySection = styled.div`
+  background-color: #b5e8cd;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 16px 0;
+  margin: 0 20px;
+  margin-bottom: -128px;
 `;

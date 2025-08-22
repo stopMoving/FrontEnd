@@ -41,9 +41,9 @@ const CardContainer = styled.div`
 
 const TextContent = styled.div`
   h3 {
-    font-size: 17px;
+    font-size: 20px;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     line-height: 1.4;
     white-space: pre-line;
   }

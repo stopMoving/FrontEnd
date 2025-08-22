@@ -1,43 +1,71 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { userAPI } from "../../lib/api";
 
 export default function DonateHistoryPanel({
-    activeTab = 2
+  activeTab = 2
 }) {
-    return (
-      <Wrap>
-        <BookWrap>
+  const [purchasedBooks, setPurchasedBooks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPurchasedBooks = async () => {
+      try {
+        const books = await userAPI.getPurchasedBooks();
+        setPurchasedBooks(books);
+      } catch (error) {
+        console.error("나눔 내역 로딩 실패: ", error);
+        setPurchasedBooks([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchPurchasedBooks();
+  }, []);
+
+  if (isLoading) {
+    return <p>나눔 내역을 불러오는 중...</p>;
+  }
+
+  if (purchasedBooks.length === 0) {
+    return <p>나눔한 책이 없습니다.</p>;
+  }
+
+  return (
+    <Wrap>
+      {purchasedBooks.map((book, index) => (
+        <BookWrap key={index}>
           <BookCover>
-          {/* <BookCover>
-            {book?.image
-              ? <CoverImg src={book?.image} alt="" />
-              : <CoverFallback />}
-          </BookCover> */}
-            <CoverFallback />
+            {book?.cover ? (
+              <CoverImg src={book?.cover} alt="" />
+            ) : (
+              <CoverFallback />
+            )}
           </BookCover>
 
           <Info>
-            {/* <Title>{book?.title || "-"}</Title> */}
-            <Title>책 제목</Title>
+            <Title>{book?.title || "-"}</Title>
 
             <Meta>
-              <Sub>김영삼 도서관</Sub>
-              <Sub>2권</Sub>
-              <Sub>2025.08.02</Sub>
-              <Sub>3600원</Sub>
+              <Sub>{book?.library_name}</Sub>
+              <Sub>{book?.quantity}</Sub>
+              <Sub>{book?.created_at.split("T")[0]}</Sub>
+              <Sub>+500P</Sub>
             </Meta>
           </Info>
         </BookWrap>
-      </Wrap>
-    )
+      ))}
+    </Wrap>
+  );
 }
 
 const Wrap = styled.div`
   width: 100%;
   max-width: 600px;
-  background: #FFFFFF;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 20px 20px 0;
   gap: 16px;
 `;
 
@@ -51,6 +79,7 @@ const BookWrap = styled.div`
 const BookCover = styled.div`
   width: 106px;
   height: 129px;
+  flex-shrink: 0;
 `;
 
 const CoverImg = styled.img`
@@ -64,7 +93,7 @@ const CoverFallback = styled.div`
   width: 106px;
   height: 129px;
   border-radius: 5px;
-  background-color: #D9D9D9;
+  background-color: #d9d9d9;
   overflow: hidden;
   flex-shrink: 0;
 
@@ -77,6 +106,7 @@ const CoverFallback = styled.div`
 `;
 
 const Info = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -90,7 +120,8 @@ const Title = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 260px;
+  max-width: 70%;
+  width: 100%;
 `;
 
 const Meta = styled.div`

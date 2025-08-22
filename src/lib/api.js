@@ -27,6 +27,21 @@ export const userAPI = {
       throw new Error("나눔 내역을 불러오는 데 실패했습니다.");
     }
   },
+
+  getPurchasedBooks: async () => {
+    try {
+      const response = await instance.get(`/users/purchased-books/`);
+      if (response.data.isSuccess === true && response.data.meta?.count === 0) {
+        return [];
+      }
+      return response.data;
+    } catch (error) {
+      if (error.response?.status === 401) {
+        throw new Error("인증이 필요합니다.");
+      }
+      throw new Error("구매 내역을 불러오는 데 실패했습니다.");
+    }
+  },
 };
 
 export const bookAPI = {

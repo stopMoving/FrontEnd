@@ -92,6 +92,7 @@ const MainPage = () => {
   const navigate = useNavigate();
   const toggleSidebar = useLibrarySidebarStore((state) => state.toggleSidebar);
   const user = useUserStore((state) => state.user);
+  const logout = useUserStore((state) => state.logout);
   const userNickName = user?.nickname;
 
   const handleNotificationClick = () => navigate("/notifications");
@@ -161,8 +162,16 @@ const MainPage = () => {
           </HorizontalScroll>
         </BookListSection>
 
+        <button
+          onClick={() => {
+            logout();
+          }}
+        >
+          임시 로그아웃 버튼입니당
+        </button>
         <Outlet />
       </MainContainer>
+
       <BottomNavBar />
     </PageWrapper>
   );
@@ -200,6 +209,7 @@ const MainContainer = styled.main`
     display: none;
   }
 `;
+
 const LogoContainer = styled.div`
   height: 30px;
   width: auto;

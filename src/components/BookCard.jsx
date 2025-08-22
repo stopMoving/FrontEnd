@@ -65,11 +65,10 @@ const TextContainer = styled.div`
   width: 106px;
   overflow: hidden;
 
-  /* 남은 공간 활용하되 고정 너비 유지 */
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 0; /* flexbox에서 overflow 처리를 위해 필요 */
+  min-height: 0;
 `;
 
 const BookTitle = styled.h3`
@@ -93,12 +92,10 @@ const BookAuthor = styled.p`
   color: #868686;
   margin: 0;
 
-  /* 텍스트 오버플로우 처리 */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 
-  /* 최대 너비 설정 */
   max-width: 106px;
   line-height: 1.2;
 `;

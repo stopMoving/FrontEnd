@@ -90,34 +90,32 @@ export default function BookListPage() {
       }
       
       else if (mode === "take") {
-        const bookIdList = scannedBooks.flatMap(book => {
-          if (Array.isArray(book.book_ids)) {
-            // book_ids가 배열인 경우, quantity만큼 해당 배열의 요소들을 반복
-            return Array(book.quantity).fill(null).flatMap(() => book.book_ids);
-          } else {
-            // book_ids가 단일 값인 경우
-            return Array(book.quantity).fill(book.book_ids);
-          }
-        });
+        const pickupList = scannedBooks.map(book => ({
+          isbn: book.rawIsbn,
+          quantity: book.quantity
+        }));
 
-        if (bookIdList.length === 0) {
+        if (pickupList.length === 0) {
           throw new Error("담긴 책이 없어요.");
         }
 
-        console.log('전송할 book_id 리스트: ', bookIdList);
+        console.log('전송할 book_id 리스트: ', pickupList);
 
-        const response = await bookAPI.pickupBooks(bookIdList);
+        const response = await bookAPI.pickupBooks(libraryId, pickupList);
 
-        // 다양한 응답 상태 처리
-        if (response.count_success < response.count_total) {
-          // 부분 성공인 경우
+        if (response.count_success === response.count_total) {
+          alert("모든 책을 성공적으로 픽업했습니다.");
+        }
+        else if (response.count_success > 0 && response.count_success < response.count_total) {
           const failedCount = response.count_total - response.count_success;
           alert(`${response.count_success}권은 성공했지만, ${failedCount}권은 처리되지 않았습니다.`);
         }
+        else if (response.count_success === 0) {
+          alert("요청한 책을 모두 픽업할 수 없습니다.");
+        }
 
         setCompleteData({
-          count: response.count_success || response.count_total,
-          points: 0, // 아예 없애면 안 되나?
+          count: response.count_success,
         });
       }
         clearScannedBooks();
@@ -161,7 +159,11 @@ export default function BookListPage() {
       points={completeData.points}
       onPrimary={() => {
         setCompleteOpen(false);
-        navigate('/mypage', { state: { initialTab: 'point' } });
+        if (mode === 'give') {
+          navigate('/mypage', { state: { initialTab: 'point' } });
+        } else if (mode === 'take') {
+          navigate('/');
+        }
       }}
       onClose={() => setCompleteOpen(false)}
     />

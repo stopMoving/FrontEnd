@@ -106,9 +106,12 @@ export const bookAPI = {
     }
   },
 
-  pickupBooks: async (bookIds) => {
+  pickupBooks: async (libraryId, books) => {
     try {
-      const payload = { book_id: bookIds };
+      const payload = {
+        library_id: Number(libraryId),
+        books: books,
+      };
       const response = await instance.post(`/books/pickup/`, payload);
       return response.data;
     } catch (error) {

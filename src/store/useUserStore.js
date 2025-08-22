@@ -76,26 +76,14 @@ const useUserStore = create((set, get) => ({
   fetchLocation: () => {
     set({ isLocationLoading: true, locationError: null });
 
-    if (!navigator.geolocation) {
-      const error = "Geolocation을 지원하지 않는 브라우저입니다.";
-      set({
-        locationError: error,
-        isLocationLoading: false,
-      });
-      reject(new Error(error));
-      return;
-    }
-
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        const location = { latitude, longitude };
 
         set({
-          location,
+          location: {latitude, longitude},
           isLocationLoading: false,
         });
-        resolvePath(location)
       },
 
       (error) => {

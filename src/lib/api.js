@@ -100,7 +100,7 @@ export const bookAPI = {
   getBookInfoByISBN: async (isbn, lat, lng) => {
     try {
       let url = `/books/by-isbn/${isbn}/`;
-      if (lat && lng) {
+      if (lat != null&& lng != null) {
         url += `?lat=${lat}&lng=${lng}`;
       }
       const response = await instance.get(url);

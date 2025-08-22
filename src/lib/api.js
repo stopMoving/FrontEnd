@@ -90,7 +90,7 @@ export const bookAPI = {
   /**
    * ISBN으로 책 상세 정보와 보유 도서관 목록을 조회합니다.
    */
-  getBookInfoByISBN: async (isbn, lat, lng) => {
+  getBookByISBN: async (isbn, lat, lng) => {
     try {
       let url = `/books/by-isbn/${isbn}/`;
       if (lat && lng) {

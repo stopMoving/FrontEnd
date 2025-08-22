@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
 import useUserStore from "../../store/useUserStore";
-import { bookAPI } from "../../lib/api.js";
+import { bookAPI as userAPI } from "../../lib/api.js";
 
 export default function ISBNInputPanel({
   onClose,
@@ -28,9 +28,9 @@ export default function ISBNInputPanel({
     try {
       let data;
       if (mode === "give") {
-        data = await bookAPI.getBookByISBN(isbn);
+        data = await userAPI.getBookByISBN(isbn);
       } else if (mode === "take") {
-        const res = await bookAPI.getPickupBookDetail(isbn, libraryId);
+        const res = await userAPI.getPickupBookDetail(isbn, libraryId);
         data = res;
       }
       onClose(); // ✅ 바텀 시트를 먼저 닫음

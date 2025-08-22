@@ -6,23 +6,42 @@ import TakeHistoryPanel from "../components/mypageComponents/TakeHistoryPanel";
 import PointPanel from "../components/mypageComponents/PointPanel";
 import { userAPI } from "../lib/api";
 import { ReactComponent as ProfileImage } from "../assets/images/profileImage.svg";
-import { ReactComponent as PointIcon } from "../assets/icons/pointIcon.svg";
+import { ReactComponent as PointIcon } from "../assets/icons/pointIcon.svg"
+import { useLocation } from "react-router-dom";
 
 export default function MyPage() {
-  const [activeTab, setActiveTap] = useState("donate");
-  const [userProfile, setUserProfile] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+    const location = useLocation();
+    const initialTab = location.state?.initialTab || 'donate';
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const profileData = await userAPI.getUserProfile();
-        setUserProfile(profileData);
-      } catch (error) {
-        console.error("사용자 프로필 로딩 실패: ", error);
-      } finally {
-        setIsLoading(false);
-      }
+    const [activeTab, setActiveTap] = useState(initialTab);
+    const [userProfile, setUserProfile] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+      const fetchUserProfile = async () => {
+        try {
+          const profileData = await userAPI.getUserProfile();
+          setUserProfile(profileData);
+        } catch (error) {
+          console.error("사용자 프로필 로딩 실패: ", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchUserProfile();
+    }, []);
+
+    const renderPanel = () => {
+        if (activeTab === 'donate') {
+            return <DonateHistoryPanel />
+        }
+        if (activeTab === 'take') {
+            return <TakeHistoryPanel />
+        }
+        if (activeTab === 'point' ) {
+            return <PointPanel />
+        }
+        return null;
     };
     fetchUserProfile();
   }, []);

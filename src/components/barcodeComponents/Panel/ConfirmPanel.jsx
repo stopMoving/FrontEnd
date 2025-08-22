@@ -33,7 +33,7 @@ export default function ConfirmPanel({
           {mode === "give" ? (
             <Point>500P</Point>
           ) : (
-            <Price>{book?.price원 || "2000"}원</Price>
+            <Price>{book?.price || "2000"}원</Price>
           )}
 
           <Isbn>ISBN 코드: {book?.isbn || "-"}</Isbn>

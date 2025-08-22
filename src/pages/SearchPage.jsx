@@ -145,7 +145,9 @@ const PageWrap = styled.div`
 `;
 
 const Header = styled.div`
-  display: flex;
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px 1fr 56px;
   align-items: center;
   margin-bottom: 16px;
 `;
@@ -159,7 +161,7 @@ const BackButton = styled.button`
 const SectionTitle = styled.div`
   font-size: 20px;
   font-weight: 500;
-  margin: 0 auto;
+  text-align: center;
 `;
 
 const SearchContainer = styled.div`
@@ -207,6 +209,7 @@ const BookWrap = styled.div`
 const Cover = styled.div`
   width: 79px;
   height: 101px;
+  flex-shrink: 0;
 `;
 
 const CoverImg = styled.img`
@@ -243,6 +246,11 @@ const Title = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: #000000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 75%;
+  width: 100%;
 `;
 
 const Sub = styled.div`

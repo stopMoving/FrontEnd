@@ -62,7 +62,7 @@ const Wrap = styled.div`
   background: #ffffff;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 20px 20px 0;
   gap: 16px;
 `;
 
@@ -76,6 +76,7 @@ const BookWrap = styled.div`
 const BookCover = styled.div`
   width: 106px;
   height: 129px;
+  flex-shrink: 0;
 `;
 
 const CoverImg = styled.img`
@@ -102,6 +103,7 @@ const CoverFallback = styled.div`
 `;
 
 const Info = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -115,7 +117,8 @@ const Title = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 260px;
+  max-width: 70%;
+  width: 100%;
 `;
 
 const Meta = styled.div`

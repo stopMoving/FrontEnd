@@ -9,7 +9,6 @@ import LibraryMarker from "../../components/mapComponents/LibraryMarker";
 import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
 import { ReactComponent as InfoIcon } from "../../assets/icons/infoIcon.svg";
 import { ReactComponent as InstaGreenIcon } from "../../assets/icons/instaGreen.svg";
-import instagramIcon from "../../assets/images/instaLogo.png";
 
 const LibraryDetailPage = () => {
   const { id } = useParams();
@@ -24,7 +23,7 @@ const LibraryDetailPage = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`library/detail/${id}`);
+        const response = await axios.get(`library/detail/${id}/`);
         setLibrary(response.data);
       } catch (err) {
         setError("도서관 정보를 불러오는 데 실패했습니다.");

@@ -79,6 +79,7 @@ const LoginPage = () => {
           />
           <div style={{ padding: 8 }}></div>
           <Button>로그인</Button>
+          <div style={{ padding: 0 }}></div>
           <HorizontalRule></HorizontalRule>
         </StyledForm>
         <BottomContainer style={{ textAlign: "center" }}>

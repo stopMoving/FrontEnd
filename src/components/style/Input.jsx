@@ -6,6 +6,7 @@ const Input = styled.input`
   border-radius: 8px;
   display: block;
   font-size: 16px;
+  font-family: inherit;
   outline: none;
   padding: 16px;
   width: 100%;

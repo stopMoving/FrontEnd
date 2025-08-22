@@ -53,7 +53,20 @@ export const bookAPI = {
       const response = await instance.post(`/books/donate/`, payload);
       return response.data;
     } catch (error) {
-      throw new Error("책 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+      if (error.response?.status === 400 && error.response?.data?.detail === "Authentication credentials were not provided.") {
+        throw new Error("로그인이 필요합니다.");
+      }
+      
+      if (error.response?.status === 404) {
+        if (error.response?.data?.error === "해당 isbn가 없습니다.") {
+          throw new Error("책 정보가 존재하지 않습니다. ISBN을 확인해주세요.");
+        }
+        if (error.response?.data?.error === "해당 도서관이 없습니다.") {
+          throw new Error("해당 도서관 정보를 찾을 수 없습니다.");
+        }
+      }
+      
+      throw new Error("요청 처리에 실패했습니다. 잠시 후 다시 시도해 주세요.");
     }
   },
 

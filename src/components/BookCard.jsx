@@ -42,7 +42,7 @@ const CardContainer = styled.div`
 
 const ImageContainer = styled.div`
   width: 106px;
-  height: 130px;
+  height: 129px;
   position: relative;
   background-color: #f0f0f0;
   border-radius: 8px;

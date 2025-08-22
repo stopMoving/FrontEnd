@@ -129,7 +129,7 @@ const PageWrapper = styled.div`
   background-color: #fff;
   display: flex;
   flex-direction: column;
-
+  font-family: inherit;
   overflow: hidden;
 `;
 
@@ -162,7 +162,7 @@ const BackButton = styled.button`
 
 const PageTitle = styled.h1`
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 500;
   color: black;
 `;
 
@@ -190,7 +190,7 @@ const BookList = styled.div`
 
 const BookListItem = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
   padding: 16px 0;
   border-bottom: 1px solid #f0f0f0;
@@ -258,6 +258,7 @@ const SearchInput = styled.input`
   border: none;
   background-color: #e6f4f0;
   padding: 0 20px 0 48px;
+  font-family: inherit;
   font-size: 16px;
   font-weight: 600;
   box-sizing: border-box;
@@ -269,7 +270,7 @@ const SearchInput = styled.input`
   &:focus {
     transition: 0.2s ease-in-out;
     outline: none;
-    box-shadow: 0 0 0 2px #11b55f;
+    // box-shadow: 0 0 0 2px #11b55f;
   }
 `;
 

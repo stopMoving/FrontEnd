@@ -31,7 +31,8 @@ const CardContainer = styled.div`
 
   background-color: #f4f4f4;
   border-radius: 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.25);
+  border: 1px solid #f4f4f4;
 
   color: black;
   cursor: pointer;
@@ -40,9 +41,9 @@ const CardContainer = styled.div`
 
 const TextContent = styled.div`
   h3 {
-    font-size: 17px;
+    font-size: 20px;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     line-height: 1.4;
     white-space: pre-line;
   }

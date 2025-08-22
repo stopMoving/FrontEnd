@@ -1,5 +1,4 @@
 import React from "react";
-import Button from "../../components/style/Button";
 import { useNavigate } from "react-router-dom";
 import FullScreenContainer from "../../components/style/FullScreenContainer";
 import useUserStore from "../../store/useUserStore";
@@ -17,13 +16,21 @@ const WelcomePage = () => {
   return (
     <>
       <FullScreenContainer>
-        <h1 style={{ fontSize: "32px" }}>
-          {userNickName ? `${userNickName}님,` : "아기사자님"} 환영합니다!
-        </h1>
-        <div style={{ fontSize: "18px" }}>
-          이제 마음껏 책을 나누고, 받을 수 있어요.
+        <Title>{`${userNickName ? `${userNickName}님,` : "아기사자님"}`}</Title>
+        <Title>환영합니다!</Title>
+        <div>
+          <div
+            style={{
+              fontSize: "18px",
+              fontWeight: "500",
+              marginBottom: 40,
+              marginTop: 16,
+            }}
+          >
+            이제 마음껏 책을 나누고, 받을 수 있어요.
+          </div>
+          <WelcomeButton onClick={handleNavigate}>지금 시작하기</WelcomeButton>
         </div>
-        <WelcomeButton onClick={handleNavigate}>지금 시작하기</WelcomeButton>
       </FullScreenContainer>
     </>
   );
@@ -38,15 +45,23 @@ const WelcomeButton = styled.button`
   color: #ffffff;
   cursor: pointer;
   font-size: 18px;
+  font-weight: 600;
   padding: 16px;
 
-  width: 80%;
+  width: 100%;
   margin: 16px 0 0 0;
-
+  font-family: inherit;
   transition: background-color 0.2s ease-in-out;
 
-  &:hover,
-  &:active {
-    background-color: #7760b4;
+  &:hover {
+    background-color: #0fa356;
   }
+
+  &:active {
+    background-color: #0e914c;
+  }
+`;
+
+const Title = styled.h1`
+  font-size: 32px;
 `;

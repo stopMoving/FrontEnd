@@ -3,7 +3,7 @@ import { ReactComponent as BackIcon } from "../assets/icons/backIcon.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useUserStore from "../store/useUserStore";
-import { bookAPI } from "../lib/axios";
+import { bookAPI } from "../lib/api";
 
 export default function BookInfoPage() {
     const navigate = useNavigate();
@@ -15,6 +15,35 @@ export default function BookInfoPage() {
     const onBack = () => {
         navigate(-1);
     }
+  }, [isbn, token]); //isbn 또는 token이 변경될 때마다 실행
+
+  const fetchBookInfo = async (bookIsbn) => {
+    setLoading(true);
+    try {
+      const data = await bookAPI.getBookInfoByISBN(
+        bookIsbn,
+        location.latitude,
+        location.longitude
+      );
+      console.log(location.latitude, location.longitude);
+
+      setBook({
+        ...data,
+        libraries: data?.libraries || [],
+      });
+    } catch (e) {
+      console.error("도서 정보 조회 실패: ", e);
+      alert(e.message || "도서 정보를 불러오는 데 실패했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isbn && token) {
+      fetchBookInfo(isbn);
+    }
+  }, [isbn, token]);
 
     const fetchBookInfo = async (bookIsbn, lat, lng) => {
         setLoading(true);
@@ -65,12 +94,14 @@ export default function BookInfoPage() {
 
         <SectionTitle>책 정보</SectionTitle>
       </Header>
-      
+
       <BookDetailWrap>
         <Cover>
-            {book?.cover_url
-            ? <CoverImg src={book?.cover_url} alt="" />
-            : <CoverFallback />}
+          {book?.cover_url ? (
+            <CoverImg src={book?.cover_url} alt="" />
+          ) : (
+            <CoverFallback />
+          )}
         </Cover>
 
         <BookInfoContainer>
@@ -127,7 +158,7 @@ const PageWrap = styled.div`
   width: 100%;
   max-width: 600px;
   min-height: 100dvh;
-  background: #E6F4F0;
+  background: #e6f4f0;
 `;
 
 // SectionTitle이 정확히 가운데 오도록 하는 스타일
@@ -200,7 +231,7 @@ const CoverFallback = styled.div`
   width: 199px;
   height: 253px;
   border-radius: 5px;
-  background-color: #D9D9D9;
+  background-color: #d9d9d9;
   overflow: hidden;
   flex-shrink: 0;
 
@@ -215,7 +246,7 @@ const CoverFallback = styled.div`
 const BookInfoContainer = styled.div`
   width: 100%;
   padding: 8px 20px 0;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   flex: 1;
 `;
 
@@ -274,7 +305,7 @@ const Desc = styled.div`
 const LibraryWrap = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: #E6F4F0;
+  background-color: #e6f4f0;
   color: #000000;
   border-radius: 5px;
   padding: 20px;

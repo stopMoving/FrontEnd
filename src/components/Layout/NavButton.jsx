@@ -22,11 +22,9 @@ const ButtonContainer = styled.button`
 `;
 
 function NavButton({ component: IconComponent, label, onClick, isActive }) {
-  const iconColor = isActive ? "#11B55F" : "#6F6F6F";
-
   return (
     <ButtonContainer onClick={onClick}>
-      <IconComponent fill={iconColor} width={24} height={24} />
+      <IconComponent width={24} height={24} />
       <IconLabel $isActive={isActive}>{label}</IconLabel>
     </ButtonContainer>
   );

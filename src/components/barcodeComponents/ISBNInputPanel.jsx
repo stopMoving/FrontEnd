@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
 import useUserStore from "../../store/useUserStore";
-import { bookAPI } from "../../lib/axios";
+import { bookAPI as userAPI } from "../../lib/api.js";
 
 export default function ISBNInputPanel({
   onClose,
@@ -42,10 +42,10 @@ export default function ISBNInputPanel({
       onClose(); // ✅ 바텀 시트를 먼저 닫음
       onConfirm(data); // ✅ onConfirm 콜백으로 책 데이터 전달
     } catch (error) {
-        console.error("조회 실패:", error);
-        alert(error.message);
+      console.error("조회 실패:", error);
+      alert(error.message);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -68,7 +68,7 @@ export default function ISBNInputPanel({
           inputMode="numeric" // 모바일에서 숫자 키패드 유도
           pattern="[0-9]*"
         />
-        </InputContainer>
+      </InputContainer>
 
       <BottomBar>
         <NextButton disabled={disabled} onClick={handleSubmit}>
@@ -96,7 +96,7 @@ const PanelWrap = styled.div`
   width: 100%;
   max-width: 600px;
   min-height: 521px;
-  background: #FFFFFF;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -106,7 +106,7 @@ const PanelWrap = styled.div`
 const TopBar = styled.div`
   width: 80px;
   height: 4px;
-  background-color: #11B55F;
+  background-color: #11b55f;
   border-radius: 4px;
   margin: 20px 125px;
 `;
@@ -131,15 +131,15 @@ const Input = styled.input`
   width: 100%;
   height: 47px;
   color: #000000;
-  background-color: #FFFFFF;
-  border: 1px solid #DEDEDE;
+  background-color: #ffffff;
+  border: 1px solid #dedede;
   border-radius: 5px;
   font-size: 14px;
   font-weight: 500;
   padding: 0 16px;
-  
+
   &::placeholder {
-    color: #DEDEDE;
+    color: #dedede;
   }
 `;
 
@@ -159,7 +159,7 @@ const NextButton = styled.button`
   font-size: 18px;
   font-weight: 600;
   border: 0;
-  color: #FFFFFF;
+  color: #ffffff;
   background: ${(p) => (p.disabled ? "#DEDEDE" : "#11B55F")};
   cursor: ${(p) => (p.disabled ? "not-allowed" : "pointer")};
   transition: background 0.2s ease;

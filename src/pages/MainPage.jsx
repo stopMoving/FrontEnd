@@ -136,23 +136,31 @@ const MainPage = () => {
         <Title>
           <GreenTitle>북작북작</GreenTitle> 가이드
         </Title>
+
         <BannerWrapper>
           {bannerData.map((banner) => (
             <BannerCard key={banner.id} {...banner} />
           ))}
         </BannerWrapper>
+
         <ButtonWrapper>
           <ActionButton1 onClick={handle나눔Button}>나눔하기</ActionButton1>
           <ActionButton2 onClick={handle데려가기Button}>데려가기</ActionButton2>
         </ButtonWrapper>
-        <Title2>
-          AI가 고른 {userNickName || "아기사자"}님 취향 맞춤 책 리스트
-        </Title2>
-        <BookGrid>
-          {bookListData.slice(0, 6).map((book) => (
-            <BookCard key={book.id} book={book} />
-          ))}
-        </BookGrid>
+
+        <BookListSection>
+          <Title2>
+            {`AI가 고른 ${userNickName || "아기사자"}님 \n취향 맞춤 책 리스트`}
+          </Title2>
+          <HorizontalScroll>
+            {bookListData.map((book) => (
+              <BookCardWrapper key={book.id}>
+                <BookCard book={book} />
+              </BookCardWrapper>
+            ))}
+          </HorizontalScroll>
+        </BookListSection>
+
         <Outlet />
       </MainContainer>
       <BottomNavBar />
@@ -166,6 +174,8 @@ export default MainPage;
 
 const PageWrapper = styled.div`
   width: 100%;
+  position: relative;
+  overflow: hidden;
   max-width: 600px;
   min-height: 100%;
   display: flex;
@@ -175,19 +185,21 @@ const PageWrapper = styled.div`
 `;
 
 const MainContainer = styled.main`
+  flex: 1;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
-  width: 100%;
-  padding: 80px 20px 80px 20px;
-  flex-grow: 1;
-  overflow-x: hidden;
+
+  padding: 80px 20px 80px;
+
   &::-webkit-scrollbar {
     display: none;
   }
 `;
-
 const LogoContainer = styled.div`
   height: 30px;
   width: auto;
@@ -205,8 +217,11 @@ const SearchButton = styled.button`
   border-radius: 50px;
   color: #6f6f6f;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
   padding: 16px 16px;
+  font-family: inherit;
+  margin-bottom: 8px;
 `;
 
 const ActionButton = styled.button`
@@ -222,6 +237,9 @@ const ActionButton = styled.button`
   transition: opacity 0.2s;
   padding: 0 8px;
   white-space: nowrap;
+  margin: 8px 0;
+  font-family: inherit;
+  margin-bottom: 32px;
 `;
 
 const ActionButton1 = styled(ActionButton)`
@@ -264,15 +282,17 @@ const ButtonWrapper = styled.div`
 const Title = styled.h1`
   width: 100%;
   text-align: left;
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 22px;
+  font-weight: 600;
+  margin: 8px 0;
 `;
 
 const Title2 = styled.h2`
   width: 100%;
   text-align: left;
-  font-size: 19px;
-  font-weight: bold;
+  font-size: 20px;
+  font-weight: 600;
+  white-space: pre-line;
 `;
 
 const BannerWrapper = styled.div`
@@ -298,4 +318,29 @@ const BookGrid = styled.div`
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
   width: 100%;
+`;
+
+const HorizontalScroll = styled.div`
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  width: calc(100% + 40px);
+  padding: 4px 20px 10px 20px;
+  margin: 0 -20px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const BookCardWrapper = styled.div`
+  flex: 0 0 110px;
+  display: flex;
+`;
+
+const BookListSection = styled.section`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;

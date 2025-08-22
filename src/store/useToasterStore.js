@@ -30,7 +30,9 @@ const ToastContainer = styled.div`
   position: fixed;
   display: flex;
   flex-direction: column-reverse;
+  width: 100%;
   gap: 24px;
+  font-weight: 600;
   justify-content: center;
   align-items: center;
   top: 64px;
@@ -47,12 +49,12 @@ const Icon = styled.img`
 
 const StyledToast = styled.div`
   display: flex;
-  border-radius: 8px;
-  padding: 12px 24px;
+  border-radius: 5px;
+  padding: 10px;
   justify-content: center;
   align-items: center;
   gap: 8px;
-  color: #ffffff;
+  color: #ff0000;
   pointer-events: all;
   cursor: pointer;
 
@@ -76,7 +78,8 @@ const StyledToast = styled.div`
         `;
       case "warn":
         return css`
-          background-color: #ff5733;
+          background-color: #fff;
+          border: 1px solid #ff0000;
         `;
       default:
         return css`

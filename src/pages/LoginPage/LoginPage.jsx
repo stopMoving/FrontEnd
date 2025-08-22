@@ -59,6 +59,7 @@ const LoginPage = () => {
           <Label htmlFor="username">
             <GreenText>북작북작</GreenText> 로그인
           </Label>
+          <div style={{ padding: 0 }}></div>
           <Input
             id="username"
             name="username"
@@ -76,6 +77,7 @@ const LoginPage = () => {
             value={values.password}
             onChange={handleChange}
           />
+          <div style={{ padding: 8 }}></div>
           <Button>로그인</Button>
           <HorizontalRule></HorizontalRule>
         </StyledForm>
@@ -95,7 +97,7 @@ const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   text-align: left;
-  gap: 16px;
+  gap: 8px;
 `;
 
 const LoginContainer = styled.div`
@@ -104,12 +106,14 @@ const LoginContainer = styled.div`
   height: 100vh;
   background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 60px 20px 20px 20px;
+  padding: 20px 20px 20px 20px;
   text-align: center;
 
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 8px;
+
+  overflow: hidden;
 `;
 
 const Logo = styled.div`
@@ -117,7 +121,7 @@ const Logo = styled.div`
   justify-content: center;
   width: 100%;
   max-width: 200px;
-  margin: 0 auto 16px;
+  margin: 20px auto 16px;
 `;
 
 const GreenText = styled.span`

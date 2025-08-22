@@ -50,7 +50,7 @@ const LibrarySidebar = () => {
         <Content>
           <Section>
             <SectionTitle>
-              내 도서관 <StarIcon width={16} height={16} fill="#FFD700" />
+              내 도서관 <StarIcon width={20} height={20} fill="#FFD700" />
             </SectionTitle>
             {isMyLibrariesLoading && <StatusText>불러오는 중...</StatusText>}
             {myLibrariesError && <StatusText>{myLibrariesError}</StatusText>}
@@ -80,7 +80,7 @@ const LibrarySidebar = () => {
 export default LibrarySidebar;
 
 const Backdrop = styled.div`
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -93,7 +93,7 @@ const Backdrop = styled.div`
 `;
 
 const SidebarContainer = styled.div`
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 80%;
@@ -112,36 +112,42 @@ const Header = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  border-bottom: 1px solid #eee;
+  margin-bottom: -20px;
 `;
 
 const BackButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
+  margin-left: 8px;
 `;
 
 const Content = styled.div`
   padding: 24px 16px;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Section = styled.section`
-  margin-bottom: 32px;
+  margin-bottom: 40px;
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 18px;
+  font-size: 24px;
   font-weight: bold;
   margin-bottom: 16px;
+  margin-left: 8px;
   display: flex;
+  color: #0d8847;
   align-items: center;
   gap: 4px;
 `;
 
 const ItemContainer = styled.div`
-  padding: 12px 8px;
-  font-size: 16px;
+  padding: 10px 8px;
+  font-size: 18px;
   cursor: pointer;
   border-radius: 6px;
   transition: background-color: 0.2s

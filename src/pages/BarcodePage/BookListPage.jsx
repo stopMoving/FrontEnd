@@ -3,7 +3,7 @@ import BookListPanel from "../../components/barcodeComponents/Panel/BookListPane
 import CompleteModal from "./CompleteModal";
 import { useMemo, useState } from "react";
 import useBookStore from "../../store/useBookStore";
-import { bookAPI } from "../../lib/axios";
+import { bookAPI } from "../../lib/api";
 import useUserStore from "../../store/useUserStore";
 
 export default function BookListPage() {
@@ -16,18 +16,21 @@ export default function BookListPage() {
   const [loading, setLoading] = useState(false);
   const [completeData, setCompleteData] = useState({ count: 0, points: 0 });
 
-  const { scannedBooks, updateBookQuantity, clearScannedBooks } = useBookStore();
+  const { scannedBooks, updateBookQuantity, clearScannedBooks } =
+    useBookStore();
   const token = useUserStore((state) => state.token);
 
   const onBack = () => {
-    navigate(`/barcode/select/${mode}?branchId=${encodeURIComponent(libraryId)}`);
-  }
+    navigate(
+      `/barcode/select/${mode}?branchId=${encodeURIComponent(libraryId)}`
+    );
+  };
 
-  const {totalCount, totalPoints } = useMemo(() => {
+  const { totalCount, totalPoints } = useMemo(() => {
     let count = 0;
     let points = 0;
 
-    scannedBooks.forEach(book => {
+    scannedBooks.forEach((book) => {
       count += book.quantity;
 
       if (mode === "give") {
@@ -37,26 +40,29 @@ export default function BookListPage() {
     return { totalCount: count, totalPoints: points };
   }, [scannedBooks, mode]);
 
-  const copy = mode === "give"
-    ? {
-        title: "나눔하기",
-        description: "책 목록을 확인 후 나눔해주세요.",
-        buttonLabel: "나눔하기",
-      }
-    : {
-        title: "데려가기",
-        description: "책 목록을 확인 후 결제해주세요.",
-        buttonLabel: "결제하기",
-      };
+  const copy =
+    mode === "give"
+      ? {
+          title: "나눔하기",
+          description: "책 목록을 확인 후 나눔해주세요.",
+          buttonLabel: "나눔하기",
+        }
+      : {
+          title: "데려가기",
+          description: "책 목록을 확인 후 결제해주세요.",
+          buttonLabel: "결제하기",
+        };
 
   // 추가(+) 버튼
   const handleAddClick = () => {
     // SelectPage로 이동하면서 mode와 libraryId 값을 다시 전달
-    navigate(`/barcode/select/${mode}?branchId=${encodeURIComponent(libraryId)}`);
+    navigate(
+      `/barcode/select/${mode}?branchId=${encodeURIComponent(libraryId)}`
+    );
   };
 
-    // 나눔하기 버튼
-  const handleFinish = async () => {    
+  // 나눔하기 버튼
+  const handleFinish = async () => {
     if (!libraryId) {
       alert("도서관이 선택되지 않았어요.");
       return;
@@ -131,7 +137,7 @@ export default function BookListPage() {
           alert(error.message || "처리 중 오류가 발생했습니다.");
         }
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 

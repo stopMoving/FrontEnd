@@ -1,52 +1,52 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { ReactComponent as BackIcon } from "../assets/icons/backIcon.svg";
 import { ReactComponent as SearchIcon } from "../assets/icons/search.svg";
 import useBookStore from "../store/useBookStore";
 import { useNavigate } from "react-router-dom";
-import { bookAPI } from "../lib/axios";
+import { bookAPI } from "../lib/api";
 
 export default function SearchPage() {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [books, setBooks] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [isSearched, setIsSearched] = useState(false);
-    const { scannedBooks } = useBookStore();
-    const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isSearched, setIsSearched] = useState(false);
+  const { scannedBooks } = useBookStore();
+  const navigate = useNavigate();
 
-    const onBack = () => {
-      navigate(-1);
+  const onBack = () => {
+    navigate(-1);
+  };
+
+  const handleBookClick = (isbn) => {
+    navigate(`/search/book/info/${isbn}`);
+  };
+
+  useEffect(() => {
+    if (searchQuery.length > 0) {
+      setLoading(true);
+      const timer = setTimeout(async () => {
+        try {
+          const data = await bookAPI.searchBooks(searchQuery);
+          setBooks(data.results);
+          setIsSearched(true);
+        } catch (error) {
+          console.error("검색 오류: ", error);
+          setBooks([]);
+          setIsSearched(true);
+        } finally {
+          setLoading(false);
+        }
+      }, 500);
+
+      return () => clearTimeout(timer);
+    } else {
+      setBooks([]);
+      setIsSearched(false);
     }
+  }, [searchQuery]);
 
-    const handleBookClick = (isbn) => {
-      navigate(`/search/book/info/${isbn}`)
-    }
-
-    useEffect(() => {
-      if (searchQuery.length > 0) {
-        setLoading(true);
-        const timer = setTimeout(async () => {
-          try {
-            const data = await bookAPI.searchBooks(searchQuery);
-            setBooks(data.results);
-            setIsSearched(true);
-          } catch (error) {
-            console.error("검색 오류: ", error);
-            setBooks([]);
-            setIsSearched(true);
-          } finally {
-            setLoading(false);
-          }
-        }, 500);
-
-        return () => clearTimeout(timer);
-      } else {
-        setBooks([]);
-        setIsSearched(false);
-      }
-    }, [searchQuery]);
-    
-    return (
+  return (
     <PageWrap>
       <Header>
         <BackButton type="button" onClick={onBack}>
@@ -55,7 +55,7 @@ export default function SearchPage() {
 
         <SectionTitle>나눔된 책 검색</SectionTitle>
       </Header>
-      
+
       <SearchContainer>
         <SearchIcon fill={"#6F6F6F"} width={20} height={20} />
         <SearchInput
@@ -65,7 +65,7 @@ export default function SearchPage() {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </SearchContainer>
-      
+
       <BookListWrap>
         {loading ? (
           <MessageWrap>
@@ -73,37 +73,42 @@ export default function SearchPage() {
           </MessageWrap>
         ) : books.length > 0 ? (
           books.map((book) => (
-          <BookWrap key={book.isbn} onClick={() => handleBookClick(book.isbn)}>
-            <Cover>
-              {book?.cover_url
-              ? <CoverImg src={book?.cover_url} alt="" />
-              : <CoverFallback />}
-            </Cover>
+            <BookWrap
+              key={book.isbn}
+              onClick={() => handleBookClick(book.isbn)}
+            >
+              <Cover>
+                {book?.cover_url ? (
+                  <CoverImg src={book?.cover_url} alt="" />
+                ) : (
+                  <CoverFallback />
+                )}
+              </Cover>
 
-            <BookInfoWrap>
-              <Title>{book?.title || "-"}</Title>
+              <BookInfoWrap>
+                <Title>{book?.title || "-"}</Title>
 
-              <Sub>{book?.author || "-"}</Sub>
-              <Sub>{book?.publisher || "-"}</Sub>
-              <Sub>{book?.published_date || "-"}</Sub>
-            </BookInfoWrap>
-          </BookWrap>
-        ))
-      ) : isSearched ? (
-        <MessageWrap>
-          <SearchIcon width={72} height={72} />
-          <Notification>
-            <span className="highlight">"{searchQuery}"</span> 은 <br/>북작북작에 나눔되지 않았습니다.
+                <Sub>{book?.author || "-"}</Sub>
+                <Sub>{book?.publisher || "-"}</Sub>
+                <Sub>{book?.published_date || "-"}</Sub>
+              </BookInfoWrap>
+            </BookWrap>
+          ))
+        ) : isSearched ? (
+          <MessageWrap>
+            <SearchIcon width={72} height={72} />
+            <Notification>
+              <span className="highlight">"{searchQuery}"</span> 은 <br />
+              북작북작에 나눔되지 않았습니다.
             </Notification>
-        </MessageWrap>
-      ) : (
-        <MessageWrap>
-          <Notification>검색어를 입력해 주세요.</Notification>
-        </MessageWrap>
-      )}
+          </MessageWrap>
+        ) : (
+          <MessageWrap>
+            <Notification>검색어를 입력해 주세요.</Notification>
+          </MessageWrap>
+        )}
       </BookListWrap>
-      
-  </PageWrap>
+    </PageWrap>
   );
 }
 
@@ -121,7 +126,7 @@ const MessageWrap = styled.div`
 const Notification = styled.div`
   font-size: 18px;
   font-weight: 500;
-  color: #6F6F6F;
+  color: #6f6f6f;
 
   .highlight {
     color: #000000;
@@ -135,7 +140,7 @@ const PageWrap = styled.div`
   flex-direction: column;
   // justify-content: center;
   margin: 0 auto;
-  background: #FFFFFF;
+  background: #ffffff;
   padding: 38px 20px 0;
 `;
 
@@ -165,7 +170,7 @@ const SearchContainer = styled.div`
   align-items: center;
   width: 100%;
   height: 42px;
-  background-color: #E6F4F0;
+  background-color: #e6f4f0;
   border: none;
   border-radius: 20px;
   padding: 4px 16px;
@@ -177,7 +182,7 @@ const SearchInput = styled.input`
   height: 42px;
   font-size: 14px;
   font-weight: 500;
-  background-color: #E6F4F0;
+  background-color: #e6f4f0;
   border: none;
   color: #000000;
   cursor: pointer;
@@ -218,7 +223,7 @@ const CoverFallback = styled.div`
   width: 79px;
   height: 101px;
   border-radius: 5px;
-  background-color: #D9D9D9;
+  background-color: #d9d9d9;
   overflow: hidden;
   flex-shrink: 0;
 

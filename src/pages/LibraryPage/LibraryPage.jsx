@@ -188,14 +188,15 @@ const LibraryPage = () => {
             <CenteredSwiperWrapper>
               <Swiper
                 modules={[Navigation, Autoplay, Mousewheel]}
-                autoplay={{
-                  delay: 3000,
-                  disableOnInteraction: false,
-                }}
-                slidesPerView={"auto"}
-                spaceBetween={10}
+                // autoplay={{
+                //   delay: 3000,
+                //   disableOnInteraction: false,
+                // }}
+                slidesPerView={3}
+                spaceBetween={15}
                 centeredSlides={true}
                 navigation={true}
+                initialSlide={1}
               >
                 {recommendedBooks.map((book, index) => (
                   <SwiperSlide key={`rec-${index}`} style={{ width: "120px" }}>
@@ -260,7 +261,7 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 50px 20px 20px;
+  padding: 20px 20px 20px;
   flex-grow: 1;
   overflow-y: auto;
   overflow-x: hidden;
@@ -354,14 +355,15 @@ const MoreLink = styled(Link)`
 const SearchPlaceholder = styled.div`
   width: 100%;
   padding: 12px 16px;
-  background-color: #f5f5f5;
+  background-color: #e6f4f0;
   border-radius: 50px;
   color: #6f6f6f;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
   margin-bottom: 32px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  flex-start: left;
   gap: 8px;
   cursor: pointer;
 `;
@@ -387,7 +389,7 @@ const BookCardWrapper = styled.div`
 
 const SwiperSection = styled(Section)`
   background-color: #e6f4f0;
-  padding: 30px; 20px;
+  padding: 30px 20px 20px;
   width: calc(100% + 40px);
   margin: 0 -20px 32px -20px;
   box-sizing: border-box;
@@ -398,21 +400,22 @@ const SwiperSection = styled(Section)`
     margin-right: -16px;
   }
 `;
-
+//padding: 30px; 20px;
 const CenteredSwiperWrapper = styled.div`
   .swiper {
     overflow: visible;
   }
 
   .swiper-slide {
-    transition: transform 0.3s ease-out;
+    transition: transform 0.4s ease-out, opacity 0.4s ease-out;
     transform: scale(0.85);
     opacity: 0.7;
   }
 
   .swiper-slide-active {
-    transform: scale(1.08);
+    transform: scale(1.1);
     opacity: 1;
+    z-index: 1;
   }
 
   .swiper-button-prev,

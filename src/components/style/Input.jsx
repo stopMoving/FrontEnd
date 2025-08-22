@@ -11,7 +11,7 @@ const Input = styled.input`
   width: 100%;
 
   &:focus {
-    border-color: #7760b4;
+    border-color: #11b55f;
     transition: border-color 0.1s ease-in-out;
   }
 

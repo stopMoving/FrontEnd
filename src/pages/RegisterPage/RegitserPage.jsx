@@ -179,7 +179,7 @@ const ValidationText = styled.p`
   color: #7b7b7b;
   font-size: 12px;
   font-weight: 400;
-  margin: 4px 0 4px 4px; /* 인풋창과의 간격 및 정렬을 위한 여백 */
+  margin: 4px 4px 0 4px; /* 인풋창과의 간격 및 정렬을 위한 여백 */
   padding: 0;
 `;
 

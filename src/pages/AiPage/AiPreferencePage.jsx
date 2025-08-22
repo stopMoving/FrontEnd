@@ -194,7 +194,7 @@ const Header = styled.header`
 
 const Title = styled.h1`
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 600;
   line-height: 1.4;
 `;
 

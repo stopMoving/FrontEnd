@@ -6,8 +6,9 @@ import { bookAPI, utils } from "../../lib/api";
 
 export default function ImageUploadPanel({
   onClose,
-  // ✅ onDetected 프롭스는 제거합니다.
   onConfirm,
+  mode,
+  libraryId
 }) {
   const inputRef = useRef(null);
   const [isProcessing, setIsProcessing] = useState(false);

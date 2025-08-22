@@ -314,6 +314,9 @@ const BannerWrapper = styled.div`
   padding: 4px 20px;
   min-height: 220px;
 
+  // 아이폰 빙글빙글 돌리는 버그 멈추기
+  -webkit-overflow-scrolling: auto;
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -321,13 +324,6 @@ const BannerWrapper = styled.div`
 
 const GreenTitle = styled.span`
   color: #11b55f;
-`;
-
-const BookGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  width: 100%;
 `;
 
 const HorizontalScroll = styled.div`

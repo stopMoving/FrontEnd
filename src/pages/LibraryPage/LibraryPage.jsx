@@ -188,10 +188,6 @@ const LibraryPage = () => {
             <CenteredSwiperWrapper>
               <Swiper
                 modules={[Navigation, Autoplay, Mousewheel]}
-                // autoplay={{
-                //   delay: 3000,
-                //   disableOnInteraction: false,
-                // }}
                 slidesPerView={3}
                 spaceBetween={15}
                 centeredSlides={true}
@@ -213,9 +209,11 @@ const LibraryPage = () => {
 
         <SearchPlaceholder
           onClick={() =>
-            navigate(`/library/${libraryId}/shared`, {
-              state: { name: libraryName },
-            })
+            navigate(
+              `/library/${libraryId}/shared?name=${encodeURIComponent(
+                libraryName
+              )}`
+            )
           }
         >
           <SearchIcon fill={"#6F6F6F"} width={20} height={20} />
@@ -225,7 +223,12 @@ const LibraryPage = () => {
         <Section>
           <SectionHeader>
             <SectionTitle>{libraryName}에 나눔된 모든 책</SectionTitle>
-            <MoreLink to={`/library/${libraryId}/shared`}>
+            <MoreLink
+              to={{
+                pathname: `/library/${libraryId}/shared`,
+                search: `?name=${encodeURIComponent(libraryName)}`,
+              }}
+            >
               더보기 <ChevronRightIcon width={16} height={16} />
             </MoreLink>
           </SectionHeader>

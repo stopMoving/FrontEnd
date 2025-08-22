@@ -57,18 +57,18 @@ export default function ScanPage() {
         });
       } else if (mode === "take") {
         const res = await bookAPI.getPickupBookDetail(digits, libraryId);
-        data = res.data;
+        
         setBook({
-          image: data?.cover_url ?? null,
-          title: data?.title ?? "제목 없음",
-          author: data?.author ?? "-",
-          publisher: data?.publisher ?? "-",
-          published_date: data?.published_date ?? "-",
-          regular_price: data?.regular_price ?? "-",
-          price: data?.sale_price ?? "-",
+          image: res?.data?.cover_url ?? null,
+          title: res?.data?.title ?? "제목 없음",
+          author: res?.data?.author ?? "-",
+          publisher: res?.data?.publisher ?? "-",
+          published_date: res?.data?.published_date ?? "-",
+          regular_price: res?.data?.regular_price ?? "-",
+          price: res?.data?.sale_price ?? "-",
           isbn: utils.formatIsbn(digits),
           rawIsbn: digits,
-          available_count: data?.available_count ?? 0,
+          available_count: res?.data?.available_count ?? 0,
           book_ids: res?.book_ids ?? [],
         });
       } else {
@@ -103,6 +103,7 @@ export default function ScanPage() {
       ...book,
       quantity: quantity,
       rawIsbn: utils.extractDigits(book.isbn),
+      book_ids: book?.book_ids || [],
     });
 
     setModalOpen(false);

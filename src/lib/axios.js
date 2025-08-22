@@ -7,6 +7,7 @@ const instance = axios.create({
     "Content-Type": "application/json",
   },
 });
+
 instance.interceptors.response.use(
   (response) => {
     return response;
@@ -19,3 +20,5 @@ instance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export default instance;

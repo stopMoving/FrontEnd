@@ -43,85 +43,59 @@ export default function MyPage() {
         }
         return null;
     };
-    fetchUserProfile();
-  }, []);
 
-  const renderPanel = () => {
-    if (activeTab === "donate") {
-      return <DonateHistoryPanel />;
+    if (isLoading) {
+        return <div>로딩 중...</div>;
     }
-    if (activeTab === "take") {
-      return <TakeHistoryPanel />;
+
+    if (!userProfile) {
+        return <div>사용자 정보를 불러올 수 없습니다.</div>;
     }
-    if (activeTab === "point") {
-      return <PointPanel />;
-    }
-    return null;
-  };
 
-  if (isLoading) {
-    return <div>로딩 중...</div>;
-  }
+    return (
+      <Wrap>
+        <MyInfoWrap>
+          <ProfileContainer>
+            <LeftWrap>
+              <ProfileImage width={70} height={70}/>
+              <Name>{userProfile.nickname}님</Name>
+            </LeftWrap>
 
-  if (!userProfile) {
-    return <div>사용자 정보를 불러올 수 없습니다.</div>;
-  }
+            <Reward>{userProfile.points} P</Reward>
+          </ProfileContainer>
 
-  return (
-    <Wrap>
-      <MyInfoWrap>
-        <ProfileContainer>
-          <LeftWrap>
-            <ProfileImage width={70} height={70} />
-            <Name>{userProfile.nickname}님</Name>
-          </LeftWrap>
+          <HashTagContainer>
+            {userProfile.keywords.map((tag, index) => (
+                <HashTag key={index}>#{tag}</HashTag>
+            ))}
+          </HashTagContainer>
+        </MyInfoWrap>
+        
+        <ReportWrap>
+          <TabContainer>
+              <TabButton onClick={() => setActiveTap('donate')} $active={activeTab === 'donate'}>나눔 내역</TabButton>
+              <TabButton onClick={() => setActiveTap('take')} $active={activeTab === 'take'}>데려간 내역</TabButton>
+              <TabButton onClick={() => setActiveTap('point')} $active={activeTab === 'point'}>
+                <PointIcon width={25} height={25} />
+                포인트
+              </TabButton>
+          </TabContainer>
 
-          <Reward>{userProfile.points} P</Reward>
-        </ProfileContainer>
-
-        <HashTagContainer>
-          {userProfile.keywords.map((tag, index) => (
-            <HashTag key={index}>#{tag}</HashTag>
-          ))}
-        </HashTagContainer>
-      </MyInfoWrap>
-
-      <ReportWrap>
-        <TabContainer>
-          <TabButton
-            onClick={() => setActiveTap("donate")}
-            $active={activeTab === "donate"}
-          >
-            나눔 내역
-          </TabButton>
-          <TabButton
-            onClick={() => setActiveTap("take")}
-            $active={activeTab === "take"}
-          >
-            데려간 내역
-          </TabButton>
-          <TabButton
-            onClick={() => setActiveTap("point")}
-            $active={activeTab === "point"}
-          >
-            <PointIcon width={25} height={25} />
-            포인트
-          </TabButton>
-        </TabContainer>
-
-        <ContentWrap>{renderPanel()}</ContentWrap>
-      </ReportWrap>
-
-      <BottomNavBar />
-    </Wrap>
-  );
+          <ContentWrap>
+            {renderPanel()}
+          </ContentWrap>
+        </ReportWrap>
+        
+        <BottomNavBar />
+        </Wrap>
+    )
 }
 
 const Wrap = styled.div`
   width: 100%;
   max-width: 600px;
   min-height: 100dvh;
-  background: #ffffff;
+  background: #FFFFFF;
   padding: 40px 0;
   display: flex;
   flex-direction: column;
@@ -166,7 +140,7 @@ const HashTagContainer = styled.div`
 const HashTag = styled.div`
   font-size: 16px;
   font-weight: 500;
-  color: #063f21;
+  color: #063F21;
 `;
 
 const Reward = styled.div`
@@ -181,8 +155,8 @@ const Reward = styled.div`
   padding: 0 8px;
   font-size: 16px;
   font-weight: 600;
-  color: #ffffff;
-  background-color: #11b55f;
+  color: #FFFFFF;
+  background-color: #11B55F;
 `;
 
 const ReportWrap = styled.div`
@@ -195,7 +169,7 @@ const ReportWrap = styled.div`
 const TabContainer = styled.div`
   display: flex;
   justify-content: space-around;
-  border-bottom: 1px solid #6f6f6f;
+  border-bottom: 1px solid #6F6F6F;
   flex-shrink: 0;
 `;
 
@@ -205,8 +179,8 @@ const TabButton = styled.button`
   font-family: inherit;
   font-size: 20px;
   font-weight: 500;
-  color: #6f6f6f;
-  background-color: #ffffff;
+  color: #6F6F6F;
+  background-color: #FFFFFF;
   border: none;
 
   display: flex;

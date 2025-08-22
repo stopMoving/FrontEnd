@@ -237,11 +237,11 @@ const AddButton = styled.button`
 
 const BottomBar = styled.div`
   position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  border-top: 1px solid #DEDEDE;
-  bottom: 0;
+  bottom: 0px;
   width: 100%;
+  max-width: 600px;
+  border-top: 1px solid #DEDEDE;
+  margin: 0 auto;
   padding: 16px 20px;
   z-index: 10;
 `;

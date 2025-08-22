@@ -140,7 +140,9 @@ const PageWrap = styled.div`
 `;
 
 const Header = styled.div`
-  display: flex;
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px 1fr 56px;
   align-items: center;
   margin-bottom: 16px;
 `;
@@ -154,7 +156,7 @@ const BackButton = styled.button`
 const SectionTitle = styled.div`
   font-size: 20px;
   font-weight: 500;
-  margin: 0 auto;
+  text-align: center;
 `;
 
 const SearchContainer = styled.div`

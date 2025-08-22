@@ -42,7 +42,7 @@ export const bookAPI = {
   /**
    * ISBN으로 알라딘에서 책 정보를 검색합니다. (기증 시 사용)
    */
-  getBookByISBNForDonate: async (isbn) => {
+  getBookByISBN: async (isbn) => {
     try {
       const response = await instance.get(`/bookinfo/donate/?isbn=${isbn}`);
       return response.data;

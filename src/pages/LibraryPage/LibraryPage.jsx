@@ -67,7 +67,7 @@ const LibraryPage = () => {
           await Promise.all([
             axios.get(`library/booklist/${libraryId}`),
             axios.get("preferences/recommendations/", {
-              params: { mode: "activity" },
+              params: { mode: "combined" },
             }),
           ]);
 

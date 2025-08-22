@@ -35,8 +35,16 @@ function RegisterPage() {
     e.preventDefault();
 
     try {
-      await register(values);
-      navigate("/welcome");
+      const registeredUser = await register(values);
+
+      // is_survey값 확인
+      if (registeredUser && !registeredUser.is_survey) {
+        // 2-1. is_survey가 false이면 welcome 페이지로 이동
+        navigate("/welcome");
+      } else {
+        // is_survey가 true이거나 다른 경우, 메인 페이지로 이동
+        navigate("/");
+      }
     } catch (error) {
       const serverMessage = error.response?.data?.message;
       let displayMessage;

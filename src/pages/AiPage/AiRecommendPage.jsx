@@ -10,39 +10,88 @@ import BottomNavBar from "../../components/Layout/BottomNavBar";
 import { ReactComponent as BookTwinkleIcon } from "../../assets/icons/bookTwinkle.svg";
 import useUserStore from "../../store/useUserStore";
 
+const CATEGORIES = [
+  "소설/시/희곡",
+  "만화",
+  "어린이",
+  "인문학",
+  "에세이",
+  "수험서/자격증",
+  "경제경영",
+  "과학",
+];
+
 const AiRecommendPage = () => {
   const user = useUserStore((state) => state.user);
   const userNickName = user?.nickname;
+
+  // 큐레이션 state
   const [activeBook, setActiveBook] = useState(null);
   const [books, setBooks] = useState([]);
+
+  //  카테고리별 책목록 관리 state
+  const [similarBooks, setSimilarBooks] = useState([]);
+  const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]);
+  const [isSimilarLoading, setIsSimilarLoading] = useState(false);
+
+  // 전체페이지 로딩 및 에러 관리 state
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchAiBooks = async () => {
+    const fetchInitialData = async () => {
       try {
         setIsLoading(true);
         setError(null);
-        const response = await axios.get("preferences/recommendations/", {
-          params: { mode: "activity" },
-        });
-        const fetchedBooks = response.data.results;
-        setBooks(fetchedBooks);
 
-        // 데이터를 성공적으로 불러온 후 첫 번째 책을 activeBook으로 설정
+        const aiBooksPromise = axios.get("preferences/recommendations/", {
+          params: { mode: "combined" },
+        });
+        const similarBooksPromise = axios.get("preferences/recommendations/", {
+          params: { mode: "activity", category: CATEGORIES[0] }, // 첫 카테고리로 초기 데이터 요청
+        });
+
+        const [aiBooksResponse, similarBooksResponse] = await Promise.all([
+          aiBooksPromise,
+          similarBooksPromise,
+        ]);
+
+        // 큐레이션 책 데이터
+        const fetchedBooks = aiBooksResponse.data.results;
+        setBooks(fetchedBooks);
         if (fetchedBooks.length > 0) {
           setActiveBook(fetchedBooks[0]);
         }
+
+        // 카테고리별 책 데이터
+        setSimilarBooks(similarBooksResponse.data.results);
       } catch (err) {
-        console.error("AI 추천 도서 로딩 실패:", err);
+        console.error("초기 데이터 로딩 실패:", err);
         setError("추천 도서를 불러오는 데 실패했습니다.");
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchAiBooks();
+    fetchInitialData();
   }, []);
+
+  const handleCategoryClick = async (category) => {
+    if (activeCategory === category || isSimilarLoading) return;
+    setActiveCategory(category);
+    setIsSimilarLoading(true);
+    try {
+      const response = await axios.get("preferences/recommendations/", {
+        params: { mode: "activity", category },
+      });
+      setSimilarBooks(response.data.results);
+    } catch (err) {
+      console.error("카테고리별 도서 로딩 실패:", err);
+      setSimilarBooks([]);
+    } finally {
+      setIsSimilarLoading(false);
+    }
+  };
 
   if (isLoading) {
     return <StatusContainer>AI가 추천 도서를 고르는 중...</StatusContainer>;
@@ -59,11 +108,41 @@ const AiRecommendPage = () => {
         <BannerText>오늘은 이런 책 어때요?</BannerText>
       </TopBanner>
 
-      <PlaceholderSection>
-        <p>{`${userNickName}님이 수령한 책과 비슷한 책이에요`}</p>
-      </PlaceholderSection>
+      <SimilarBooksSection>
+        <SectionHeader>{`${userNickName}님이\n데려간 책과 비슷한 책이에요`}</SectionHeader>
+        <CategoryTabs>
+          {CATEGORIES.map((category) => (
+            <CategoryTab
+              key={category}
+              isActive={activeCategory === category}
+              onClick={() => handleCategoryClick(category)}
+            >
+              {category}
+            </CategoryTab>
+          ))}
+        </CategoryTabs>
+        <BookList>
+          {isSimilarLoading ? (
+            <PlaceholderText>책을 찾고 있어요...</PlaceholderText>
+          ) : similarBooks.length > 0 ? (
+            similarBooks.slice(0, 3).map((book) => (
+              <BookItem key={book.isbn}>
+                <BookItemImage src={book.cover_url} alt={book.title} />
+                <BookItemInfo>
+                  <BookItemTitle>{book.title}</BookItemTitle>
+                  <BookItemAuthor>{book.author}</BookItemAuthor>
+                </BookItemInfo>
+              </BookItem>
+            ))
+          ) : (
+            <PlaceholderText>
+              책을 데려가고 AI로 더 많은 책을 추천받아봐요!
+            </PlaceholderText>
+          )}
+        </BookList>
+      </SimilarBooksSection>
 
-      <SectionTitle>{`${userNickName}님을 잘 아는 AI의 큐레이션`}</SectionTitle>
+      <SectionTitle>{`${userNickName}님을\n잘 아는 AI 큐레이션`}</SectionTitle>
 
       <DisplaySection>
         {activeBook && (
@@ -115,12 +194,15 @@ const PageWrapper = styled.div`
   background-color: #fff;
   padding-bottom: 70px;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const TopBanner = styled.header`
   width: 100%;
-  height: 170px;
-  background-color: #f0f2f5;
+  padding: 20px;
+  background-color: #e6f4f0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -153,6 +235,7 @@ const SectionTitle = styled.h2`
   font-weight: bold;
   padding: 0 20px;
   margin-bottom: 24px;
+  white-space: pre-wrap;
 `;
 
 const SwiperWrapper = styled.div`
@@ -233,4 +316,92 @@ const StatusContainer = styled.div`
   height: 100vh;
   font-size: 18px;
   color: #6f6f6f;
+`;
+
+// 카테고리별 책
+
+const SimilarBooksSection = styled.section`
+  padding: 16px 0 16px;
+  color: black;
+  font-size: 16px;
+`;
+
+const SectionHeader = styled.p`
+  font-size: 20px;
+  font-weight: bold;
+  padding: 0 20px;
+  margin-bottom: 16px;
+  white-space: pre-wrap;
+`;
+
+const CategoryTabs = styled.div`
+  display: flex;
+  overflow-x: auto;
+  padding: 0 20px;
+  margin-bottom: 20px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const CategoryTab = styled.button`
+  flex-shrink: 0;
+  padding: 8px 16px;
+  margin-right: 8px;
+  border-radius: 20px;
+  border: 1px solid #dedede;
+  background-color: "white";
+  border: ${(props) =>
+    props.isActive ? "1px solid #000" : "1px solid #DEDEDE"};
+  color: ${(props) => (props.isActive ? "#000" : "#555")};
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-family: inherit;
+
+  &:last-child {
+    margin-right: 0;
+  }
+`;
+
+const BookList = styled.div`
+  padding: 0 20px;
+  min-height: 200px; /* 로딩 중 레이아웃 깨짐 방지 */
+`;
+
+const BookItem = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+`;
+
+const BookItemImage = styled.img`
+  width: 79px;
+  height: 101px;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  margin-right: 16px;
+  object-fit: cover;
+`;
+
+const BookItemInfo = styled.div``;
+
+const BookItemTitle = styled.h3`
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 4px;
+`;
+
+const BookItemAuthor = styled.p`
+  font-size: 14px;
+  color: #888;
+`;
+
+const PlaceholderText = styled.p`
+  text-align: center;
+  color: #888;
+  font-size: 16px;
+  padding: 80px 20px;
 `;

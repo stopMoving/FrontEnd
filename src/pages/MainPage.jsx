@@ -73,7 +73,7 @@ const MainPage = () => {
         setIsLoading(true);
         setError(null);
         const response = await axios.get("preferences/recommendations/", {
-          params: { mode: "activity" }, // 쿼리 파라미터 설정
+          params: { mode: "combined" }, // 쿼리 파라미터 설정
         });
         setRecommendedBooks(response.data.results);
       } catch (err) {
@@ -102,7 +102,7 @@ const MainPage = () => {
         }
         title={
           <LogoContainer>
-            <MainLogo />
+            <MainLogo width={49} height={20} />
           </LogoContainer>
         }
         rightControls={
@@ -213,7 +213,7 @@ const MainContainer = styled.main`
 `;
 
 const LogoContainer = styled.div`
-  height: 30px;
+  height: 20px;
   width: auto;
 `;
 

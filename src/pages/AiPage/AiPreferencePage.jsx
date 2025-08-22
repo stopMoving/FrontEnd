@@ -1,78 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import Button from "../../components/style/Button";
 import useUserStore from "../../store/useUserStore";
+import axios from "../../lib/axios";
 
 import { ReactComponent as SpinnerIcon } from "../../assets/icons/spinner.svg";
-
-const mockBookCategories = [
-  {
-    id: 1,
-    category: "소설/시/희곡",
-    imageUrl: "https://placehold.co/106x129?text=소설",
-  },
-  {
-    id: 2,
-    category: "에세이",
-    imageUrl: "https://placehold.co/106x129?text=에세이",
-  },
-  {
-    id: 3,
-    category: "자기계발",
-    imageUrl: "https://placehold.co/106x129?text=자기계발",
-  },
-  {
-    id: 4,
-    category: "경제/경영",
-    imageUrl: "https://placehold.co/106x129?text=경제",
-  },
-  {
-    id: 5,
-    category: "건강/취미",
-    imageUrl: "https://placehold.co/106x129?text=건강",
-  },
-  {
-    id: 6,
-    category: "역사/문화",
-    imageUrl: "https://placehold.co/106x129?text=역사",
-  },
-  {
-    id: 7,
-    category: "여행/지리",
-    imageUrl: "https://placehold.co/106x129?text=여행",
-  },
-  {
-    id: 8,
-    category: "과학/기술",
-    imageUrl: "https://placehold.co/106x129?text=과학",
-  },
-  {
-    id: 9,
-    category: "외국어",
-    imageUrl: "https://placehold.co/106x129?text=외국어",
-  },
-  {
-    id: 10,
-    category: "여행/지리",
-    imageUrl: "https://placehold.co/106x129?text=여행",
-  },
-  {
-    id: 11,
-    category: "과학/기술",
-    imageUrl: "https://placehold.co/106x129?text=과학",
-  },
-  {
-    id: 12,
-    category: "외국어",
-    imageUrl: "https://placehold.co/106x129?text=외국어",
-  },
-];
+import { useNavigate } from "react-router-dom";
 
 const CategoryCard = ({ item, isSelected, onClick }) => {
   return (
     <CardContainer onClick={onClick}>
       <ImageWrapper>
-        <Image src={item.imageUrl} alt={item.category} />
+        <Image src={item.cover_url} alt={item.category} />
         {isSelected && <SelectionOverlay />}
       </ImageWrapper>
       <CategoryName>{item.category}</CategoryName>
@@ -83,44 +22,91 @@ const CategoryCard = ({ item, isSelected, onClick }) => {
 const AiPreferencePage = () => {
   const user = useUserStore((state) => state.user);
   const userNickName = user?.nickname;
-  const [selected, setSelected] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSelect = (itemId) => {
-    setSelected((prev) => {
-      const isAlreadySelected = prev.includes(itemId);
+  const [categories, setCategories] = useState([]);
+  const [selectedIsbns, setSelectedIsbns] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // 초기 데이터 로딩 상태
+  const [isSubmitting, setIsSubmitting] = useState(false); // 제출(취향분석) 로딩 상태
+  const [error, setError] = useState(null);
+
+  // 카테고리 목록 리퀘스트
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get("bookinfo/list/");
+        setCategories(response.data);
+      } catch (err) {
+        console.error("카테고리 로딩 실패:", err);
+        setError("카테고리 목록을 불러오는 데 실패했습니다.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const handleSelect = (isbn) => {
+    setSelectedIsbns((prev) => {
+      const isAlreadySelected = prev.includes(isbn);
       if (isAlreadySelected) {
-        return prev.filter((id) => id !== itemId);
+        return prev.filter((item) => item !== isbn);
       } else {
         if (prev.length < 3) {
-          return [...prev, itemId];
+          return [...prev, isbn];
         }
       }
       return prev;
     });
   };
 
-  const handleSubmit = () => {
-    console.log("선택된 카테고리 ID:", selected);
-    setIsLoading(true);
+  // 사용자가 선택한 ISBN 목록 POST 리퀘스트
+  const handleSubmit = async () => {
+    if (selectedIsbns.length !== 3) return;
+
+    setIsSubmitting(true);
+    try {
+      await axios.post("preferences/keywords/", {
+        isbns: selectedIsbns,
+      });
+      // 성공 시 메인페이지 이동
+      navigate("/");
+    } catch (err) {
+      console.error("취향 정보 제출 실패:", err);
+      setIsSubmitting(false); // 실패 시 로딩 상태 해제
+    }
   };
 
-  const isSubmitDisabled = selected.length !== 3;
+  const isSubmitDisabled = selectedIsbns.length !== 3;
 
-  if (isLoading) {
+  if (isLoading || isSubmitting) {
     return (
       <PageWrapper>
         <LoadingContainer>
           <Spinner>
             <SpinnerIcon width={80} height={80} />
           </Spinner>
-          <LoadingText>
-            {userNickName}님을 위한
-            <br />
-            취향 분석 중...
-          </LoadingText>
-          <LoadingSubText>좋아하실 만한 책을 찾는 중이에요.</LoadingSubText>
+          {isSubmitting ? (
+            <>
+              <LoadingText>
+                {userNickName}님을 위한
+                <br />
+                취향 분석 중...
+              </LoadingText>
+              <LoadingSubText>좋아하실 만한 책을 찾는 중이에요.</LoadingSubText>
+            </>
+          ) : (
+            <LoadingText>데이터를 불러오는 중...</LoadingText>
+          )}
         </LoadingContainer>
+      </PageWrapper>
+    );
+  }
+  if (error) {
+    return (
+      <PageWrapper>
+        <LoadingContainer>{error}</LoadingContainer>
       </PageWrapper>
     );
   }
@@ -135,12 +121,12 @@ const AiPreferencePage = () => {
         </Header>
 
         <BookGrid>
-          {mockBookCategories.map((item) => (
+          {categories.map((item) => (
             <CategoryCard
-              key={item.id}
+              key={item.isbn}
               item={item}
-              isSelected={selected.includes(item.id)}
-              onClick={() => handleSelect(item.id)}
+              isSelected={selectedIsbns.includes(item.isbn)}
+              onClick={() => handleSelect(item.isbn)}
             />
           ))}
         </BookGrid>
@@ -232,7 +218,10 @@ const ImageWrapper = styled.div`
 const Image = styled.img`
   width: 100%;
   border-radius: 8px;
+  aspect-ratio: 3 / 4; // 이미지가 들어갈 틀을 3:4 비율로 고정
+  object-fit: cover; // 이미지가 틀을 가득 채우도록 설정
   display: block;
+  border: 1px solid #dedede;
 `;
 
 const SelectionOverlay = styled.div`
@@ -267,7 +256,6 @@ const rotate = keyframes`
 
 const Spinner = styled.div`
   animation: ${rotate} 1s linear infinite;
-  //   animation: ${rotate} 0.8s ease-in-out infinite;
   margin-bottom: 24px;
 
   width: 80px;

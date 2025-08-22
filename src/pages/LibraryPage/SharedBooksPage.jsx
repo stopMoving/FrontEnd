@@ -214,6 +214,7 @@ const BookImage = styled.img`
   background-color: #f0f0f0;
   object-fit: cover;
   flex-shrink: 0;
+  border: 1px solid #dedede;
 `;
 
 const BookInfo = styled.div`

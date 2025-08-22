@@ -8,8 +8,11 @@ import axios from "../../lib/axios";
 
 import BottomNavBar from "../../components/Layout/BottomNavBar";
 import { ReactComponent as BookTwinkleIcon } from "../../assets/icons/bookTwinkle.svg";
+import useUserStore from "../../store/useUserStore";
 
 const AiRecommendPage = () => {
+  const user = useUserStore((state) => state.user);
+  const userNickName = user?.nickname;
   const [activeBook, setActiveBook] = useState(null);
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,10 +60,10 @@ const AiRecommendPage = () => {
       </TopBanner>
 
       <PlaceholderSection>
-        <p>"OO님이 수령한 책과 비슷한 책이에요" 섹션 (추후 구현)</p>
+        <p>{`${userNickName}님이 수령한 책과 비슷한 책이에요`}</p>
       </PlaceholderSection>
 
-      <SectionTitle>OO님을 잘 아는 AI의 큐레이션</SectionTitle>
+      <SectionTitle>{`${userNickName}님을 잘 아는 AI의 큐레이션`}</SectionTitle>
 
       <DisplaySection>
         {activeBook && (
@@ -188,7 +191,8 @@ const ActiveBookImage = styled.img`
   border-radius: 8px;
   background-color: #d9d9d9;
   margin-bottom: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  // box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #dedede;
 `;
 
 const ActiveBookTitle = styled.h3`

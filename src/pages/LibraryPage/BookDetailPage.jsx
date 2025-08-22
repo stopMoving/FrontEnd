@@ -220,6 +220,7 @@ const BookImage = styled.img`
   margin: 24px auto 16px;
   background-color: #f0f0f0;
   border-radius: 8px;
+  border: 1px solid #dedede;
 `;
 
 const InfoWrapper = styled.div`

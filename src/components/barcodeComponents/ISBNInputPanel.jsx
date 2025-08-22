@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
 import useUserStore from "../../store/useUserStore";
-import { bookAPI as userAPI } from "../../lib/api.js";
+import { bookAPI } from "../../lib/api.js";
 
 export default function ISBNInputPanel({
   onClose,

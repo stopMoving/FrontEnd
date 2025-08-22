@@ -10,7 +10,7 @@ export default function BookInfoPage() {
     const {isbn} = useParams();
     const [book, setBook] = useState(null);
     const [loading, setLoading] = useState(false);
-    const { location } = useUserStore();
+    const { location, isLocationLoading } = useUserStore();
 
     const onBack = () => {
         navigate(-1);
@@ -35,13 +35,13 @@ export default function BookInfoPage() {
     };
 
     useEffect(() => {
-        if (isbn && location?.latitude && location?.longitude) {
-            fetchBookInfo(isbn, location.latitude, location.longitude);
-        }
-    }, [isbn, location]);
+      if (isbn && location?.latitude != null && location?.longitude != null ) {
+        fetchBookInfo(isbn, location.latitude, location.longitude);
+      }
+    }, [isbn, location?.latitude, location?.longitude]);
 
-    if (!location?.latitude || !location?.longitude) {
-      return (
+  if (isLocationLoading) {
+    return (
         <PageWrap>
           <Header>
             <BackButton type="button" onClick={onBack}>
@@ -53,10 +53,10 @@ export default function BookInfoPage() {
 
           <p>위치 정보를 불러오는 중...</p>
         </PageWrap>
-      );
-    }
-
-    return (
+    );
+  }
+  
+  return (
     <PageWrap>
       <Header>
         <BackButton type="button" onClick={onBack}>
@@ -99,7 +99,7 @@ export default function BookInfoPage() {
                     <LibraryName>{library.name}</LibraryName>
                     <LibraryInfo>
                         <span>{library.distance_m}m</span>
-                        <span>수량: {library.total_books}권</span>
+                        <span>수량: {library.available_books}권</span>
                     </LibraryInfo>
                   </LibraryWrap>
                 ))
@@ -108,10 +108,7 @@ export default function BookInfoPage() {
 
             <BookIntroduceWrap>
               <Desc>책 소개</Desc>
-
-              <Introduce>
-
-              </Introduce>
+              <Introduce>{book?.description || "-"}</Introduce>
             </BookIntroduceWrap>
 
         </BookInfoContainer>
@@ -130,58 +127,37 @@ const PageWrap = styled.div`
   background: #E6F4F0;
 `;
 
-// SectionTitle이 정확히 가운데 오도록 하는 스타일
-// 다른 데에는 밑에 스타일로 적용되어 있음
 const Header = styled.div`
   position: relative;
-  display: flex;
-  justify-content: center;
+  height: 52px;
+  display: grid;
+  grid-template-columns: 56px 1fr 56px;
   align-items: center;
-  margin: 38px 20px 14px;
+  margin: 38px 20px 0;
 `;
 
 const BackButton = styled.button`
   background: none;
   border: 0;
   cursor: pointer;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
 `;
 
 const SectionTitle = styled.div`
   font-size: 20px;
   font-weight: 500;
+  text-align: center;
 `;
 
-// const Header = styled.div`
-//   display: flex;
-//   align-items: center;
-//   margin-bottom: 16px;
-// `;
-
-// const BackButton = styled.button`
-//   background: none;
-//   border: 0;
-//   cursor: pointer;
-// `;
-
-// const SectionTitle = styled.div`
-//   font-size: 20px;
-//   font-weight: 500;
-//   margin: 0 auto;
-// `;
-
 const BookDetailWrap = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  // justify-content: center;
   align-items: center;
   margin-top: 16px;
   gap: 16px;
-  flex: 1;
-  min-height: calc(100dvh - 60px);
+  // flex: 1;
+  // min-height: calc(100dvh - 60px);
 `;
 
 const Cover = styled.div`
@@ -301,6 +277,7 @@ const BookIntroduceWrap = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  margin-bottom: 20px;
   // justify-content: center;
   // align-items: center;
 `;

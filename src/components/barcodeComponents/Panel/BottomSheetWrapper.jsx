@@ -87,7 +87,7 @@ const Sheet = styled.div`
   margin: 0 auto;
   z-index: 1001;
   transform: translateY(100%);
-  transition: ${(p) => (p.isDragging ? "none" : "transform 0.3s ease-out")};
+  transition: ${(p) => (p.$isDragging ? "none" : "transform 0.3s ease-out")};
 
   ${(props) => props.$isOpen && css`
     transform: translateY(0);

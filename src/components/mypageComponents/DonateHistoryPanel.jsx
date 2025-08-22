@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { userAPI } from "../../lib/api";
 
-export default function DonateHistoryPanel({ activeTab = 1 }) {
+export default function DonateHistoryPanel({
+  activeTab = 1
+}) {
   const [donatedBooks, setDonatedBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -13,6 +15,7 @@ export default function DonateHistoryPanel({ activeTab = 1 }) {
         setDonatedBooks(books);
       } catch (error) {
         console.error("나눔 내역 로딩 실패: ", error);
+        setDonatedBooks([]);
       } finally {
         setIsLoading(false);
       }
@@ -30,8 +33,8 @@ export default function DonateHistoryPanel({ activeTab = 1 }) {
 
   return (
     <Wrap>
-      {donatedBooks.map((book) => (
-        <BookWrap key={book.userbook_id}>
+      {donatedBooks.map((book, index) => (
+        <BookWrap key={index}>
           <BookCover>
             {book?.cover ? (
               <CoverImg src={book?.cover} alt="" />
@@ -41,11 +44,14 @@ export default function DonateHistoryPanel({ activeTab = 1 }) {
           </BookCover>
 
           <Info>
-            <Title>{book?.book_title || "-"}</Title>
+            <Title>{book?.title || "-"}</Title>
 
             <Meta>
-              <Sub>{book?.library_name}</Sub>
-              <Sub>{book?.quantity}</Sub>
+              <Sub>
+                <span>{book?.library_name}</span>
+                <span>•</span>
+                <span>{book?.quantity}권</span>
+              </Sub>
               <Sub>{book?.created_at.split("T")[0]}</Sub>
               <Sub>+500P</Sub>
             </Meta>
@@ -128,7 +134,10 @@ const Meta = styled.div`
 `;
 
 const Sub = styled.div`
+  display: flex;
+  flex-direction: row;
   font-size: 14px;
   font-weight: 500;
   color: #000000;
+  gap: 4px;
 `;

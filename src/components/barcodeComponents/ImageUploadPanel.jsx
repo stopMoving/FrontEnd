@@ -6,8 +6,9 @@ import { bookAPI, utils } from "../../lib/api";
 
 export default function ImageUploadPanel({
   onClose,
-  // ✅ onDetected 프롭스는 제거합니다.
   onConfirm,
+  mode,
+  libraryId
 }) {
   const inputRef = useRef(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -53,7 +54,17 @@ export default function ImageUploadPanel({
           throw new Error("유효한 ISBN 바코드가 아닙니다.");
         }
 
-        const data = await bookAPI.getBookByISBN(digits);
+        let data;
+        if (mode === "give") {
+          data = await bookAPI.getBookByISBN(digits);
+        }
+        else if (mode === "take") {
+          const res = await bookAPI.getPickupBookDetail(digits, libraryId);
+          data = {
+            bookData: res.data,
+            bookIds: res.book_ids,
+          }
+        }
 
         onClose(); // ✅ API 호출 성공 시 바텀 시트 닫기
         onConfirm(data); // ✅ onConfirm 콜백으로 책 데이터 전달

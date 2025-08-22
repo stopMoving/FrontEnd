@@ -97,7 +97,7 @@ export const bookAPI = {
     }
   },
 
-  getBookByISBN: async (isbn, lat, lng) => {
+  getBookInfoByISBN: async (isbn, lat, lng) => {
     try {
       let url = `/books/by-isbn/${isbn}/`;
       if (lat && lng) {

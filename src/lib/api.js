@@ -1,12 +1,6 @@
 import instance from "../lib/axios"; // 설정된 axios 인스턴스를 import
 
-/**
- * 사용자 관련 API 함수 모음
- */
 export const userAPI = {
-  /**
-   * 현재 로그인된 사용자의 프로필 정보를 가져옵니다.
-   */
   getUserProfile: async () => {
     try {
       const response = await instance.get(`/users/profile/`);
@@ -19,9 +13,6 @@ export const userAPI = {
     }
   },
 
-  /**
-   * 현재 로그인된 사용자의 도서 나눔 내역을 가져옵니다.
-   */
   getDonatedBooks: async () => {
     try {
       const response = await instance.get(`/users/donated-books/`);
@@ -35,13 +26,7 @@ export const userAPI = {
   },
 };
 
-/**
- * 책 관련 API 함수 모음
- */
 export const bookAPI = {
-  /**
-   * ISBN으로 알라딘에서 책 정보를 검색합니다. (기증 시 사용)
-   */
   getBookByISBN: async (isbn) => {
     try {
       const response = await instance.get(`/bookinfo/donate/?isbn=${isbn}`);
@@ -59,14 +44,11 @@ export const bookAPI = {
     }
   },
 
-  /**
-   * 도서를 도서관에 기증(나눔)합니다.
-   */
-  donateBooks: async (libraryId, isbnList) => {
+  donateBooks: async (libraryId, donationList) => {
     try {
       const payload = {
         library_id: Number(libraryId),
-        isbn: isbnList,
+        books: donationList,
       };
       const response = await instance.post(`/books/donate/`, payload);
       return response.data;
@@ -75,9 +57,6 @@ export const bookAPI = {
     }
   },
 
-  /**
-   * 일반적인 책 검색
-   */
   searchBooks: async (query) => {
     try {
       const response = await instance.get(`/bookinfo/search/?q=${query}`);
@@ -87,9 +66,6 @@ export const bookAPI = {
     }
   },
 
-  /**
-   * ISBN으로 책 상세 정보와 보유 도서관 목록을 조회합니다.
-   */
   getBookByISBN: async (isbn, lat, lng) => {
     try {
       let url = `/books/by-isbn/${isbn}/`;
@@ -106,9 +82,6 @@ export const bookAPI = {
     }
   },
 
-  /**
-   * 데려갈 책의 상세 정보를 조회합니다.
-   */
   getPickupBookDetail: async (isbn, libraryId) => {
     try {
       const response = await instance.get(`/books/pickup/detail/`, {
@@ -120,9 +93,6 @@ export const bookAPI = {
     }
   },
 
-  /**
-   * 특정 책들을 데려가기(픽업) 요청합니다.
-   */
   pickupBooks: async (bookIds) => {
     try {
       const payload = { book_id: bookIds };

@@ -71,16 +71,17 @@ export default function BookListPage() {
     setLoading(true);
     try {
       if (mode === "give") {
-        const isbnList = scannedBooks.flatMap(book => 
-          Array(book.quantity).fill(book.rawIsbn)
-        );
+        const donationList = scannedBooks.map(book => ({
+          isbn: book.rawIsbn,
+          quantity: book.quantity
+        }));
 
-        if (isbnList.length === 0) {
+        if (donationList.length === 0) {
           alert("담긴 ISBN이 없어요. ");
           return;
         }
 
-        await bookAPI.donateBooks(libraryId, isbnList);
+        await bookAPI.donateBooks(libraryId, donationList);
 
         setCompleteData({
           count: totalCount,

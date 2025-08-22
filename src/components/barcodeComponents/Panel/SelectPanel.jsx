@@ -40,30 +40,27 @@ export default function SelectPanel({
         image: data?.cover_url ?? null,
         title: data?.title ?? "제목 없음",
         author: data?.author ?? "-",
-        publisher: data?.publisher ?? "-",
         published_date: data?.published_date ?? "-",
-        regular_price: data?.regular_price ?? "-",
-        price: data?.regular_price
-          ? Math.round(data.regular_price * 0.2)
-          : null,
         isbn: utils.formatIsbn(data?.isbn),
         rawIsbn: utils.extractDigits(data?.isbn),
       });
-    } else if (mode === "take") {
+    }
+    
+    else if (mode === 'take') {
+      const bookData = data.bookData;
+      const bookIds = data.bookIds;
+
       setBook({
-        image: data?.cover_url ?? null,
-        title: data?.title ?? "제목 없음",
-        author: data?.author ?? "-",
-        publisher: data?.publisher ?? "-",
-        published_date: data?.published_date ?? "-",
-        regular_price: data?.regular_price ?? "-",
-        price: data?.regular_price
-          ? Math.round(data.regular_price * 0.2)
-          : null,
-        isbn: utils.formatIsbn(data?.isbn),
-        rawIsbn: utils.extractDigits(data?.isbn),
-        available_count: data?.data?.available_count ?? 0,
-        book_ids: data?.book_ids ?? [],
+        image: bookData?.cover_url ?? null,
+        title: bookData?.title ?? "제목 없음",
+        author: bookData?.author ?? "-",
+        published_date: bookData?.published_date ?? "-",
+        regular_price: bookData?.regular_price ?? "-",
+        price: bookData?.sale_price ?? "-",
+        isbn: utils.formatIsbn(bookData?.isbn),
+        rawIsbn: utils.extractDigits(bookData?.isbn),
+        available_count: bookData?.available_count ?? 0,
+        book_ids: bookIds ?? [],
       });
     }
 

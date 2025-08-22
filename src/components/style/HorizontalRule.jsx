@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 const StyledHr = styled.hr`
-  border: none;
+  border-top-color: #dedede;
   width: auto;
   height: 1px;
   background-color: #dedede;
@@ -10,11 +10,9 @@ const StyledHr = styled.hr`
 
 const Text = styled.span`
   color: #dedede;
-  /* 텍스트가 줄바꿈되지 않도록 설정 (선택 사항) */
   white-space: nowrap;
 `;
 
-// 자식으로 포함된 StyledHr 컴포넌트에만 flex-grow를 적용
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -26,7 +24,6 @@ const Container = styled.div`
 `;
 
 function HorizontalRule({ className = "", children }) {
-  // children prop이 있을 경우, 텍스트를 포함한 구분선을 렌더링합니다.
   if (children) {
     return (
       <Container className={className}>
@@ -37,7 +34,6 @@ function HorizontalRule({ className = "", children }) {
     );
   }
 
-  // children prop이 없을 경우, 일반 구분선만 렌더링합니다.
   return <StyledHr className={className} />;
 }
 

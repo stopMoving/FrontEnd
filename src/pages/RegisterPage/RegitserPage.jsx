@@ -118,8 +118,8 @@ function RegisterPage() {
           </div>
 
           <Button>회원가입</Button>
-
           <HorizontalRule></HorizontalRule>
+
           <div style={{ textAlign: "center", color: "#6F6F6F" }}>
             이미 회원이신가요? <Link to="/login">로그인하기</Link>
           </div>
@@ -139,7 +139,12 @@ const StyledForm = styled.form`
   padding: 20px;
   flex: 1;
   overflow-y: auto;
-  overflow: hidden;
+  // overflow: hidden;
+  font-family: inherit;
+  width: 100%;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const RegisterContainer = styled.div`
@@ -148,14 +153,12 @@ const RegisterContainer = styled.div`
   height: 100vh;
   background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 20px 20px 20px 20px;
+  padding: 20px 0 20px;
   text-align: center;
 
-  /* registerContainer의 자식들(h1, form)을 정렬 */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* gap: 24px; */
 `;
 
 const Logo = styled.div`
@@ -175,6 +178,7 @@ const GreenText = styled.span`
 const ValidationText = styled.p`
   color: #7b7b7b;
   font-size: 12px;
+  font-weight: 400;
   margin: 4px 0 4px 4px; /* 인풋창과의 간격 및 정렬을 위한 여백 */
   padding: 0;
 `;

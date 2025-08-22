@@ -50,15 +50,10 @@ export default function BookListPanel({
                   <QuantityBtn onClick={() => onQuantityChange(book.isbn, 1)}>+</QuantityBtn>
                 </QuantityWrap>
 
-                {/* {mode === "give" ? (
+                {mode === "give" ? (
                   <Point>500P</Point>
                 ) : (
                 <Price>{book?.price || "2000"}원</Price>
-                )} */}
-                {mode === "give" ? (
-                  <Price>{book?.price || "2000"}원</Price>
-                ) : (
-                <Point>500P</Point>
                 )}
               </SubWrap>
             </BookInfoWrap>
@@ -120,6 +115,7 @@ const BookWrap = styled.div`
 const Cover = styled.div`
   width: 79px;
   height: 101px;
+  flex-shrink: 0;
 `;
 
 const CoverImg = styled.img`
@@ -156,6 +152,11 @@ const Title = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: #000000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 75%;
+  width: 100%;
 `;
 
 const Author = styled.div`
@@ -236,11 +237,11 @@ const AddButton = styled.button`
 
 const BottomBar = styled.div`
   position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  border-top: 1px solid #DEDEDE;
-  bottom: 0;
+  bottom: 0px;
   width: 100%;
+  max-width: 600px;
+  border-top: 1px solid #DEDEDE;
+  margin: 0 auto;
   padding: 16px 20px;
   z-index: 10;
 `;

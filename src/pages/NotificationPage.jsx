@@ -34,8 +34,8 @@ const formatMessage = (message) => {
   let title = match[2];
   const afterText = match[3];
 
-  if (title.length > 5) {
-    title = title.substring(0, 5) + "...";
+  if (title.length > 6) {
+    title = title.substring(0, 6) + "...";
   }
   return (
     <>

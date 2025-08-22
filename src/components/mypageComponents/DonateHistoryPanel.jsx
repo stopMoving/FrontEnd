@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { userAPI } from "../../lib/api";
 
-export default function DonateHistoryPanel({ activeTab = 1 }) {
+export default function DonateHistoryPanel({
+  activeTab = 1
+}) {
   const [donatedBooks, setDonatedBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -13,6 +15,7 @@ export default function DonateHistoryPanel({ activeTab = 1 }) {
         setDonatedBooks(books);
       } catch (error) {
         console.error("나눔 내역 로딩 실패: ", error);
+        setDonatedBooks([]);
       } finally {
         setIsLoading(false);
       }
@@ -30,8 +33,8 @@ export default function DonateHistoryPanel({ activeTab = 1 }) {
 
   return (
     <Wrap>
-      {donatedBooks.map((book) => (
-        <BookWrap key={book.userbook_id}>
+      {donatedBooks.map((book, index) => (
+        <BookWrap key={index}>
           <BookCover>
             {book?.cover ? (
               <CoverImg src={book?.cover} alt="" />
@@ -41,11 +44,14 @@ export default function DonateHistoryPanel({ activeTab = 1 }) {
           </BookCover>
 
           <Info>
-            <Title>{book?.book_title || "-"}</Title>
+            <Title>{book?.title || "-"}</Title>
 
             <Meta>
-              <Sub>{book?.library_name}</Sub>
-              <Sub>{book?.quantity}</Sub>
+              <Sub>
+                <span>{book?.library_name}</span>
+                <span>•</span>
+                <span>{book?.quantity}권</span>
+              </Sub>
               <Sub>{book?.created_at.split("T")[0]}</Sub>
               <Sub>+500P</Sub>
             </Meta>
@@ -62,7 +68,7 @@ const Wrap = styled.div`
   background: #ffffff;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 20px 20px 0;
   gap: 16px;
 `;
 
@@ -76,6 +82,7 @@ const BookWrap = styled.div`
 const BookCover = styled.div`
   width: 106px;
   height: 129px;
+  flex-shrink: 0;
 `;
 
 const CoverImg = styled.img`
@@ -102,6 +109,7 @@ const CoverFallback = styled.div`
 `;
 
 const Info = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -115,7 +123,8 @@ const Title = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 260px;
+  max-width: 70%;
+  width: 100%;
 `;
 
 const Meta = styled.div`
@@ -125,7 +134,10 @@ const Meta = styled.div`
 `;
 
 const Sub = styled.div`
+  display: flex;
+  flex-direction: row;
   font-size: 14px;
   font-weight: 500;
   color: #000000;
+  gap: 4px;
 `;

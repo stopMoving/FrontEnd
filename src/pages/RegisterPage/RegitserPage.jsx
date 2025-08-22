@@ -37,7 +37,6 @@ function RegisterPage() {
     try {
       await register(values);
       navigate("/welcome");
-      toast("success", "회원가입 및 로그인에 성공했습니다!");
     } catch (error) {
       const serverMessage = error.response?.data?.message;
       let displayMessage;

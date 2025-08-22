@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
 import { ReactComponent as SearchIcon } from "../../assets/icons/search.svg";
@@ -8,20 +8,24 @@ import axios from "../../lib/axios";
 const SharedBooksPage = () => {
   const { libraryId } = useParams();
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const libraryName = state?.name || "도서관";
 
   const [books, setBooks] = useState([]);
+  const [searchParams] = useSearchParams();
+  const libraryName = searchParams.get("name") || "도서관";
+
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // const { state } = useLocation();
+  // const libraryName = state?.name || "도서관";
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         setIsLoading(true);
         setError(null);
-        const response = await axios.get(`library/booklist/${libraryId}`);
+        const response = await axios.get(`library/booklist/${libraryId}/`);
         setBooks(response.data);
       } catch (err) {
         if (err.response?.data?.message) {
@@ -57,7 +61,6 @@ const SharedBooksPage = () => {
           <BackButton onClick={() => navigate(-1)}>
             <BackIcon />
           </BackButton>
-          {/* 에러 시 제목은 비워둡니다. */}
         </TopNavBar>
         <StatusContainer>
           😥

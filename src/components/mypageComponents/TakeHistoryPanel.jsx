@@ -24,12 +24,21 @@ export default function DonateHistoryPanel({
   }, []);
 
   if (isLoading) {
-    return <p>나눔 내역을 불러오는 중...</p>;
+    return (
+    <MessageWrap>
+      <Notification>나눔 내역을 불러오는 중...</Notification>;
+    </MessageWrap>
+    )
   }
 
   if (purchasedBooks.length === 0) {
-    return <p>나눔한 책이 없습니다.</p>;
+    return (
+    <MessageWrap>
+      <Notification>나눔한 책이 없습니다.</Notification>;
+    </MessageWrap>
+    )
   }
+
 
   return (
     <Wrap>
@@ -140,4 +149,20 @@ const Sub = styled.div`
   font-weight: 500;
   color: #000000;
   gap: 4px;
+`;
+
+const MessageWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 100px;
+  gap: 30px;
+`;
+
+const Notification = styled.div`
+  font-size: 18px;
+  font-weight: 500;
+  color: #6f6f6f;
 `;

@@ -13,6 +13,7 @@ export default function DonateHistoryPanel({ activeTab = 1 }) {
         setDonatedBooks(books);
       } catch (error) {
         console.error("나눔 내역 로딩 실패: ", error);
+        setDonatedBooks([]);
       } finally {
         setIsLoading(false);
       }
@@ -30,8 +31,8 @@ export default function DonateHistoryPanel({ activeTab = 1 }) {
 
   return (
     <Wrap>
-      {donatedBooks.map((book) => (
-        <BookWrap key={book.userbook_id}>
+      {donatedBooks.map((book, index) => (
+        <BookWrap key={index}>
           <BookCover>
             {book?.cover ? (
               <CoverImg src={book?.cover} alt="" />
@@ -41,7 +42,7 @@ export default function DonateHistoryPanel({ activeTab = 1 }) {
           </BookCover>
 
           <Info>
-            <Title>{book?.book_title || "-"}</Title>
+            <Title>{book?.title || "-"}</Title>
 
             <Meta>
               <Sub>{book?.library_name}</Sub>

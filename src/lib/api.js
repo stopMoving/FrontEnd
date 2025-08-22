@@ -21,6 +21,9 @@ export const userAPI = {
       }
       return response.data;
     } catch (error) {
+      if (error.response?.status === 401) {
+        throw new Error("인증이 필요합니다.");
+      }
       throw new Error("나눔 내역을 불러오는 데 실패했습니다.");
     }
   },

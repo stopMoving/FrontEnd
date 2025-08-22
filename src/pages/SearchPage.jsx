@@ -57,12 +57,13 @@ export default function SearchPage() {
       </Header>
 
       <SearchContainer>
-        <SearchIcon fill={"#6F6F6F"} width={20} height={20} />
+        <SearchIcon fill={"#6F6F6F"} width={21} height={21} />
         <SearchInput
           type="text"
           placeholder="책 제목을 검색하세요."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          autofocus
         />
       </SearchContainer>
 
@@ -141,15 +142,16 @@ const PageWrap = styled.div`
   // justify-content: center;
   margin: 0 auto;
   background: #ffffff;
-  padding: 38px 20px 0;
+  padding: 20px 20px 0;
 `;
 
 const Header = styled.div`
   position: relative;
+  height: 52px;
   display: grid;
   grid-template-columns: 56px 1fr 56px;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 `;
 
 const BackButton = styled.button`
@@ -170,7 +172,7 @@ const SearchContainer = styled.div`
   align-items: center;
   width: 100%;
   height: 42px;
-  background-color: #e6f4f0;
+  background-color: #f0f2f5;
   border: none;
   border-radius: 20px;
   padding: 4px 16px;
@@ -180,13 +182,17 @@ const SearchContainer = styled.div`
 const SearchInput = styled.input`
   width: 100%;
   height: 42px;
-  font-size: 14px;
-  font-weight: 500;
-  background-color: #e6f4f0;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #f0f2f5;
   border: none;
-  color: #000000;
+  color: #6f6f6f;
   cursor: pointer;
-  padding: 8px 10px;
+  padding: 8px;
+  
+  &:focus {
+  outline: none;
+  }
 `;
 
 const BookListWrap = styled.div`

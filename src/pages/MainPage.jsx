@@ -7,6 +7,7 @@ import BannerCard from "../components/BannerCard";
 import useUserStore from "../store/useUserStore";
 import LibrarySidebar from "../components/mapComponents/LibrarySidebar";
 import useLibrarySidebarStore from "../store/useLibrarySidebarStore";
+import axios from "../../src/lib/axios";
 
 // --- 아이콘 임포트 ---
 import { ReactComponent as LibraryIcon } from "../assets/icons/library.svg";
@@ -17,6 +18,7 @@ import { ReactComponent as Library2 } from "../assets/icons/Library2.svg";
 import { ReactComponent as Library3 } from "../assets/icons/Library3.svg";
 import { ReactComponent as Library4 } from "../assets/icons/Library4.svg";
 import { ReactComponent as MainLogo } from "../assets/icons/logo.svg";
+import { useEffect, useState } from "react";
 
 const bannerData = [
   {
@@ -49,45 +51,6 @@ const bannerData = [
   },
 ];
 
-const bookListData = [
-  {
-    id: 1,
-    imageUrl: "https://placehold.co/100x140",
-    title: "여행의 이유",
-    author: "김영하",
-  },
-  {
-    id: 2,
-    imageUrl: "https://placehold.co/100x140",
-    title: "달러구트 꿈 백화점",
-    author: "이미예",
-  },
-  {
-    id: 3,
-    imageUrl: "https://placehold.co/100x140",
-    title: "아몬드",
-    author: "손원평",
-  },
-  {
-    id: 4,
-    imageUrl: "https://placehold.co/100x140",
-    title: "불편한 편의점",
-    author: "김호연",
-  },
-  {
-    id: 5,
-    imageUrl: "https://placehold.co/100x140",
-    title: "코스모스",
-    author: "칼 세이건",
-  },
-  {
-    id: 6,
-    imageUrl: "https://placehold.co/100x140",
-    title: "사피엔스",
-    author: "유발 하라리",
-  },
-];
-
 const MainPage = () => {
   const navigate = useNavigate();
   const toggleSidebar = useLibrarySidebarStore((state) => state.toggleSidebar);
@@ -95,10 +58,34 @@ const MainPage = () => {
   const logout = useUserStore((state) => state.logout);
   const userNickName = user?.nickname;
 
+  const [recommendedBooks, setRecommendedBooks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const handleNotificationClick = () => navigate("/notifications");
   const handleSearchClick = () => navigate("/search/book");
   const handle나눔Button = () => navigate("/barcode/library/select/give");
   const handle데려가기Button = () => navigate("/barcode/library/select/take");
+
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const response = await axios.get("preferences/recommendations/", {
+          params: { mode: "combined" }, // 쿼리 파라미터 설정
+        });
+        setRecommendedBooks(response.data.results);
+      } catch (err) {
+        console.error("추천 도서 로딩 실패:", err);
+        setError("추천 도서 목록을 불러오는 데 실패했습니다.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchRecommendations();
+  }, []);
 
   return (
     <PageWrapper>
@@ -115,7 +102,7 @@ const MainPage = () => {
         }
         title={
           <LogoContainer>
-            <MainLogo />
+            <MainLogo width={49} height={20} />
           </LogoContainer>
         }
         rightControls={
@@ -154,11 +141,28 @@ const MainPage = () => {
             {`AI가 고른 ${userNickName || "아기사자"}님 \n취향 맞춤 책 리스트`}
           </Title2>
           <HorizontalScroll>
-            {bookListData.map((book) => (
-              <BookCardWrapper key={book.id}>
-                <BookCard book={book} />
-              </BookCardWrapper>
-            ))}
+            {isLoading ? (
+              <StatusText>추천 도서를 불러오는 중...</StatusText>
+            ) : error ? (
+              <StatusText>{error}</StatusText>
+            ) : recommendedBooks.length > 0 ? (
+              recommendedBooks.map((book) => (
+                <BookCardWrapper
+                  key={book.isbn} // key를 isbn으로 변경
+                  onClick={() => navigate(`/book/${book.isbn}`)}
+                >
+                  <BookCard
+                    book={{
+                      title: book.title,
+                      author: book.author,
+                      imageUrl: book.cover_url,
+                    }}
+                  />
+                </BookCardWrapper>
+              ))
+            ) : (
+              <StatusText>추천 도서가 없습니다.</StatusText>
+            )}
           </HorizontalScroll>
         </BookListSection>
 
@@ -178,8 +182,6 @@ const MainPage = () => {
 };
 
 export default MainPage;
-
-// --- Styled Components (반응형 최종 수정) ---
 
 const PageWrapper = styled.div`
   width: 100%;
@@ -211,8 +213,15 @@ const MainContainer = styled.main`
 `;
 
 const LogoContainer = styled.div`
-  height: 30px;
+  height: 20px;
   width: auto;
+`;
+
+const StatusText = styled.p`
+  width: 100%;
+  text-align: center;
+  color: #6f6f6f;
+  padding: 20px 0;
 `;
 
 const SearchButton = styled.button`
@@ -314,9 +323,6 @@ const BannerWrapper = styled.div`
   padding: 4px 20px;
   min-height: 220px;
 
-  // 아이폰 빙글빙글 돌리는 버그 멈추기
-  -webkit-overflow-scrolling: auto;
-
   &::-webkit-scrollbar {
     display: none;
   }
@@ -342,6 +348,7 @@ const HorizontalScroll = styled.div`
 const BookCardWrapper = styled.div`
   flex: 0 0 110px;
   display: flex;
+  cursor: pointer;
 `;
 
 const BookListSection = styled.section`

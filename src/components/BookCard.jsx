@@ -49,6 +49,7 @@ const ImageContainer = styled.div`
   margin-bottom: 8px;
   overflow: hidden;
   flex-shrink: 0; /* 크기 축소 방지 */
+  border: 1px solid #dedede;
 
   img {
     position: absolute;

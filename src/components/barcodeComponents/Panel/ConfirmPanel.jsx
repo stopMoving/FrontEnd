@@ -101,13 +101,14 @@ const CoverFallback = styled.div`
 `;
 
 const BookTitle = styled.div`
-  display: flex;
   font-size: 24px;
   font-weight: 600;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
   margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  width: 100%;
 `;
 
 const Meta = styled.div`

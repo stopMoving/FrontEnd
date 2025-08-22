@@ -4,70 +4,50 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import axios from "../../lib/axios";
 
 import BottomNavBar from "../../components/Layout/BottomNavBar";
 import { ReactComponent as BookTwinkleIcon } from "../../assets/icons/bookTwinkle.svg";
 
-// mock 데이터
-const mockAiBooks = [
-  {
-    id: 1,
-    title: "선택된 책",
-    author: "저자",
-    imageUrl: "https://placehold.co/135x177?text=대형책",
-  },
-  {
-    id: 2,
-    title: "책 제목 01",
-    author: "저자01",
-    imageUrl: "https://placehold.co/78x101?text=책01",
-  },
-  {
-    id: 3,
-    title: "책 제목 02",
-    author: "저자02",
-    imageUrl: "https://placehold.co/78x101?text=선택된+책",
-  },
-  {
-    id: 4,
-    title: "책 제목 03",
-    author: "저자03",
-    imageUrl: "https://placehold.co/78x101?text=책03",
-  },
-  {
-    id: 5,
-    title: "책 제목 04",
-    author: "저자04",
-    imageUrl: "https://placehold.co/78x101?text=책04",
-  },
-  {
-    id: 6,
-    title: "책 제목 05",
-    author: "저자05",
-    imageUrl: "https://placehold.co/79x101?text=책05",
-  },
-  {
-    id: 7,
-    title: "책 제목 06",
-    author: "저자06",
-    imageUrl: "https://placehold.co/79x101?text=책06",
-  },
-  {
-    id: 8,
-    title: "책 제목 07",
-    author: "저자07",
-    imageUrl: "https://placehold.co/79x101?text=책07",
-  },
-];
-
 const AiRecommendPage = () => {
   const [activeBook, setActiveBook] = useState(null);
+  const [books, setBooks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (mockAiBooks.length > 0) {
-      setActiveBook(mockAiBooks[0]);
-    }
+    const fetchAiBooks = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const response = await axios.get("preferences/recommendations/", {
+          params: { mode: "activity" },
+        });
+        const fetchedBooks = response.data.results;
+        setBooks(fetchedBooks);
+
+        // 데이터를 성공적으로 불러온 후 첫 번째 책을 activeBook으로 설정
+        if (fetchedBooks.length > 0) {
+          setActiveBook(fetchedBooks[0]);
+        }
+      } catch (err) {
+        console.error("AI 추천 도서 로딩 실패:", err);
+        setError("추천 도서를 불러오는 데 실패했습니다.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAiBooks();
   }, []);
+
+  if (isLoading) {
+    return <StatusContainer>AI가 추천 도서를 고르는 중...</StatusContainer>;
+  }
+
+  if (error) {
+    return <StatusContainer>{error}</StatusContainer>;
+  }
 
   return (
     <PageWrapper>
@@ -85,7 +65,10 @@ const AiRecommendPage = () => {
       <DisplaySection>
         {activeBook && (
           <ActiveBookDisplay>
-            <ActiveBookImage src={activeBook.imageUrl} alt={activeBook.title} />
+            <ActiveBookImage
+              src={activeBook.cover_url}
+              alt={activeBook.title}
+            />
             <ActiveBookTitle>{activeBook.title}</ActiveBookTitle>
             <ActiveBookAuthor>{activeBook.author}</ActiveBookAuthor>
           </ActiveBookDisplay>
@@ -102,12 +85,12 @@ const AiRecommendPage = () => {
             centeredSlides={true}
             spaceBetween={8}
             onSlideChange={(swiper) => {
-              setActiveBook(mockAiBooks[swiper.realIndex]);
+              setActiveBook(books[swiper.realIndex]);
             }}
           >
-            {mockAiBooks.map((book) => (
+            {books.map((book) => (
               <SwiperSlide key={book.id}>
-                <BookCover src={book.imageUrl} alt={book.title} />
+                <BookCover src={book.cover_url} alt={book.title} />
               </SwiperSlide>
             ))}
           </Swiper>
@@ -205,15 +188,29 @@ const ActiveBookImage = styled.img`
   border-radius: 8px;
   background-color: #d9d9d9;
   margin-bottom: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 `;
+
 const ActiveBookTitle = styled.h3`
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 4px;
+
+  width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
 `;
 const ActiveBookAuthor = styled.p`
   font-size: 12px;
   color: #868686;
+
+  width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
 `;
 
 const DisplaySection = styled.div`
@@ -223,4 +220,13 @@ const DisplaySection = styled.div`
   padding: 16px 0;
   margin: 0 20px;
   margin-bottom: -128px;
+`;
+
+const StatusContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+  color: #6f6f6f;
 `;

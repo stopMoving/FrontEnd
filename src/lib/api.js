@@ -107,7 +107,7 @@ export const bookAPI = {
       return response.data;
     } catch (error) {
       if (error.response?.status === 404) {
-        throw new Error("존재하지 않는 ISBN입니다.");
+        throw new Error(error.response.data.detail || "존재하지 않는 ISBN입니다.");
       }
       throw new Error("도서 정보를 불러오는 데 실패했습니다.");
     }

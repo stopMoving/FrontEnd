@@ -10,7 +10,7 @@ export default function BookInfoPage() {
     const {isbn} = useParams();
     const [book, setBook] = useState(null);
     const [loading, setLoading] = useState(false);
-    const { location } = useUserStore();
+    const { location, isLocationLoading, fetchLocation } = useUserStore();
 
     const onBack = () => {
         navigate(-1);
@@ -35,13 +35,19 @@ export default function BookInfoPage() {
     };
 
     useEffect(() => {
-        if (isbn && location?.latitude && location?.longitude) {
-            fetchBookInfo(isbn, location.latitude, location.longitude);
-        }
-    }, [isbn, location]);
+      fetchLocation();
+    }, [fetchLocation]);
 
-    if (!location?.latitude || !location?.longitude) {
-      return (
+    useEffect(() => {
+      if (isbn && location?.latitude && location?.longitude) {
+        fetchBookInfo(isbn, location.latitude, location.longitude);
+      } else if (isbn && !isLocationLoading && !location) {
+        fetchBookInfo(isbn);
+      }
+    }, [isbn, location, isLocationLoading]);
+
+  if (isLocationLoading) {
+    return (
         <PageWrap>
           <Header>
             <BackButton type="button" onClick={onBack}>
@@ -53,10 +59,10 @@ export default function BookInfoPage() {
 
           <p>위치 정보를 불러오는 중...</p>
         </PageWrap>
-      );
-    }
-
-    return (
+    );
+  }
+  
+  return (
     <PageWrap>
       <Header>
         <BackButton type="button" onClick={onBack}>
@@ -108,10 +114,7 @@ export default function BookInfoPage() {
 
             <BookIntroduceWrap>
               <Desc>책 소개</Desc>
-
-              <Introduce>
-
-              </Introduce>
+              <Introduce>{book?.description || "-"}</Introduce>
             </BookIntroduceWrap>
 
         </BookInfoContainer>
@@ -134,20 +137,29 @@ const PageWrap = styled.div`
 // 다른 데에는 밑에 스타일로 적용되어 있음
 const Header = styled.div`
   position: relative;
-  display: flex;
-  justify-content: center;
+  height: 52px;
+  display: grid;
+  grid-template-columns: 56px 1fr 56px;
+  align-items: center;
+  // margin-bottom: 8px;
   align-items: center;
   margin: 38px 20px 14px;
 `;
+
+// const BackButton = styled.button`
+//   background: none;
+//   border: 0;
+//   cursor: pointer;
+//   position: absolute;
+//   left: 0;
+//   top: 50%;
+//   transform: translateY(-50%);
+// `;
 
 const BackButton = styled.button`
   background: none;
   border: 0;
   cursor: pointer;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
 `;
 
 const SectionTitle = styled.div`

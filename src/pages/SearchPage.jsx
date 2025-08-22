@@ -63,7 +63,7 @@ export default function SearchPage() {
           placeholder="책 제목을 검색하세요."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          autofocus
+          autoFocus
         />
       </SearchContainer>
 

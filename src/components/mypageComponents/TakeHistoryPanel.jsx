@@ -47,8 +47,11 @@ export default function DonateHistoryPanel({
             <Title>{book?.title || "-"}</Title>
 
             <Meta>
-              <Sub>{book?.library_name}</Sub>
-              <Sub>{book?.quantity}</Sub>
+              <Sub>
+                <span>{book?.library_name}</span>
+                <span>•</span>
+                <span>{book?.quantity}권</span>
+              </Sub>
               <Sub>{book?.created_at.split("T")[0]}</Sub>
               <Sub>+500P</Sub>
             </Meta>
@@ -131,7 +134,10 @@ const Meta = styled.div`
 `;
 
 const Sub = styled.div`
+  display: flex;
+  flex-direction: row;
   font-size: 14px;
   font-weight: 500;
   color: #000000;
+  gap: 4px;
 `;

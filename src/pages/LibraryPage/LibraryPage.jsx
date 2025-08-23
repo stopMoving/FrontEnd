@@ -19,6 +19,7 @@ import BookCard from "../../components/BookCard";
 import useUserStore from "../../store/useUserStore";
 import useLibrarySidebarStore from "../../store/useLibrarySidebarStore";
 import { useToaster } from "../../store/useToasterStore";
+import LoadingPage from "../LoadingPage";
 
 const LibraryPage = () => {
   const { libraryId } = useParams();
@@ -107,14 +108,7 @@ const LibraryPage = () => {
     }
   };
 
-  if (isLoading)
-    return (
-      <PageWrapper>
-        <StatusContainer>
-          <h2>로딩 중...</h2>
-        </StatusContainer>
-      </PageWrapper>
-    );
+  if (isLoading) return <LoadingPage />;
   if (error)
     return (
       <PageWrapper>

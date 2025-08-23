@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
 import axios from "../../lib/axios";
+import LoadingPage from "../LoadingPage";
 
 const BookDetailPage = () => {
   const { isbn } = useParams();
@@ -42,12 +43,7 @@ const BookDetailPage = () => {
     loadBookData();
   }, [isbn]);
 
-  if (isLoading)
-    return (
-      <PageWrapper>
-        <StatusContainer>로딩 중...</StatusContainer>
-      </PageWrapper>
-    );
+  if (isLoading) return <LoadingPage />;
   if (error)
     return (
       <PageWrapper>

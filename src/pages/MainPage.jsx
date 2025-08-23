@@ -326,6 +326,12 @@ const BannerWrapper = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+
+  // 터치 스크롤 x축으로 제한
+  touch-action: pan-x;
+
+  // 아이폰 유저 터치 길게 누르는거 방지
+  -webkit-user-drag: none;
 `;
 
 const GreenTitle = styled.span`

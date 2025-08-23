@@ -28,6 +28,9 @@ const LibraryPage = () => {
   const { state } = useLocation();
   const libraryName = state?.name;
 
+  // 도서관 URL 저장
+  const [libraryImageUrl, setLibraryImageUrl] = useState(null);
+
   // toast 불러오기
   const toast = useToaster();
 
@@ -63,14 +66,19 @@ const LibraryPage = () => {
         setError(null);
 
         // Promise.all을 사용해 두 API를 동시에 호출
-        const [sharedBooksResponse, recommendedBooksResponse] =
-          await Promise.all([
-            axios.get(`library/booklist/${libraryId}/`),
-            axios.get(`library/recommendations/${libraryId}/`),
-          ]);
+        const [
+          sharedBooksResponse,
+          recommendedBooksResponse,
+          libraryImageResponse,
+        ] = await Promise.all([
+          axios.get(`library/booklist/${libraryId}/`),
+          axios.get(`library/recommendations/${libraryId}/`),
+          axios.get(`library/image/${libraryId}/`),
+        ]);
 
         setSharedBooks(sharedBooksResponse.data);
         setRecommendedBooks(recommendedBooksResponse.data.results);
+        setLibraryImageUrl(libraryImageResponse.data.library_image_url);
       } catch (err) {
         console.error("데이터 로딩 실패:", err);
         setError("데이터를 불러오는 중 문제가 발생했습니다.");
@@ -128,7 +136,7 @@ const LibraryPage = () => {
         </Header>
 
         <LibraryHeader>
-          <LibraryImage />
+          <LibraryImage imageUrl={libraryImageUrl} />
           <LibraryTitle to={`/library/detail/${libraryId}`}>
             {libraryName}
             <InfoIcon width={16} height={16} />
@@ -279,6 +287,11 @@ const LibraryImage = styled.div`
   border-radius: 50%;
   background-color: #f0f0f0;
   flex-shrink: 0;
+
+  background-image: url(${(props) => props.imageUrl});
+  background-size: cover; // 원 꽉 채우기
+  background-position: center; // 이미지 중앙이 보이게
+  background-repeat: no-repeat;
 `;
 
 const LibraryTitle = styled(Link)`

@@ -28,6 +28,7 @@ import MyPage from "./pages/MyPage";
 import AiRecommendPage from "./pages/AiPage/AiRecommendPage";
 import NotificationPage from "./pages/NotificationPage";
 import DonateHistoryPanel from "./components/mypageComponents/DonateHistoryPanel";
+import LoadingPage from "./pages/LoadingPage.jsx";
 
 const PrivateRoutes = () => {
   const { user, isInitialized } = useUserStore();
@@ -91,6 +92,7 @@ const App = () => {
           <Route path="barcode/select/:mode" element={<SelectPage />} />
           <Route path="barcode/scan/:mode" element={<ScanPage />} />
           <Route path="barcode/booklist/:mode" element={<BookListPage />} />
+          <Route path="loading" element={<LoadingPage />} />
         </Route>
       </Routes>
       <Toaster />

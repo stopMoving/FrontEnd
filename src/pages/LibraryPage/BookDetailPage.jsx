@@ -206,7 +206,6 @@ const Title = styled.h1`
 const InfoList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
   color: #6f6f6f;
   font-size: 12px;
 `;
@@ -244,7 +243,6 @@ const IsbnInfo = styled.p`
   font-size: 14px;
   font-weight: 500;
   color: black;
-  margin-top: 8px;
 `;
 
 const Divider = styled.hr`

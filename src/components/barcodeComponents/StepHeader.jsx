@@ -26,7 +26,7 @@ export default function StepHeader({
 
 const Wrap = styled.header`
   position: fixed;
-  top: 40px;
+  top: 16px;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
@@ -60,7 +60,7 @@ const Title = styled.div`
 const Steps = styled.div`
   display: flex;
   justify-content: space-around;
-  padding: 12px 20px 0;
+  padding-top: 16px;
 `;
 
 const Step = styled.div`
@@ -69,6 +69,8 @@ const Step = styled.div`
   font-size: 20px;
   font-weight: 500;
   color: #6F6F6F;
+  flex: 1;
+  text-align: center;
 
   ${({ $active }) =>
     $active &&
@@ -86,7 +88,7 @@ const Step = styled.div`
         transform: translateX(-50%);
         bottom: -2px;
         height: 3.5px;
-        width: clamp(72px, 31vw, 140px); /* 가운데 짧은 밑줄 */
+        width: 100%;
         background: #11B55F;
         border-radius: 999px;
       }

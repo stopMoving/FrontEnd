@@ -45,24 +45,19 @@ export default function ScanPage() {
           image: data?.cover_url ?? null,
           title: data?.title ?? "제목 없음",
           author: data?.author ?? "-",
-          publisher: data?.publisher ?? "-",
           published_date: data?.published_date ?? "-",
-          regular_price: data?.regular_price ?? "-",
-          //내가 계산 x, 백엔드에서 넘겨주는 걸로
-          price: data?.regular_price
-            ? Math.round(data.regular_price * 0.2)
-            : null,
           isbn: utils.formatIsbn(digits),
           rawIsbn: digits,
         });
-      } else if (mode === "take") {
+      }
+      
+      else if (mode === "take") {
         const res = await bookAPI.getPickupBookDetail(digits, libraryId);
         
         setBook({
           image: res?.data?.cover_url ?? null,
           title: res?.data?.title ?? "제목 없음",
           author: res?.data?.author ?? "-",
-          publisher: res?.data?.publisher ?? "-",
           published_date: res?.data?.published_date ?? "-",
           regular_price: res?.data?.regular_price ?? "-",
           price: res?.data?.sale_price ?? "-",
@@ -130,7 +125,7 @@ export default function ScanPage() {
       <MaskBottom>
         <Title>바코드 인식</Title>
         <Hint>
-          인식이 어려우면 조명을 밝히고, 바코드와 카메라를 평행하게 맞춘 뒤
+          인식이 어려우면 조명을 밝히고,
           <br />
           프레임 안에 꽉 차게 맞춰보세요.
         </Hint>

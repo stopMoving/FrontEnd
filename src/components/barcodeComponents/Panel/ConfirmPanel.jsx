@@ -31,9 +31,9 @@ export default function ConfirmPanel({
           </Meta>
 
           {mode === "give" ? (
-            <Point>500P</Point>
+            <Point>{500 * quantity}P</Point>
           ) : (
-            <Price>{book?.price || "2000"}원</Price>
+            <Price>{book?.price * quantity || "2000"}원</Price>
           )}
 
           <Isbn>ISBN 코드: {book?.isbn || "-"}</Isbn>
@@ -109,6 +109,7 @@ const BookTitle = styled.div`
   text-overflow: ellipsis;
   max-width: 100%;
   width: 100%;
+  text-align: center;
 `;
 
 const Meta = styled.div`

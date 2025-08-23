@@ -19,6 +19,7 @@ export default function SelectPanel({
   libraryId,
   onBack,
 }) {
+  console.log('SelectPanel에 전달된 mode prop:', mode);
   const navigate = useNavigate();
   const [activeSheet, setActiveSheet] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);

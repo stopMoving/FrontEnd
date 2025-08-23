@@ -62,7 +62,7 @@ export default function DonateHistoryPanel({
                 <span>{book?.quantity}권</span>
               </Sub>
               <Sub>{book?.created_at.split("T")[0]}</Sub>
-              <Sub>+500P</Sub>
+              <Sub>{book?.quantity * book?.sale_price}원</Sub>
             </Meta>
           </Info>
         </BookWrap>
@@ -125,7 +125,7 @@ const Info = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   color: #000000;
   margin-bottom: 8px;

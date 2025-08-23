@@ -47,8 +47,6 @@ export default function BookInfoPage() {
             <BackButton type="button" onClick={onBack}>
               <BackIcon width={24} height={24} />
             </BackButton>
-
-            <SectionTitle>책 정보</SectionTitle>
           </Header>
 
           <p>위치 정보를 불러오는 중...</p>
@@ -62,8 +60,6 @@ export default function BookInfoPage() {
         <BackButton type="button" onClick={onBack}>
           <BackIcon width={24} height={24} />
         </BackButton>
-
-        <SectionTitle>책 정보</SectionTitle>
       </Header>
       
       <BookDetailWrap>
@@ -140,12 +136,6 @@ const BackButton = styled.button`
   background: none;
   border: 0;
   cursor: pointer;
-`;
-
-const SectionTitle = styled.div`
-  font-size: 20px;
-  font-weight: 500;
-  text-align: center;
 `;
 
 const BookDetailWrap = styled.div`

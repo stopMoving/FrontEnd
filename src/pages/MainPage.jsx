@@ -24,7 +24,7 @@ const bannerData = [
   {
     id: 1,
     title: "집에서 잠든 책,\n우리 동네 도서관으로!",
-    description: "상태 좋은 책 기증하고, \n지역화폐 리워드까지 받아가세요",
+    description: "상태 좋은 책 기증하고, \n포인트와 리워드까지 받아가세요",
     icon: Library1,
   },
   {

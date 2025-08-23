@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import BookListPanel from "../../components/barcodeComponents/Panel/BookListPanel";
 import CompleteModal from "./CompleteModal";
 import { useMemo, useState } from "react";
@@ -8,7 +8,7 @@ import useUserStore from "../../store/useUserStore";
 
 export default function BookListPage() {
   const navigate = useNavigate();
-  const { mode } = useParams(); // 'give' | 'take'
+  const { mode } = useParams();
   const [searchParams] = useSearchParams();
   const libraryId = searchParams.get("branchId");
 
@@ -21,9 +21,8 @@ export default function BookListPage() {
   const token = useUserStore((state) => state.token);
 
   const onBack = () => {
-    navigate(
-      `/barcode/select/${mode}?branchId=${encodeURIComponent(libraryId)}`
-    );
+    clearScannedBooks();
+    navigate(`/`);
   };
 
   const { totalCount, totalPoints } = useMemo(() => {
@@ -115,7 +114,7 @@ export default function BookListPage() {
         }
 
         setCompleteData({
-          count: response.count_success,
+          count: totalCount,
         });
       }
         clearScannedBooks();
@@ -144,6 +143,7 @@ export default function BookListPage() {
   <>
     <BookListPanel
       {...copy}
+      mode={mode}
       items={scannedBooks}
       onBack={onBack}
       onNext={handleFinish}

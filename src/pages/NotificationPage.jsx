@@ -9,6 +9,7 @@ import { ReactComponent as BellIcon } from "../assets/icons/bell_icons_gray.svg"
 import { ReactComponent as PointIcon } from "../assets/icons/pointChat.svg";
 import { ReactComponent as BookHandChatIcon } from "../assets/icons/bookHandChat.svg";
 import { ReactComponent as BookChatIcon } from "../assets/icons/bookChat.svg";
+import LoadingPage from "./LoadingPage";
 
 const getNotificationIcon = (type) => {
   switch (type) {
@@ -96,7 +97,7 @@ const NotificationPage = () => {
     if (isLoading)
       return (
         <StatusContainer>
-          <p>로딩 중...</p>
+          <LoadingPage />
         </StatusContainer>
       );
     if (error)

@@ -1,21 +1,24 @@
-import styled, { keyframes } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 export default function LoadingPage({
   title = "잠시만 기다려 주세요!",
   description = "화면을 불러오고 있어요.",
+  isCompact = false,
 }) {
   return (
-    <Wrap>
-      <DotLoader>
+    <Wrap isCompact={isCompact}>
+      <DotLoader isCompact={isCompact}>
         <Dot />
         <Dot />
         <Dot />
       </DotLoader>
 
-      <TextWrap>
-        <Title>{title}</Title>
-        <Description>{description}</Description>
-      </TextWrap>
+      {!isCompact && (
+        <TextWrap>
+          <Title>{title}</Title>
+          <Description>{description}</Description>
+        </TextWrap>
+      )}
     </Wrap>
   );
 }
@@ -27,9 +30,20 @@ const Wrap = styled.div`
   align-items: center;
   width: 100%;
   max-width: 600px;
-  min-height: 100dvh;
-  background: #FFFFFF;
+  background: #ffffff;
   text-align: center;
+
+  ${(props) =>
+    props.isCompact
+      ? css`
+          // 컴팩트 모드일 때 전체 화면 스타일 제거
+          min-height: auto;
+          padding: 20px 0;
+        `
+      : css`
+          // 기본 (전체 화면) 모드
+          min-height: 100dvh;
+        `}
 `;
 
 const bounce = keyframes`
@@ -45,16 +59,16 @@ const bounce = keyframes`
 
 const DotLoader = styled.div`
   display: flex;
-  gap: 8px;
+  gap: ${(props) => (props.isCompact ? "6px" : "8px")};
   padding: 16px 0;
-  margin-bottom: 16px;
+  margin-bottom: ${(props) => (props.isCompact ? "0" : "16px")};
 `;
 
 const Dot = styled.div`
-  width: 16px;
-  height: 16px;
+  width: ${(props) => (props.isCompact ? "12px" : "16px")};
+  height: ${(props) => (props.isCompact ? "12px" : "16px")};
   border-radius: 50%;
-  background: #11B55F;
+  background: #11b55f;
   animation: ${bounce} 1.4s infinite ease-in-out;
 
   &:nth-child(1) {
@@ -75,7 +89,7 @@ const TextWrap = styled.div`
 const Title = styled.div`
   font-size: 18px;
   font-weight: 600;
-  color: #11B55F;
+  color: #11b55f;
   margin-bottom: 8px;
 `;
 

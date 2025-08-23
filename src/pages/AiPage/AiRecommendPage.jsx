@@ -10,6 +10,7 @@ import axios from "../../lib/axios";
 import BottomNavBar from "../../components/Layout/BottomNavBar";
 import { ReactComponent as BookTwinkleIcon } from "../../assets/icons/bookTwinkle.svg";
 import useUserStore from "../../store/useUserStore";
+import LoadingPage from "../LoadingPage";
 
 const CATEGORIES = [
   "소설/시/희곡",
@@ -96,7 +97,7 @@ const AiRecommendPage = () => {
   };
 
   if (isLoading) {
-    return <StatusContainer>AI가 추천 도서를 고르는 중...</StatusContainer>;
+    return <LoadingPage />;
   }
 
   if (error) {
@@ -125,7 +126,9 @@ const AiRecommendPage = () => {
         </CategoryTabs>
         <BookList>
           {isSimilarLoading ? (
-            <PlaceholderText>책을 찾고 있어요...</PlaceholderText>
+            <PlaceholderText>
+              <LoadingPage isCompact={true} />
+            </PlaceholderText>
           ) : similarBooks.length > 0 ? (
             similarBooks.slice(0, 3).map((book) => (
               <BookItem
@@ -370,7 +373,7 @@ const CategoryTab = styled.button`
 
 const BookList = styled.div`
   padding: 0 20px;
-  min-height: 200px; /* 로딩 중 레이아웃 깨짐 방지 */
+  min-height: 200px;
 `;
 
 const BookItem = styled.div`
@@ -416,9 +419,15 @@ const BookItemAuthor = styled.p`
   text-overflow: ellipsis;
 `;
 
-const PlaceholderText = styled.p`
+const PlaceholderText = styled.div`
+  //레이아웃 점프 방지
+  min-height: 352px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   text-align: center;
-  color: ##868686;
-  font-size: 16px;
-  padding: 80px 20px;
+  color: #868686;
+  font-size: 14px;
+  line-height: 1.6;
 `;

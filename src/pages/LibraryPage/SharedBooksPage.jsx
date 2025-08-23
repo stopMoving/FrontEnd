@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
 import { ReactComponent as SearchIcon } from "../../assets/icons/search.svg";
 import axios from "../../lib/axios";
+import LoadingPage from "../../pages/LoadingPage";
 
 const SharedBooksPage = () => {
   const { libraryId } = useParams();
@@ -16,9 +17,6 @@ const SharedBooksPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // const { state } = useLocation();
-  // const libraryName = state?.name || "도서관";
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -48,12 +46,7 @@ const SharedBooksPage = () => {
       book.author.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  if (isLoading)
-    return (
-      <PageWrapper>
-        <StatusContainer>로딩 중...</StatusContainer>
-      </PageWrapper>
-    );
+  if (isLoading) return <LoadingPage />;
   if (error)
     return (
       <PageWrapper>
@@ -96,7 +89,7 @@ const SharedBooksPage = () => {
         <BookList>
           {filteredBooks.length > 0 ? (
             filteredBooks.map((book) => (
-              // --- 1. key와 onClick 이벤트에 isbn 사용 ---
+              // key와 onClick 이벤트에 isbn 사용
               <BookListItem
                 key={book.isbn}
                 onClick={() => navigate(`/book/${book.isbn}`)}
@@ -121,8 +114,6 @@ const SharedBooksPage = () => {
 };
 
 export default SharedBooksPage;
-
-// --- Styled Components ---
 
 const PageWrapper = styled.div`
   width: 100%;

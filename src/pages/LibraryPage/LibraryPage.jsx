@@ -65,10 +65,8 @@ const LibraryPage = () => {
         // Promise.all을 사용해 두 API를 동시에 호출
         const [sharedBooksResponse, recommendedBooksResponse] =
           await Promise.all([
-            axios.get(`library/booklist/${libraryId}`),
-            axios.get("preferences/recommendations/", {
-              params: { mode: "combined" },
-            }),
+            axios.get(`library/booklist/${libraryId}/`),
+            axios.get(`library/recommendations/${libraryId}/`),
           ]);
 
         setSharedBooks(sharedBooksResponse.data);

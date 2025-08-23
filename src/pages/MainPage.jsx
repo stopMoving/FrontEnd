@@ -18,6 +18,8 @@ import { ReactComponent as Library2 } from "../assets/icons/Library2.svg";
 import { ReactComponent as Library3 } from "../assets/icons/Library3.svg";
 import { ReactComponent as Library4 } from "../assets/icons/Library4.svg";
 import { ReactComponent as MainLogo } from "../assets/icons/logo.svg";
+import { ReactComponent as BellIconActive } from "../assets/icons/bellNoti.svg";
+
 import { useEffect, useState } from "react";
 
 const bannerData = [
@@ -61,6 +63,7 @@ const MainPage = () => {
   const [recommendedBooks, setRecommendedBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [hasUnread, setHasUnread] = useState(false);
 
   const handleNotificationClick = () => navigate("/notifications");
   const handleSearchClick = () => navigate("/search/book");
@@ -87,6 +90,24 @@ const MainPage = () => {
     fetchRecommendations();
   }, []);
 
+  useEffect(() => {
+    const checkUnreadNotifications = async () => {
+      try {
+        const response = await axios.get("notification/unread-count/");
+        if (response.data && response.data.unread > 0) {
+          setHasUnread(true);
+        } else {
+          setHasUnread(false);
+        }
+      } catch (err) {
+        console.error("읽지 않은 알림 확인 실패:", err);
+        // 에러가 발생해도 앱이 멈추지 않도록 처리
+      }
+    };
+
+    checkUnreadNotifications();
+  }, []);
+
   return (
     <PageWrapper>
       <LibrarySidebar />
@@ -110,8 +131,11 @@ const MainPage = () => {
             onClick={handleNotificationClick}
             aria-label="알림 보기"
           >
-            {" "}
-            <BellIcon width={24} height={24} />{" "}
+            {hasUnread ? (
+              <BellIconActive width={24} height={24} />
+            ) : (
+              <BellIcon width={24} height={24} />
+            )}
           </TopNavBar.IconButton>
         }
       />

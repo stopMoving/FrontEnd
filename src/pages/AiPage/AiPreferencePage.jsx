@@ -286,5 +286,5 @@ const ButtonWrapper = styled.div`
   width: 100%;
   max-width: 600px;
   padding: 0 20px 20px;
-  background-color: #fff;
+  background-color: transparent;
 `;

@@ -84,7 +84,13 @@ const BookDetailPage = () => {
         </BookImageSection>
 
         <InfoWrapper>
-          <Title>{book.title}</Title>
+          <TitleHeader>
+            <Title>{book.title}</Title>
+            <QuantityBadge>
+              수량 : {book.libraries[0]?.available_books || 0}권
+            </QuantityBadge>
+          </TitleHeader>
+
           <InfoList>
             <InfoItem>{book.author}</InfoItem>
             <InfoItem>{book.publisher}</InfoItem>
@@ -106,36 +112,8 @@ const BookDetailPage = () => {
               {book.description || "제공된 책 소개가 없습니다."}
             </SummaryText>
           </SummarySection>
-
-          {book.libraries && book.libraries.length > 0 && (
-            <>
-              {/* <Divider /> */}
-              {/* <SummarySection>
-              <SectionTitle>이 책을 볼 수 있는 도서관</SectionTitle>
-              {book.libraries.map((lib) => (
-                <LibraryItem key={lib.library_id}>
-                  <LibraryName>{lib.name}</LibraryName>
-                  <LibraryInfo>
-                    <span>{lib.distance_m}m</span>
-                    <span>보유: {lib.total_books}권</span>
-                    <span className="available">
-                      대여 가능: {lib.available_books}권
-                    </span>
-                  </LibraryInfo>
-                </LibraryItem>
-              ))}
-            </SummarySection> */}
-            </>
-          )}
         </InfoWrapper>
       </ContentContainer>
-
-      <BottomNavBar>
-        <QuantityButton>
-          수량 : {book.libraries[0]?.available_books || 0}권
-        </QuantityButton>
-        <ReserveButton>예약</ReserveButton>
-      </BottomNavBar>
     </PageWrapper>
   );
 };
@@ -174,34 +152,17 @@ const BackButton = styled.button`
   cursor: pointer;
 `;
 
-const BottomNavBar = styled.footer`
-  width: 100%;
-  max-width: 600px;
-  height: 80px;
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  box-sizing: border-box;
-
-  position: fixed;
-  bottom: 0;
-  background-color: #fff;
-  border-top: 1px solid #f0f0f0;
-  z-index: 10;
-
-  left: 50%;
-  transform: translateX(-50%);
-`;
-
 const ContentContainer = styled.main`
   width: 100%;
-  padding-top: 60px;
-  padding-bottom: 100px;
+  padding-top: 40px;
+  padding-bottom: 40px;
   box-sizing: border-box;
   flex: 1;
   overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const BookImageSection = styled.div`
@@ -227,23 +188,43 @@ const InfoWrapper = styled.div`
   padding: 0 20px;
 `;
 
+const TitleHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+`;
+
 const Title = styled.h1`
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 12px;
+  flex: 1;
+  min-width: 0; /* flex 아이템의 크기가 줄어들 수 있도록 설정 */
 `;
 
 const InfoList = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 8px;
   color: #6f6f6f;
+  font-size: 12px;
+`;
+
+const QuantityBadge = styled.span`
+  background-color: #b5e8cd;
+  color: black;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 20px;
   font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 4px;
 `;
 
 const InfoItem = styled.span`
-  padding-right: 8px;
-  border-right: 1px solid #e0e0e0;
   &:last-child {
     border-right: none;
   }
@@ -254,20 +235,20 @@ const OriginalPrice = styled.del`
 `;
 
 const PriceInfo = styled.p`
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 14px;
+  font-weight: 500;
   margin-top: 16px;
 `;
 
 const IsbnInfo = styled.p`
   font-size: 14px;
+  font-weight: 500;
   color: black;
   margin-top: 8px;
 `;
 
 const Divider = styled.hr`
   border: none;
-  border-top: 1px solid #f0f0f0;
   margin: 32px 0;
 `;
 
@@ -276,66 +257,18 @@ const SummarySection = styled.section`
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
 `;
 
 const SummaryText = styled.p`
-  font-size: 16px;
+  font-size: 12px;
   line-height: 1.6;
   color: black;
-  text-indent: 1em;
+  text-indent: 0.6em;
   overflow: hidden;
 `;
-
-const ActionButton = styled.button`
-  height: 52px;
-  border-radius: 8px;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-`;
-
-const QuantityButton = styled(ActionButton)`
-  flex-basis: 80px;
-  background-color: #b5e8cd;
-  border-radius: 30px;
-  font-size: 14px;
-  color: black;
-`;
-
-const ReserveButton = styled(ActionButton)`
-  flex: 1;
-  background-color: #11b55f;
-  font-size: 24px;
-  color: white;
-`;
-
-// const LibraryItem = styled.div`
-//   border: 1px solid #f0f0f0;
-//   border-radius: 8px;
-//   padding: 16px;
-//   margin-bottom: 12px;
-// `;
-
-// const LibraryName = styled.h3`
-//   font-size: 16px;
-//   font-weight: 600;
-//   margin: 0 0 8px 0;
-// `;
-
-// const LibraryInfo = styled.div`
-//   display: flex;
-//   gap: 12px;
-//   font-size: 14px;
-//   color: #555;
-
-//   .available {
-//     color: #11b55f;
-//     font-weight: 500;
-//   }
-// `;
 
 const StatusContainer = styled.div`
   display: flex;

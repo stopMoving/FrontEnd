@@ -10,7 +10,7 @@ const WelcomePage = () => {
   const userNickName = user?.nickname;
 
   const handleNavigate = () => {
-    navigate("/login");
+    navigate("/ai/preference");
   };
 
   return (

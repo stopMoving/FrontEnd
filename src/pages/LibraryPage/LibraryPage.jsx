@@ -20,37 +20,6 @@ import useUserStore from "../../store/useUserStore";
 import useLibrarySidebarStore from "../../store/useLibrarySidebarStore";
 import { useToaster } from "../../store/useToasterStore";
 
-const mockRecommendedBooks = [
-  {
-    id: 201,
-    isbn: "mock-isbn-201",
-    title: "취향 맞춤 책 1",
-    author: "저자1",
-    imageUrl: "https://placehold.co/100x140?text=추천1",
-  },
-  {
-    id: 202,
-    isbn: "mock-isbn-202",
-    title: "취향 맞춤 책 2",
-    author: "저자2",
-    imageUrl: "https://placehold.co/100x140?text=추천2",
-  },
-  {
-    id: 203,
-    isbn: "mock-isbn-203",
-    title: "취향 맞춤 책 3",
-    author: "저자3",
-    imageUrl: "https://placehold.co/100x140?text=추천3",
-  },
-  {
-    id: 204,
-    isbn: "mock-isbn-204",
-    title: "취향 맞춤 책 4",
-    author: "저자4",
-    imageUrl: "https://placehold.co/100x140?text=추천4",
-  },
-];
-
 const LibraryPage = () => {
   const { libraryId } = useParams();
   const navigate = useNavigate();
@@ -88,31 +57,34 @@ const LibraryPage = () => {
       return;
     }
 
-    const loadBookList = async () => {
+    const loadData = async () => {
       try {
         setIsLoading(true);
         setError(null);
 
-        const response = await axios.get(`library/booklist/${libraryId}`);
-        console.log("서버로부터 받은 실제 데이터:", response.data);
-        setSharedBooks(response.data);
+        // Promise.all을 사용해 두 API를 동시에 호출
+        const [sharedBooksResponse, recommendedBooksResponse] =
+          await Promise.all([
+            axios.get(`library/booklist/${libraryId}`),
+            axios.get("preferences/recommendations/", {
+              params: { mode: "combined" },
+            }),
+          ]);
 
-        setRecommendedBooks(mockRecommendedBooks);
+        setSharedBooks(sharedBooksResponse.data);
+        setRecommendedBooks(recommendedBooksResponse.data.results);
       } catch (err) {
-        if (err.response && err.response.data && err.response.data.message) {
-          setError(err.response.data.message);
-        } else {
-          setError("책 목록을 불러오는 중 문제가 발생했습니다.");
-        }
-        console.error("Failed to fetch book list:", err);
+        console.error("데이터 로딩 실패:", err);
+        setError("데이터를 불러오는 중 문제가 발생했습니다.");
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadBookList();
-  }, [libraryId, libraryName, navigate]);
+    loadData();
+  }, [libraryId, libraryName]);
 
+  //즐겨찾기 함수
   const handleToggleFavorite = async () => {
     setIsTogglingFavorite(true);
     try {
@@ -188,20 +160,20 @@ const LibraryPage = () => {
             <CenteredSwiperWrapper>
               <Swiper
                 modules={[Navigation, Autoplay, Mousewheel]}
-                // autoplay={{
-                //   delay: 3000,
-                //   disableOnInteraction: false,
-                // }}
                 slidesPerView={3}
                 spaceBetween={15}
                 centeredSlides={true}
                 navigation={true}
                 initialSlide={1}
               >
-                {recommendedBooks.map((book, index) => (
-                  <SwiperSlide key={`rec-${index}`} style={{ width: "120px" }}>
+                {recommendedBooks.map((book) => (
+                  <SwiperSlide key={book.isbn} style={{ width: "120px" }}>
                     <BookCard
-                      book={book}
+                      book={{
+                        title: book.title,
+                        author: book.author,
+                        imageUrl: book.cover_url,
+                      }}
                       onClick={() => navigate(`/book/${book.isbn}`)}
                     />
                   </SwiperSlide>
@@ -213,9 +185,11 @@ const LibraryPage = () => {
 
         <SearchPlaceholder
           onClick={() =>
-            navigate(`/library/${libraryId}/shared`, {
-              state: { name: libraryName },
-            })
+            navigate(
+              `/library/${libraryId}/shared?name=${encodeURIComponent(
+                libraryName
+              )}`
+            )
           }
         >
           <SearchIcon fill={"#6F6F6F"} width={20} height={20} />
@@ -225,7 +199,12 @@ const LibraryPage = () => {
         <Section>
           <SectionHeader>
             <SectionTitle>{libraryName}에 나눔된 모든 책</SectionTitle>
-            <MoreLink to={`/library/${libraryId}/shared`}>
+            <MoreLink
+              to={{
+                pathname: `/library/${libraryId}/shared`,
+                search: `?name=${encodeURIComponent(libraryName)}`,
+              }}
+            >
               더보기 <ChevronRightIcon width={16} height={16} />
             </MoreLink>
           </SectionHeader>

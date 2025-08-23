@@ -29,6 +29,8 @@ import AiRecommendPage from "./pages/AiPage/AiRecommendPage";
 import NotificationPage from "./pages/NotificationPage";
 import DonateHistoryPanel from "./components/mypageComponents/DonateHistoryPanel";
 import LoadingPage from "./pages/LoadingPage.jsx";
+import LandingPage from "./pages/RegisterPage/LandingPage";
+import AiPreferencePage from "./pages/AiPage/AiPreferencePage";
 
 const PrivateRoutes = () => {
   const { user, isInitialized } = useUserStore();
@@ -37,7 +39,7 @@ const PrivateRoutes = () => {
     return <div>로딩 중...</div>;
   }
 
-  return user ? <Outlet /> : <Navigate to="/login" />;
+  return user ? <Outlet /> : <Navigate to="/landing" />;
 };
 
 const App = () => {
@@ -61,6 +63,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/welcome" element={<WelcomePage />} />
+        <Route path="/landing" element={<LandingPage />} />
 
         <Route element={<PrivateRoutes />}>
           <Route path="/" element={<MainPage />} />
@@ -73,6 +76,7 @@ const App = () => {
           <Route path="/library/:libraryId" element={<LibraryPage />} />
           <Route path="/notifications" element={<NotificationPage />} />
           <Route path="/ai/recommand" element={<AiRecommendPage />} />
+          <Route path="/ai/preference" element={<AiPreferencePage />} />
           <Route path="/book/:isbn" element={<BookDetailPage />} />
           <Route
             path="/library/:libraryId/shared"

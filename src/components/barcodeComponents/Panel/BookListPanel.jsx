@@ -6,6 +6,7 @@ export default function BookListPanel({
   mode,
   title,
   description,
+  quantity,
   items=[],
   buttonLabel,
   disabled = false,
@@ -51,9 +52,9 @@ export default function BookListPanel({
                 </QuantityWrap>
 
                 {mode === "give" ? (
-                  <Point>500P</Point>
+                  <Point>{500 * book.quantity}P</Point>
                 ) : (
-                <Price>{book?.price || "2000"}원</Price>
+                <Price>{book?.price * book.quantity || "2000"}원</Price>
                 )}
               </SubWrap>
             </BookInfoWrap>
@@ -145,6 +146,8 @@ const BookInfoWrap = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-width: 0;
   gap: 4px;
 `;
 
@@ -155,7 +158,7 @@ const Title = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 75%;
+  // max-width: 75%;
   width: 100%;
 `;
 
@@ -177,6 +180,8 @@ const SubWrap = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
+  flex: 1;
+  min-width: 0;
   align-items: center;
   justify-content: space-between;
 `;
@@ -211,12 +216,14 @@ const Point = styled.div`
   font-size: 16px;
   font-weight: 600;
   color: #000000;
+  text-align: right;
 `;
 
 const Price = styled.div`
   font-size: 16px;
   font-weight: 600;
   color: #000000;
+  text-align: right;
 `;
 
 const AddButton = styled.button`

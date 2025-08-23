@@ -95,7 +95,7 @@ export default function SearchPage() {
               </BookInfoWrap>
             </BookWrap>
           ))
-        ) : isSearched ? (
+        ) : isSearched > 0 ? (
           <MessageWrap>
             <SearchIcon width={72} height={72} />
             <Notification>
@@ -103,25 +103,21 @@ export default function SearchPage() {
               북작북작에 나눔되지 않았습니다.
             </Notification>
           </MessageWrap>
-        ) : (
-          <MessageWrap>
-            <Notification>검색어를 입력해 주세요.</Notification>
-          </MessageWrap>
-        )}
+        ) : null
+        }
       </BookListWrap>
     </PageWrap>
   );
 }
 
-// 두 줄로 나오는 거 수정
 const MessageWrap = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin: 100px;
-  gap: 30px;
+  margin-top: 60px;
+  gap: 16px;
 `;
 
 const Notification = styled.div`
@@ -137,12 +133,11 @@ const Notification = styled.div`
 const PageWrap = styled.div`
   width: 100%;
   max-width: 600px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  // justify-content: center;
-  margin: 0 auto;
-  background: #ffffff;
-  padding: 20px 20px 0;
+  background: #FFFFFF;
+  padding: 20px 20px 12px;
 `;
 
 const Header = styled.div`
@@ -152,6 +147,7 @@ const Header = styled.div`
   grid-template-columns: 56px 1fr 56px;
   align-items: center;
   margin-bottom: 8px;
+  flex-shrink: 0;
 `;
 
 const BackButton = styled.button`
@@ -177,6 +173,7 @@ const SearchContainer = styled.div`
   border-radius: 20px;
   padding: 4px 16px;
   margin-bottom: 16px;
+  flex-shrink: 0;
 `;
 
 const SearchInput = styled.input`
@@ -199,9 +196,8 @@ const BookListWrap = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
-
   overflow: hidden;
   overflow-y: auto;
 `;

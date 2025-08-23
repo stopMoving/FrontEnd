@@ -1,15 +1,18 @@
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import SelectPanel from "../../components/barcodeComponents/Panel/SelectPanel";
+import useBookStore from "../../store/useBookStore";
 
 export default function SelectPage() {
-  const { mode } = useParams(); // 'give' | 'take'
+  const { mode } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { clearScannedBooks } = useBookStore();
 
   const libraryId = searchParams.get("branchId");
 
   const onBack = () => {
-    navigate(`/barcode/library/select/${mode}`);
+    clearScannedBooks();
+    navigate(`/`);
   }
 
   const copy = mode === "give"

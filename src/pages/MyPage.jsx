@@ -149,7 +149,6 @@ const Reward = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  width: 71px;
   height: 35px;
   border-radius: 20px;
   padding: 0 8px;
@@ -168,12 +167,13 @@ const ReportWrap = styled.div`
 
 const TabContainer = styled.div`
   display: flex;
-  justify-content: space-around;
+  // justify-content: space-around;
   border-bottom: 1px solid #6F6F6F;
   flex-shrink: 0;
 `;
 
 const TabButton = styled.button`
+  flex: 1;
   position: relative;
   padding: 8px 0;
   font-family: inherit;
@@ -184,6 +184,7 @@ const TabButton = styled.button`
   border: none;
 
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 8px;
 
@@ -203,7 +204,7 @@ const TabButton = styled.button`
         transform: translateX(-50%);
         bottom: -2px;
         height: 3.5px;
-        width: clamp(72px, 31vw, 140px); /* 가운데 짧은 밑줄 */
+        width: 100%;
         background: #11B55F;
         border-radius: 999px;
       }
@@ -213,5 +214,6 @@ const TabButton = styled.button`
 const ContentWrap = styled.div`
   flex-grow: 1;
   overflow-y: auto;
-  padding-bottom: 20px;
+  overflow-x: hidden;
+  padding-bottom: 45px;
 `;

@@ -186,9 +186,9 @@ const SearchInput = styled.input`
   color: #6f6f6f;
   cursor: pointer;
   padding: 8px;
-  
+
   &:focus {
-  outline: none;
+    outline: none;
   }
 `;
 

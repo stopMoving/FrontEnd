@@ -19,10 +19,6 @@ const LoginPage = () => {
   const { login, user } = useUserStore();
   const toast = useToaster();
 
-  const handleRegister = () => {
-    navigate("/register");
-  };
-
   function handleChange(e) {
     const { name, value } = e.target;
 
@@ -35,19 +31,20 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login(values);
-      navigate("/"); // 로그인 성공 시 이동할 페이지
+      const loggedInUser = await login(values);
+
+      // is_survey 값 확인
+      if (loggedInUser && !loggedInUser.is_survey) {
+        navigate("/ai/preference");
+      } else {
+        // is_survey가 true이거나 user 정보가 없으면 메인 페이지로 이동
+        navigate("/");
+      }
     } catch (error) {
       toast("warn", "아이디 또는 비밀번호가 올바르지 않습니다.");
       console.error("로그인 실패:", error);
     }
   };
-
-  useEffect(() => {
-    if (user) {
-      navigate("/");
-    }
-  }, [user, navigate]);
 
   return (
     <>
@@ -79,6 +76,7 @@ const LoginPage = () => {
           />
           <div style={{ padding: 8 }}></div>
           <Button>로그인</Button>
+          <div style={{ padding: 0 }}></div>
           <HorizontalRule></HorizontalRule>
         </StyledForm>
         <BottomContainer style={{ textAlign: "center" }}>

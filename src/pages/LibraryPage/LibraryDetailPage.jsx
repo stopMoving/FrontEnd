@@ -4,12 +4,12 @@ import styled from "styled-components";
 import axios from "../../lib/axios";
 
 // 컴포넌트 및 아이콘 임포트
-import KakaoMap from "../../components/mapComponents/KakaoMap";
-import LibraryMarker from "../../components/mapComponents/LibraryMarker";
 import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
 import { ReactComponent as InfoIcon } from "../../assets/icons/infoIcon.svg";
 import { ReactComponent as InstaGreenIcon } from "../../assets/icons/instaGreen.svg";
-import instagramIcon from "../../assets/images/instaLogo.png";
+
+// 지도 컴포넌트 호출
+import StaticKakaoMap from "../../components/mapComponents/StaticKakaoMap";
 
 const LibraryDetailPage = () => {
   const { id } = useParams();
@@ -24,7 +24,8 @@ const LibraryDetailPage = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`library/detail/${id}`);
+        const response = await axios.get(`library/detail/${id}/`);
+        console.log("API 응답 데이터: ", response.data);
         setLibrary(response.data);
       } catch (err) {
         setError("도서관 정보를 불러오는 데 실패했습니다.");
@@ -82,11 +83,11 @@ const LibraryDetailPage = () => {
 
         <MapLink href={kakaoMapUrl} target="_blank" rel="noopener noreferrer">
           <MapContainer>
-            <KakaoMapWrapper>
-              <KakaoMap center={{ lat: library.lat, lng: library.long }}>
-                <LibraryMarker library={library} />
-              </KakaoMap>
-            </KakaoMapWrapper>
+            <StaticKakaoMap
+              lat={library.lat}
+              lng={library.long}
+              libraryName={library.name}
+            />
             <MapCaption>지도를 클릭하시면 카카오 지도로 이동합니다.</MapCaption>
           </MapContainer>
         </MapLink>
@@ -236,15 +237,6 @@ const MapContainer = styled.div`
   width: 100%;
   height: 220px;
   overflow: hidden;
-`;
-
-const KakaoMapWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 10;
 `;
 
 const MapCaption = styled.div`

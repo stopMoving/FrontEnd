@@ -21,6 +21,7 @@ import { ReactComponent as MainLogo } from "../assets/icons/logo.svg";
 import { ReactComponent as BellIconActive } from "../assets/icons/bellNoti.svg";
 
 import { useEffect, useState } from "react";
+import LoadingPage from "./LoadingPage";
 
 const bannerData = [
   {
@@ -166,7 +167,7 @@ const MainPage = () => {
           </Title2>
           <HorizontalScroll>
             {isLoading ? (
-              <StatusText>추천 도서를 불러오는 중...</StatusText>
+              <LoadingPage isCompact={true} />
             ) : error ? (
               <StatusText>{error}</StatusText>
             ) : recommendedBooks.length > 0 ? (

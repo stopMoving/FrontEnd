@@ -10,6 +10,7 @@ import { ReactComponent as InstaGreenIcon } from "../../assets/icons/instaGreen.
 
 // 지도 컴포넌트 호출
 import StaticKakaoMap from "../../components/mapComponents/StaticKakaoMap";
+import LoadingPage from "../LoadingPage";
 
 const LibraryDetailPage = () => {
   const { id } = useParams();
@@ -39,11 +40,7 @@ const LibraryDetailPage = () => {
   }, [id]);
 
   if (loading) {
-    return (
-      <PageWrapper>
-        <StatusContainer>로딩 중...</StatusContainer>
-      </PageWrapper>
-    );
+    return <LoadingPage />;
   }
   if (error) {
     return (

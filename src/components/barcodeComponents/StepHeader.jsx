@@ -88,7 +88,6 @@ const Step = styled.div`
         transform: translateX(-50%);
         bottom: -2px;
         height: 3.5px;
-        // width: clamp(72px, 31vw, 140px); /* 가운데 짧은 밑줄 */
         width: 100%;
         background: #11B55F;
         border-radius: 999px;

@@ -87,14 +87,7 @@ const App = () => {
 
           <Route path="search/book" element={<SearchPage />} />
           <Route path="search/book-detail" element={<BookInfoPage />} />
-          <Route
-            path="barcode/library/select/:mode"
-            element={<LibrarySelectPage />}
-          />
-          <Route
-            path="barcode/library/select/:mode"
-            element={<LibrarySelectPage />}
-          />
+          <Route path="barcode/library/select/:mode" element={<LibrarySelectPage />} />
           <Route path="barcode/select/:mode" element={<SelectPage />} />
           <Route path="barcode/scan/:mode" element={<ScanPage />} />
           <Route path="barcode/booklist/:mode" element={<BookListPage />} />

@@ -136,10 +136,8 @@ const PageWrap = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  // justify-content: center;
-  margin: 0 auto;
   background: #FFFFFF;
-  padding: 20px 20px 0;
+  padding: 20px 20px 12px;
 `;
 
 const Header = styled.div`
@@ -149,6 +147,7 @@ const Header = styled.div`
   grid-template-columns: 56px 1fr 56px;
   align-items: center;
   margin-bottom: 8px;
+  flex-shrink: 0;
 `;
 
 const BackButton = styled.button`
@@ -174,6 +173,7 @@ const SearchContainer = styled.div`
   border-radius: 20px;
   padding: 4px 16px;
   margin-bottom: 16px;
+  flex-shrink: 0;
 `;
 
 const SearchInput = styled.input`
@@ -196,8 +196,10 @@ const BookListWrap = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
+  overflow: hidden;
+  overflow-y: auto;
 `;
 
 const BookWrap = styled.div`

@@ -189,9 +189,9 @@ const SearchInput = styled.input`
   color: #6f6f6f;
   cursor: pointer;
   padding: 8px;
-  
+
   &:focus {
-  outline: none;
+    outline: none;
   }
 `;
 
@@ -201,6 +201,9 @@ const BookListWrap = styled.div`
   flex-direction: column;
   justify-content: center;
   gap: 8px;
+
+  overflow: hidden;
+  overflow-y: auto;
 `;
 
 const BookWrap = styled.div`

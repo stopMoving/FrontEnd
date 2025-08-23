@@ -332,6 +332,9 @@ const BannerWrapper = styled.div`
 
   // 아이폰 유저 터치 길게 누르는거 방지
   -webkit-user-drag: none;
+
+  // 부모요소로부터 y스크롤 방지
+  overscroll-behavior-y: contain;
 `;
 
 const GreenTitle = styled.span`

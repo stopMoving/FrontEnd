@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
+import { useNavigate } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/navigation";
 import axios from "../../lib/axios";
@@ -25,6 +26,7 @@ const AiRecommendPage = () => {
   const user = useUserStore((state) => state.user);
   const userNickName = user?.nickname;
 
+  const navigate = useNavigate();
   // 큐레이션 state
   const [activeBook, setActiveBook] = useState(null);
   const [books, setBooks] = useState([]);
@@ -126,11 +128,16 @@ const AiRecommendPage = () => {
             <PlaceholderText>책을 찾고 있어요...</PlaceholderText>
           ) : similarBooks.length > 0 ? (
             similarBooks.slice(0, 3).map((book) => (
-              <BookItem key={book.isbn}>
+              <BookItem
+                key={book.isbn}
+                onClick={() => navigate(`/search/book/info/${book.isbn}`)}
+              >
                 <BookItemImage src={book.cover_url} alt={book.title} />
                 <BookItemInfo>
                   <BookItemTitle>{book.title}</BookItemTitle>
-                  <BookItemAuthor>{book.author}</BookItemAuthor>
+                  <BookItemAuthor>
+                    {`${book.author.split(")")[0].trim()})`}
+                  </BookItemAuthor>
                 </BookItemInfo>
               </BookItem>
             ))
@@ -146,7 +153,9 @@ const AiRecommendPage = () => {
 
       <DisplaySection>
         {activeBook && (
-          <ActiveBookDisplay>
+          <ActiveBookDisplay
+            onClick={() => navigate(`/search/book/info/${activeBook.isbn}`)}
+          >
             <ActiveBookImage
               src={activeBook.cover_url}
               alt={activeBook.title}
@@ -215,13 +224,6 @@ const BannerText = styled.h1`
   color: black;
 `;
 
-const PlaceholderSection = styled.div`
-  padding: 40px 20px;
-  text-align: center;
-  color: #aaa;
-  font-size: 12px;
-`;
-
 const CurationSection = styled.section`
   padding: 100px 20px 30px;
   margin: 0 20px;
@@ -267,6 +269,7 @@ const ActiveBookDisplay = styled.div`
   flex-direction: column;
   align-items: center;
   margin-bottom: 24px;
+  cursor: pointer;
 `;
 const ActiveBookImage = styled.img`
   width: 135px;
@@ -354,7 +357,7 @@ const CategoryTab = styled.button`
   background-color: white;
   border: ${(props) =>
     props.isActive ? "1px solid #000" : "1px solid #DEDEDE"};
-  color: ${(props) => (props.isActive ? "#000" : "#555")};
+  color: ${(props) => (props.isActive ? "#000" : "#6F6F6F")};
   font-size: 12px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
@@ -374,33 +377,48 @@ const BookItem = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 16px;
+  cursor: pointer;
 `;
 
 const BookItemImage = styled.img`
-  width: 79px;
+  min-width: 79px;
+  max-width: 80px;
   height: 101px;
   border-radius: 4px;
   background-color: #f0f0f0;
   margin-right: 16px;
   object-fit: cover;
+  border: 1px solid #dedede;
 `;
 
-const BookItemInfo = styled.div``;
+const BookItemInfo = styled.div`
+  width: calc(100% - 95px);
+`;
 
 const BookItemTitle = styled.h3`
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 2줄로 제한 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 40px;
 `;
 
 const BookItemAuthor = styled.p`
   font-size: 14px;
-  color: #888;
+  color: #868686;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const PlaceholderText = styled.p`
   text-align: center;
-  color: #888;
+  color: ##868686;
   font-size: 16px;
   padding: 80px 20px;
 `;

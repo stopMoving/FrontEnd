@@ -24,7 +24,7 @@ const bannerData = [
   {
     id: 1,
     title: "집에서 잠든 책,\n우리 동네 도서관으로!",
-    description: "상태 좋은 책 기증하고, \n지역화폐 리워드까지 받아가세요",
+    description: "상태 좋은 책 기증하고, \n포인트와 리워드까지 받아가세요",
     icon: Library1,
   },
   {
@@ -332,6 +332,9 @@ const BannerWrapper = styled.div`
 
   // 아이폰 유저 터치 길게 누르는거 방지
   -webkit-user-drag: none;
+
+  // 부모요소로부터 y스크롤 방지
+  overscroll-behavior-y: contain;
 `;
 
 const GreenTitle = styled.span`

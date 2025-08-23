@@ -351,8 +351,7 @@ const CategoryTab = styled.button`
   padding: 8px 16px;
   margin-right: 8px;
   border-radius: 20px;
-  border: 1px solid #dedede;
-  background-color: "white";
+  background-color: white;
   border: ${(props) =>
     props.isActive ? "1px solid #000" : "1px solid #DEDEDE"};
   color: ${(props) => (props.isActive ? "#000" : "#555")};

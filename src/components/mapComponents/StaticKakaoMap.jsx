@@ -7,49 +7,70 @@ import markerIcon from "../../assets/images/mapMarker.png";
 
 // 위도, 경도, 도서관 이름 받기
 const StaticKakaoMap = ({ lat, lng, libraryName }) => {
-  // 지도 담기 DOM 레퍼런스 생성
-  console.log("지도 컴포넌트 Props 수신: ", { lat, lng, libraryName });
   const mapContainer = useRef(null);
 
   useEffect(() => {
-    console.log("useEffect 실행, 지도 컨테이너:", mapContainer.current);
-    // 카카오 SDK 먼저 찾고
-    if (!window.kakao || !window.kakao.maps) {
-      console.error("카카오맵 SDK가 로드되지 않았습니다.");
-      return;
-    }
+    const loadKakaoMapScript = () => {
+      if (window.kakao && window.kakao.maps) {
+        initMap();
+        return;
+      }
+      const existingScript = document.querySelector(
+        `script[src*="//dapi.kakao.com/v2/maps/sdk.js"]`
+      );
+      if (existingScript) {
+        existingScript.onload = () => initMap();
+        return;
+      }
 
-    // 지도 그리기
-    kakao.maps.load(() => {
-      console.log("4: 지도 생성 로직 진입");
-      const mapOption = {
-        center: new kakao.maps.LatLng(lat, lng),
-        level: 3,
-        draggable: false,
-        scrollwheel: false,
-        disableDoubleClickZoom: true,
+      const script = document.createElement("script");
+      script.async = true;
+      const apiKey = process.env.REACT_APP_KAKAO_MAP_API_KEY;
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${apiKey}&libraries=services,clusterer&autoload=false`;
+
+      // onload 핸들러를 먼저 등록
+      script.onload = () => {
+        initMap();
+      };
+      // onerror 핸들러도 등록
+      script.onerror = () => {
+        console.error("카카오맵 스크립트를 로드하는 데 실패했습니다.");
       };
 
-      // 지도 생성
-      const map = new kakao.maps.Map(mapContainer.current, mapOption);
+      // 핸들러 등록 후 문서에 추가
+      document.head.appendChild(script);
+    };
 
-      // 마커 만들기
-      const imageSrc = markerIcon; // 마커 이미지
-      const imageSize = new kakao.maps.Size(36, 36); // 마커사이즈
-      const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+    const initMap = () => {
+      kakao.maps.load(() => {
+        if (!mapContainer.current) return;
 
-      // 마커 위치
-      const markerPosition = new kakao.maps.LatLng(lat, lng);
+        const mapOption = {
+          center: new kakao.maps.LatLng(lat, lng),
+          level: 4,
+          draggable: false,
+          scrollwheel: false,
+          disableDoubleClickZoom: true,
+        };
+        const map = new kakao.maps.Map(mapContainer.current, mapOption);
 
-      // 마커 생성 및 지도에 표시
-      new kakao.maps.Marker({
-        position: markerPosition,
-        image: markerImage, // 커스텀 마커 이미지 설정
-        title: libraryName, // 마커에 마우스를 올리면 표시될 타이틀
-        map: map, // 마커를 표시할 지도 객체
+        const imageSrc = markerIcon;
+        const imageSize = new kakao.maps.Size(36, 36);
+        const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+        const markerPosition = new kakao.maps.LatLng(lat, lng);
+
+        new kakao.maps.Marker({
+          position: markerPosition,
+          image: markerImage,
+          title: libraryName,
+          map: map,
+        });
       });
-    });
-    // 디펜던시에 위도 경도 도서관 이름
+    };
+
+    if (lat && lng) {
+      loadKakaoMapScript();
+    }
   }, [lat, lng, libraryName]);
 
   return <MapDiv ref={mapContainer}></MapDiv>;

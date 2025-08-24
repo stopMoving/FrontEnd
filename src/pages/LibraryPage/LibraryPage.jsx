@@ -167,14 +167,22 @@ const LibraryPage = () => {
                 initialSlide={1}
               >
                 {recommendedBooks.map((book) => (
-                  <SwiperSlide key={book.isbn} style={{ width: "120px" }}>
+                  <SwiperSlide
+                    key={book.isbn}
+                    style={{ width: "120px" }}
+                    onClick={() =>
+                      navigate(`/library/${libraryId}/book/${book.isbn}`)
+                    }
+                  >
                     <BookCard
                       book={{
                         title: book.title,
                         author: book.author,
                         imageUrl: book.cover_url,
                       }}
-                      onClick={() => navigate(`/book/${book.isbn}`)}
+                      onClick={() =>
+                        navigate(`/library/${libraryId}/book/${book.isbn}`)
+                      }
                     />
                   </SwiperSlide>
                 ))}
@@ -212,7 +220,9 @@ const LibraryPage = () => {
             {sharedBooks.map((book, index) => (
               <BookCardWrapper
                 key={`shared-${index}`}
-                onClick={() => navigate(`/book/${book.isbn}`)}
+                onClick={() =>
+                  navigate(`/library/${libraryId}/book/${book.isbn}`)
+                }
               >
                 <BookCard book={{ ...book, imageUrl: book.cover }} />
               </BookCardWrapper>
@@ -344,7 +354,7 @@ const SearchPlaceholder = styled.div`
   color: #6f6f6f;
   font-size: 16px;
   font-weight: 600;
-  margin-bottom: 32px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
   flex-start: left;

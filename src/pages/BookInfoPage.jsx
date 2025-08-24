@@ -7,77 +7,44 @@ import { bookAPI } from "../lib/api";
 import LoadingPage from "./LoadingPage";
 
 export default function BookInfoPage() {
-    const navigate = useNavigate();
-    const {isbn} = useParams();
-    const [book, setBook] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const { location, isLocationLoading, fetchLocation } = useUserStore();
+  const navigate = useNavigate();
+  const { isbn } = useParams();
+  const [book, setBook] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const { location, isLocationLoading } = useUserStore();
 
-    const onBack = () => {
-        navigate(-1);
+  const onBack = () => {
+    navigate(-1);
+  };
+
+  const fetchBookInfo = async (bookIsbn, lat, lng) => {
+    setLoading(true);
+    try {
+      const data = await bookAPI.getBookInfoByISBN(bookIsbn, lat, lng);
+      console.log("Received Book Data: ", data);
+
+      setBook({
+        ...data,
+        libraries: data?.libraries || [],
+      });
+    } catch (e) {
+      console.error("도서 정보 조회 실패: ", e);
+      alert(e.message || "도서 정보를 불러오는 데 실패했습니다.");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const fetchBookInfo = async (bookIsbn, lat, lng) => {
-      console.log("fetchBookInfo 시작:", { bookIsbn, lat, lng });
-        setLoading(true);
-        try {
-            const data = await bookAPI.getBookInfoByISBN(bookIsbn, lat, lng);
-            console.log("Received Book Data: ", data);
+  useEffect(() => {
+    if (isbn && location?.latitude != null && location?.longitude != null) {
+      fetchBookInfo(isbn, location.latitude, location.longitude);
+    }
+  }, [isbn, location?.latitude, location?.longitude]);
 
-            setBook({
-                ...data,
-                libraries: data?.libraries || [],
-            });
-        } catch (e) {
-            console.error("도서 정보 조회 실패: ", e);
-            alert(e.message || "도서 정보를 불러오는 데 실패했습니다.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // useEffect(() => {
-    //   fetchLocation();
-    // }, [fetchLocation]);
-
-    useEffect(() => {
-      console.log("useEffect 실행:", {
-      isbn,
-    location: location?.latitude,
-    longitude: location?.longitude,
-    isLocationLoading
-  });
-
-      if (isbn && location?.latitude != null && location?.longitude != null ) {
-        fetchBookInfo(isbn, location.latitude, location.longitude);
-      } else {
-        console.log("API 요청 조건이 충족되지 않았습니다.");
-      }
-    }, [isbn, location?.latitude, location?.longitude]);
-
-  if (isLocationLoading || loading) {
-    return (
-        <LoadingPage />
-    );
+  if (isLocationLoading) {
+    return <LoadingPage />;
   }
 
-  console.log("렌더링 상태:", { 
-  book, 
-  loading, 
-  isLocationLoading, 
-  location 
-});
-
-  // ✅ 로딩 완료 후, book 데이터가 없는 경우를 처리합니다.
-  if (!book && !loading && !isLocationLoading) {
-      return (
-          <PageWrap>
-              <Header><BackButton type="button" onClick={onBack}><BackIcon width={24} height={24} /></BackButton></Header>
-              <p>책 정보를 불러오는 데 실패했습니다. 잠시 후 다시 시도해주세요.</p>
-          </PageWrap>
-      );
-  }
-  
   return (
     <PageWrap>
       <Header>
@@ -85,57 +52,58 @@ export default function BookInfoPage() {
           <BackIcon width={24} height={24} />
         </BackButton>
       </Header>
-      
+
       <BookDetailWrap>
         <Cover>
-            {book?.cover_url
-            ? <CoverImg src={book?.cover_url} alt="" />
-            : <CoverFallback />}
+          {book?.cover_url ? (
+            <CoverImg src={book?.cover_url} alt="" />
+          ) : (
+            <CoverFallback />
+          )}
         </Cover>
 
         <BookInfoContainer>
-            <BookInfoWrap>
-              <Title>{book?.title || "-"}</Title>
+          <BookInfoWrap>
+            <Title>{book?.title || "-"}</Title>
 
-              <Meta>
-                <Sub>{book?.author || "-"}</Sub>
-                <Sub>{book?.publisher || "-"}</Sub>
-                <Sub>{book?.published_date || "-"}</Sub>
-                <Sub><del>{book?.regular_price || "-"}</del>원</Sub>
-              </Meta>
+            <Meta>
+              <Sub>{book?.author || "-"}</Sub>
+              <Sub>{book?.publisher || "-"}</Sub>
+              <Sub>{book?.published_date || "-"}</Sub>
+              <Sub>
+                <del>{book?.regular_price || "-"}</del>원
+              </Sub>
+            </Meta>
 
-              <Highlight>
-                <Info>{book?.sale_price || "-"} 원</Info>
-                <Info>ISBN 코드 : {book?.isbn || "-"}</Info>
-              </Highlight>
-            </BookInfoWrap>
+            <Highlight>
+              <Info>{book?.sale_price || "-"} 원</Info>
+              <Info>ISBN 코드 : {book?.isbn || "-"}</Info>
+            </Highlight>
+          </BookInfoWrap>
 
-            <LibraryInfoWrap>
-              <Desc>이 책이 있는 도서관</Desc>
+          <LibraryInfoWrap>
+            <Desc>이 책이 있는 도서관</Desc>
 
-              {book?.libraries.length > 0 && 
-                book.libraries.map((library) => (
-                  <LibraryWrap key={library.library_id}>
-                    <LibraryName>{library.name}</LibraryName>
-                    <LibraryInfo>
-                        <span>{library.distance_m}m</span>
-                        <span>수량: {library.available_books}권</span>
-                    </LibraryInfo>
-                  </LibraryWrap>
-                ))
-            }
-            </LibraryInfoWrap>
+            {book?.libraries.length > 0 &&
+              book.libraries.map((library) => (
+                <LibraryWrap key={library.library_id}>
+                  <LibraryName>{library.name}</LibraryName>
+                  <LibraryInfo>
+                    <span>{library.distance_m}m</span>
+                    <span>수량: {library.available_books}권</span>
+                  </LibraryInfo>
+                </LibraryWrap>
+              ))}
+          </LibraryInfoWrap>
 
-            <BookIntroduceWrap>
-              <Desc>책 소개</Desc>
-              <Introduce>{book?.description || "-"}</Introduce>
-            </BookIntroduceWrap>
-
+          <BookIntroduceWrap>
+            <Desc>책 소개</Desc>
+            <Introduce>{book?.description || "-"}</Introduce>
+          </BookIntroduceWrap>
         </BookInfoContainer>
       </BookDetailWrap>
-
-      </PageWrap>
-  )
+    </PageWrap>
+  );
 }
 
 const PageWrap = styled.div`
@@ -144,7 +112,7 @@ const PageWrap = styled.div`
   width: 100%;
   max-width: 600px;
   min-height: 100dvh;
-  background: #E6F4F0;
+  background: #e6f4f0;
 `;
 
 const Header = styled.div`
@@ -190,7 +158,7 @@ const CoverFallback = styled.div`
   width: 199px;
   height: 253px;
   border-radius: 5px;
-  background-color: #D9D9D9;
+  background-color: #d9d9d9;
   overflow: hidden;
   flex-shrink: 0;
 
@@ -205,7 +173,7 @@ const CoverFallback = styled.div`
 const BookInfoContainer = styled.div`
   width: 100%;
   padding: 8px 20px 0;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   flex: 1;
 `;
 
@@ -264,7 +232,7 @@ const Desc = styled.div`
 const LibraryWrap = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: #E6F4F0;
+  background-color: #e6f4f0;
   color: #000000;
   border-radius: 5px;
   padding: 20px;
@@ -300,4 +268,5 @@ const Introduce = styled.div`
   font-size: 12px;
   font-weight: 500;
   color: #000000;
+  text-indent: 0.6em;
 `;

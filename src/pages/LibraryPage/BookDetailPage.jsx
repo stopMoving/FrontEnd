@@ -6,17 +6,18 @@ import axios from "../../lib/axios";
 import LoadingPage from "../LoadingPage";
 
 const BookDetailPage = () => {
-  const { isbn } = useParams();
+  const { libraryId, isbn } = useParams();
   const navigate = useNavigate();
 
-  const [book, setBook] = useState(null);
+  const [bookData, setBookData] = useState(null);
+  const [bookCount, setBookCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const loadBookData = async () => {
       console.log("페이지에서 받은 ISBN:", isbn);
-      if (!isbn) {
+      if (!libraryId || !isbn) {
         setError("책 정보를 찾을 수 없습니다.");
         setIsLoading(false);
         return;
@@ -25,11 +26,17 @@ const BookDetailPage = () => {
       try {
         setIsLoading(true);
         setError(null);
-        const response = await axios.get(`books/by-isbn/${isbn}/`);
-        console.log(response.data);
-        setBook(response.data);
+        const response = await axios.get(`library/book-detail/${libraryId}/`, {
+          params: {
+            isbn: isbn,
+          },
+        });
+        const { data, book_cnt } = response.data;
+        setBookData(data);
+        setBookCount(book_cnt);
+        console.log(bookCount);
       } catch (err) {
-        if (err.response && err.response.data && err.response.data.detail) {
+        if (err.response?.data?.detail) {
           setError(err.response.data.detail);
         } else {
           setError("책 정보를 불러오는 데 실패했습니다.");
@@ -41,7 +48,7 @@ const BookDetailPage = () => {
     };
 
     loadBookData();
-  }, [isbn]);
+  }, [libraryId, isbn]);
 
   if (isLoading) return <LoadingPage />;
   if (error)
@@ -59,7 +66,7 @@ const BookDetailPage = () => {
         </StatusContainer>
       </PageWrapper>
     );
-  if (!book)
+  if (!bookData)
     return (
       <PageWrapper>
         <StatusContainer>책 정보가 없습니다.</StatusContainer>
@@ -70,42 +77,40 @@ const BookDetailPage = () => {
     <PageWrapper>
       <TopNavBar>
         <BackButton onClick={() => navigate(-1)}>
-          <BackIcon />
+          <BackIcon width={24} height={24} />
         </BackButton>
       </TopNavBar>
 
       <ContentContainer>
         <BookImageSection>
-          <BookImage src={book.cover_url} alt={book.title} />
+          <BookImage src={bookData.cover_url} alt={bookData.title} />
         </BookImageSection>
 
         <InfoWrapper>
           <TitleHeader>
-            <Title>{book.title}</Title>
-            <QuantityBadge>
-              수량 : {book.libraries[0]?.available_books || 0}권
-            </QuantityBadge>
+            <Title>{bookData.title}</Title>
+            <QuantityBadge>수량 : {bookCount || 0}권</QuantityBadge>
           </TitleHeader>
 
           <InfoList>
-            <InfoItem>{book.author}</InfoItem>
-            <InfoItem>{book.publisher}</InfoItem>
-            <InfoItem>{book.published_date}</InfoItem>
+            <InfoItem>{bookData.author}</InfoItem>
+            <InfoItem>{bookData.publisher}</InfoItem>
+            <InfoItem>{bookData.published_date}</InfoItem>
             <InfoItem>
               <OriginalPrice>
-                {book.regular_price.toLocaleString()}원
+                {bookData.regular_price.toLocaleString()}원
               </OriginalPrice>
             </InfoItem>
           </InfoList>
 
-          <PriceInfo>{book.sale_price.toLocaleString()}원</PriceInfo>
-          <IsbnInfo>ISBN 코드 : {book.isbn}</IsbnInfo>
+          <PriceInfo>{bookData.sale_price.toLocaleString()}원</PriceInfo>
+          <IsbnInfo>ISBN 코드 : {bookData.isbn}</IsbnInfo>
           <Divider />
 
           <SummarySection>
             <SectionTitle>책 소개</SectionTitle>
             <SummaryText>
-              {book.description || "제공된 책 소개가 없습니다."}
+              {bookData.description || "제공된 책 소개가 없습니다."}
             </SummaryText>
           </SummarySection>
         </InfoWrapper>
@@ -128,6 +133,7 @@ const PageWrapper = styled.div`
 
 const TopNavBar = styled.header`
   width: 100%;
+  padding: 0 20px;
   max-width: 600px;
   height: 60px;
   display: flex;
@@ -142,7 +148,6 @@ const TopNavBar = styled.header`
 `;
 
 const BackButton = styled.button`
-  margin-left: 16px;
   background: none;
   border: none;
   cursor: pointer;
@@ -150,7 +155,7 @@ const BackButton = styled.button`
 
 const ContentContainer = styled.main`
   width: 100%;
-  padding-top: 40px;
+  padding-top: 32px;
   padding-bottom: 40px;
   box-sizing: border-box;
   flex: 1;
@@ -164,7 +169,7 @@ const ContentContainer = styled.main`
 const BookImageSection = styled.div`
   width: 100%;
   background-color: #e6f4f0;
-  padding: 24px 0;
+  padding: 16px 0 0 16px;
   display: flex;
   justify-content: center;
   margin-bottom: 8px;

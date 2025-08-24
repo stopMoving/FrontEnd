@@ -92,7 +92,9 @@ const SharedBooksPage = () => {
               // key와 onClick 이벤트에 isbn 사용
               <BookListItem
                 key={book.isbn}
-                onClick={() => navigate(`/book/${book.isbn}`)}
+                onClick={() =>
+                  navigate(`/library/${libraryId}/book/${book.isbn}`)
+                }
               >
                 <BookImage src={book.cover} alt={book.title} />
                 <BookInfo>
@@ -147,7 +149,7 @@ const TopNavBar = styled.header`
 const BackButton = styled.button`
   position: absolute;
   left: 16px;
-  top: 50%;
+  top: 57%;
   transform: translateY(-50%);
   background: none;
   border: none;

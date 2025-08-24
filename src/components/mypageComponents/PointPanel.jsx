@@ -116,15 +116,26 @@ const Wrap = styled.div`
 `;
 
 const GoodsWrap = styled.div`
+  position: relative;
   height: 195px;
   border-radius: 5px;
   border: 1px solid #DEDEDE;
   transition: opacity 0.3s ease;
+  overflow: hidden;
 
   ${(props) => props.$disabled && `
-    opacity: 0.8;
     pointer-events: none;
-    filter: grayscale(100%);
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height : 100%;
+      background-color: #343434;
+      opacity: 0.8;
+      z-index: 1;
+      }
     `}
 `;
 
@@ -138,10 +149,6 @@ const GoodsImage = styled.img`
   height: 100%;
   object-fit: cover;
   transition: opacity 0.3 ease;
-
-  ${(props) => props.$disabled && `
-    opacity: 0.5;
-    `}
 `;
 
 const InfoWrap = styled.div`
@@ -160,8 +167,4 @@ const Title = styled.div`
   font-size: 16px;
   font-weight: 500;
   color: #000000;
-
-  ${(props) => props.$disabled && `
-      color: #868686;
-    `}
 `;

@@ -5,6 +5,8 @@ import { ReactComponent as SearchIcon } from "../assets/icons/search.svg";
 import useBookStore from "../store/useBookStore";
 import { useNavigate } from "react-router-dom";
 import { bookAPI } from "../lib/api";
+import LoadingPage from "./LoadingPage";
+import instance from "../lib/axios";
 
 export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -12,6 +14,7 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false);
   const [isSearched, setIsSearched] = useState(false);
   const { scannedBooks } = useBookStore();
+  const [recommendBook, setRecommendBook] = useState(null);
   const navigate = useNavigate();
 
   const onBack = () => {
@@ -22,18 +25,55 @@ export default function SearchPage() {
     navigate(`/search/book/info/${isbn}`);
   };
 
+  const fetchRecommendBook = async () => {
+    try {
+      const response = await instance.get("preferences/recommendations/", {
+        params: { mode: "combined" },
+      });
+
+      const recommendedBookData = response.data?.results;
+
+
+      if (
+        recommendedBookData &&
+        Array.isArray(recommendedBookData) &&
+        recommendedBookData.length > 0
+      ) {
+        const randomIndex = Math.floor(
+          Math.random() * recommendedBookData.length
+        );
+        setRecommendBook(recommendedBookData[randomIndex]);
+      } else {
+        setRecommendBook(null);
+      }
+    } catch (error) {
+      console.error("추천 도서 불러오기 실패: ", error);
+      setRecommendBook(null);
+    }
+  };
+
+
   useEffect(() => {
-    if (searchQuery.length > 0) {
+    if (searchQuery && searchQuery.trim().length > 0) {
       setLoading(true);
       const timer = setTimeout(async () => {
         try {
           const data = await bookAPI.searchBooks(searchQuery);
-          setBooks(data?.results || []);
+
+          const results = data?.results || [];
+          setBooks(results);
           setIsSearched(true);
+
+          if (Array.isArray(results) && results.length === 0) {
+            fetchRecommendBook();
+          } else {
+            setRecommendBook(null);
+          }
         } catch (error) {
           console.error("검색 오류: ", error);
           setBooks([]);
           setIsSearched(true);
+          fetchRecommendBook();
         } finally {
           setLoading(false);
         }
@@ -57,106 +97,105 @@ export default function SearchPage() {
       </Header>
 
       <SearchContainer>
-        <SearchIcon fill={"#6F6F6F"} width={20} height={20} />
+        <SearchIcon fill={"#6F6F6F"} width={21} height={21} />
         <SearchInput
           type="text"
           placeholder="책 제목을 검색하세요."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          autoFocus
         />
       </SearchContainer>
 
-      <BookListWrap>
-        {loading ? (
-          <MessageWrap>
-            <Notification>검색 중입니다...</Notification>
-          </MessageWrap>
-        ) : books.length > 0 ? (
-          books.map((book) => (
-            <BookWrap
-              key={book.isbn}
-              onClick={() => handleBookClick(book.isbn)}
-            >
-              <Cover>
-                {book?.cover_url ? (
-                  <CoverImg src={book?.cover_url} alt="" />
-                ) : (
-                  <CoverFallback />
-                )}
-              </Cover>
+      {loading ? (
+        <LoadingWrap>
+          <LoadingPage isCompact={true} />
+        </LoadingWrap>
+      ) : (
+        <BookListWrap>
+          {books.length > 0 ? (
+            books.map((book) => (
+              <BookWrap
+                key={book.isbn}
+                onClick={() => handleBookClick(book.isbn)}
+              >
+                <Cover>
+                  {book?.cover_url ? (
+                    <CoverImg src={book?.cover_url} alt="" />
+                  ) : (
+                    <CoverFallback />
+                  )}
+                </Cover>
 
-              <BookInfoWrap>
-                <Title>{book?.title || "-"}</Title>
+                <BookInfoWrap>
+                  <Title>{book?.title || "-"}</Title>
 
-                <Sub>{book?.author || "-"}</Sub>
-                <Sub>{book?.publisher || "-"}</Sub>
-                <Sub>{book?.published_date || "-"}</Sub>
-              </BookInfoWrap>
-            </BookWrap>
-          ))
-        ) : isSearched ? (
-          <MessageWrap>
-            <SearchIcon width={72} height={72} />
-            <Notification>
-              <span className="highlight">"{searchQuery}"</span> 은 <br />
-              북작북작에 나눔되지 않았습니다.
-            </Notification>
-          </MessageWrap>
-        ) : (
-          <MessageWrap>
-            <Notification>검색어를 입력해 주세요.</Notification>
-          </MessageWrap>
-        )}
-      </BookListWrap>
+                  <Sub>{book?.author || "-"}</Sub>
+                  <Sub>{book?.publisher || "-"}</Sub>
+                  <Sub>{book?.published_date || "-"}</Sub>
+                </BookInfoWrap>
+              </BookWrap>
+            ))
+          ) : isSearched ? (
+            <SubWrap>
+              <MessageWrap>
+                <SearchIcon width={72} height={72} />
+                <Notification>
+                  <span className="highlight">"{searchQuery}"</span> 은 <br />
+                  북작북작에 나눔되지 않았습니다.
+                </Notification>
+              </MessageWrap>
+
+              <RecommendWrap>
+                <Description>이 책은 어때요?</Description>
+                <RecommendBookWrap>
+                  {recommendBook ? (
+                    <RecommendBook
+                      src={recommendBook.cover_url}
+                      onClick={() => handleBookClick(recommendBook.isbn)}
+                    />
+                  ) : (
+                    <Notification>추천 도서를 불러올 수 없어요.</Notification>
+                  )}
+                </RecommendBookWrap>
+                <BookTitle>{recommendBook?.title}</BookTitle>
+              </RecommendWrap>
+            </SubWrap>
+          ) : null}
+        </BookListWrap>
+      )}
     </PageWrap>
   );
 }
 
-// 두 줄로 나오는 거 수정
-const MessageWrap = styled.div`
+const LoadingWrap = styled.div`
+  height: 100%;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  margin: 100px;
-  gap: 30px;
-`;
-
-const Notification = styled.div`
-  font-size: 18px;
-  font-weight: 500;
-  color: #6f6f6f;
-
-  .highlight {
-    color: #000000;
-  }
 `;
 
 const PageWrap = styled.div`
   width: 100%;
   max-width: 600px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  // justify-content: center;
-  margin: 0 auto;
   background: #ffffff;
-  padding: 38px 20px 0;
+  padding: 20px 20px 12px;
 `;
 
 const Header = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 16px;
   position: relative;
+  height: 52px;
+  display: grid;
+  grid-template-columns: 56px 1fr 56px;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-shrink: 0;
 `;
 
 const BackButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-
   background: none;
   border: 0;
   cursor: pointer;
@@ -165,11 +204,7 @@ const BackButton = styled.button`
 const SectionTitle = styled.div`
   font-size: 20px;
   font-weight: 500;
-  // margin: 0 auto;
-
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  text-align: center;
 `;
 
 const SearchContainer = styled.div`
@@ -183,26 +218,33 @@ const SearchContainer = styled.div`
   border-radius: 20px;
   padding: 4px 16px;
   margin-bottom: 16px;
+  flex-shrink: 0;
 `;
 
 const SearchInput = styled.input`
   width: 100%;
   height: 42px;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
   background-color: #e6f4f0;
   border: none;
-  color: #000000;
+  color: #6f6f6f;
   cursor: pointer;
-  padding: 8px 10px;
+  padding: 8px;
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const BookListWrap = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
+  overflow: hidden;
+  overflow-y: auto;
 `;
 
 const BookWrap = styled.div`
@@ -217,6 +259,7 @@ const BookWrap = styled.div`
 const Cover = styled.div`
   width: 79px;
   height: 101px;
+  flex-shrink: 0;
 `;
 
 const CoverImg = styled.img`
@@ -253,10 +296,88 @@ const Title = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: #000000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 75%;
+  width: 100%;
 `;
 
 const Sub = styled.div`
   font-size: 12px;
   font-weight: 400;
   color: #868686;
+`;
+
+const SubWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+`;
+
+const MessageWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-top: 60px;
+  gap: 16px;
+`;
+
+const Notification = styled.div`
+  font-size: 18px;
+  font-weight: 500;
+  color: #6f6f6f;
+
+  .highlight {
+    color: #000000;
+  }
+`;
+
+const RecommendWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 335px;
+  min-height: 193px;
+  background-color: #f4f4f4;
+
+  border-radius: 5px;
+  padding: 16px 0;
+`;
+
+const Description = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  color: #6f6f6f;
+
+  margin-bottom: 8px;
+`;
+
+const RecommendBookWrap = styled.div`
+  width: 106px;
+  height: 129px;
+  margin-bottom: 8px;
+`;
+
+const RecommendBook = styled.img`
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  object-fit: cover;
+`;
+
+const BookTitle = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 80%;
+  text-align: center;
 `;

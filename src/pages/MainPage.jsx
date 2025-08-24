@@ -71,8 +71,6 @@ const MainPage = () => {
   const handle나눔Button = () => navigate("/barcode/library/select/give");
   const handle데려가기Button = () => navigate("/barcode/library/select/take");
 
-  const handleLogout = () => {};
-
   useEffect(() => {
     const fetchRecommendations = async () => {
       try {
@@ -193,13 +191,6 @@ const MainPage = () => {
           </HorizontalScroll>
         </BookListSection>
         <Outlet />
-        <button
-          onClick={() => {
-            logout();
-          }}
-        >
-          임시 로그아웃
-        </button>
       </MainContainer>
 
       <BottomNavBar />
@@ -257,7 +248,7 @@ const SearchButton = styled.button`
   font-weight: 500;
   width: 100%;
   height: 42px;
-  background-color: #f0f2f5;
+  background-color: #e6f4f0;
   border: none;
   border-radius: 50px;
   color: #6f6f6f;

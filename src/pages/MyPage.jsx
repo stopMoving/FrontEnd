@@ -7,59 +7,132 @@ import PointPanel from "../components/mypageComponents/PointPanel";
 import { userAPI } from "../lib/api";
 import { ReactComponent as ProfileImage } from "../assets/images/profileImage.svg";
 import { ReactComponent as PointIcon } from "../assets/icons/pointIcon.svg"
+import { ReactComponent as LogoImage } from "../assets/images/LogoImage.svg";
 import { useLocation } from "react-router-dom";
 import LoadingPage from "./LoadingPage";
+import useUserStore from "../store/useUserStore";
+import ProfileImageUpload from "../components/mypageComponents/ProfileImageUpload";
 
 export default function MyPage() {
-    const location = useLocation();
-    const initialTab = location.state?.initialTab || 'donate';
-
-    const [activeTab, setActiveTap] = useState(initialTab);
-    const [userProfile, setUserProfile] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-      const fetchUserProfile = async () => {
-        try {
-          const profileData = await userAPI.getUserProfile();
-          setUserProfile(profileData);
-        } catch (error) {
-          console.error("사용자 프로필 로딩 실패: ", error);
-          setUserProfile(null);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      fetchUserProfile();
-    }, []);
-
-    const renderPanel = () => {
-        if (activeTab === 'donate') {
-            return <DonateHistoryPanel />
-        }
-        if (activeTab === 'take') {
-            return <TakeHistoryPanel />
-        }
-        if (activeTab === 'point' ) {
-            return <PointPanel />
-        }
-        return null;
-    };
-
-    if (isLoading) {
-      return <LoadingPage />;
+  const location = useLocation();
+  const initialTab = location.state?.initialTab || 'donate';
+  const logout = useUserStore((state) => state.logout);
+  const [activeTab, setActiveTap] = useState(initialTab);
+  const [userProfile, setUserProfile] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  const fetchUserProfile = async () => {
+    try {
+      const profileData = await userAPI.getUserProfile();
+      setUserProfile(profileData);
+    } catch (error) {
+      console.error("사용자 프로필 로딩 실패: ", error);
+      setUserProfile(null);
+    } finally {
+      setIsLoading(false);
     }
+  };
+  
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
 
-    if (!userProfile) {
-        return <LoadingPage />;
+  const handleUploadSuccess = () => {
+    console.log("업로드 성공! 프로필 정보를 다시 불러옵니다.");
+    fetchUserProfile();
+  };
+ 
+  const renderPanel = () => {
+    if (activeTab === "donate") {
+      return <DonateHistoryPanel />;
     }
+    if (activeTab === "take") {
+      return <TakeHistoryPanel />;
+    }
+    if (activeTab === "point") {
+      return <PointPanel />;
+    }
+    return null;
+  };
+
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+
+  if (!userProfile) {
+    return <LoadingPage />;
+  }
+
+  return (
+    <Wrap>
+      <MyInfoWrap>
+        <ProfileContainer>
+          <LeftWrap>
+            <ProfileImageUpload
+              // API 응답에 profile_image_url이 있다고 가정
+              currentImageUrl={userProfile.user_image_url}
+              userId={userProfile.id} // API 응답에 id가 있다고 가정
+              onUploadSuccess={handleUploadSuccess}
+            />
+            <Name>{userProfile.nickname}님</Name>
+          </LeftWrap>
+
+          <Reward>{userProfile.points} P</Reward>
+        </ProfileContainer>
+
+        <HashTagContainer>
+          {userProfile.keywords.map((tag, index) => (
+            <HashTag key={index}>#{tag}</HashTag>
+          ))}
+        </HashTagContainer>
+      </MyInfoWrap>
+
+      <ReportWrap>
+        <TabContainer>
+          <TabButton
+            onClick={() => setActiveTap("donate")}
+            $active={activeTab === "donate"}
+          >
+            나눔 내역
+          </TabButton>
+          <TabButton
+            onClick={() => setActiveTap("take")}
+            $active={activeTab === "take"}
+          >
+            데려간 내역
+          </TabButton>
+          <TabButton
+            onClick={() => setActiveTap("point")}
+            $active={activeTab === "point"}
+          >
+            <PointIcon width={25} height={25} />
+            포인트
+          </TabButton>
+        </TabContainer>
+
+        <ContentWrap>{renderPanel()}</ContentWrap>
+      </ReportWrap>
+
+      <BottomNavBar />
+    </Wrap>
+  );
 
     return (
       <Wrap>
+        <Header>
+          <LogoImage width={41} height={17}/>
+          <LogoutBtn onClick={() => logout()}>로그아웃</LogoutBtn>
+        </Header>
+
         <MyInfoWrap>
           <ProfileContainer>
             <LeftWrap>
-              <ProfileImage width={70} height={70}/>
+              <ProfileImage
+              // API 응답에 profile_image_url이 있다고 가정
+              currentImageUrl={userProfile.user_image_url}
+              userId={userProfile.id} // API 응답에 id가 있다고 가정
+              onUploadSuccess={handleUploadSuccess}
+              />
               <Name>{userProfile.nickname}님</Name>
             </LeftWrap>
 
@@ -98,9 +171,28 @@ const Wrap = styled.div`
   max-width: 600px;
   min-height: 100dvh;
   background: #FFFFFF;
-  padding: 30px 0;
+  padding: 16px 0;
   display: flex;
   flex-direction: column;
+`;
+
+const Header = styled.div`
+  width: 100%;
+  height: 50px;
+  padding: 4px 20px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #DEDEDE;
+`;
+
+const LogoutBtn = styled.button`
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+  background-color: #FFFFFF;
+  border: none;
+  cursor: pointer;
 `;
 
 const MyInfoWrap = styled.div`
@@ -142,7 +234,7 @@ const HashTagContainer = styled.div`
 const HashTag = styled.div`
   font-size: 16px;
   font-weight: 500;
-  color: #063F21;
+  color: #063f21;
 `;
 
 const Reward = styled.div`
@@ -156,8 +248,8 @@ const Reward = styled.div`
   padding: 0 8px;
   font-size: 16px;
   font-weight: 600;
-  color: #FFFFFF;
-  background-color: #11B55F;
+  color: #ffffff;
+  background-color: #11b55f;
 `;
 
 const ReportWrap = styled.div`
@@ -170,7 +262,7 @@ const ReportWrap = styled.div`
 const TabContainer = styled.div`
   display: flex;
   // justify-content: space-around;
-  border-bottom: 1px solid #6F6F6F;
+  border-bottom: 1px solid #6f6f6f;
   flex-shrink: 0;
 `;
 
@@ -181,8 +273,8 @@ const TabButton = styled.button`
   font-family: inherit;
   font-size: 20px;
   font-weight: 500;
-  color: #6F6F6F;
-  background-color: #FFFFFF;
+  color: #6f6f6f;
+  background-color: #ffffff;
   border: none;
 
   display: flex;

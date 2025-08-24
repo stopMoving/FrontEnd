@@ -3,9 +3,7 @@ import styled from "styled-components";
 import { userAPI } from "../../lib/api";
 import LoadingPage from "../../pages/LoadingPage";
 
-export default function DonateHistoryPanel({
-  activeTab = 1
-}) {
+export default function DonateHistoryPanel({ activeTab = 1 }) {
   const [donatedBooks, setDonatedBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -29,15 +27,15 @@ export default function DonateHistoryPanel({
       <LoadingWrap>
         <LoadingPage isCompact={true} />
       </LoadingWrap>
-    )
+    );
   }
 
   if (donatedBooks.length === 0) {
     return (
-    <MessageWrap>
-      <Notification>나눔한 책이 없습니다.</Notification>;
-    </MessageWrap>
-    )
+      <MessageWrap>
+        <Notification>나눔한 책이 없습니다.</Notification>
+      </MessageWrap>
+    );
   }
 
   return (

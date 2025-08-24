@@ -354,7 +354,7 @@ const SearchPlaceholder = styled.div`
   color: #6f6f6f;
   font-size: 16px;
   font-weight: 600;
-  margin-bottom: 32px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
   flex-start: left;

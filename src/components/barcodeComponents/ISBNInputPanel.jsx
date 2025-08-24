@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import styled from "styled-components";
 import useUserStore from "../../store/useUserStore";
 import { bookAPI } from "../../lib/api.js";
+import { ReactComponent as ExitIcon } from "../../assets/icons/ExitIcon.svg";
 
 export default function ISBNInputPanel({
   onClose,
@@ -53,10 +54,13 @@ export default function ISBNInputPanel({
 
   return (
     <PanelWrap>
-      <TopBar />
-
       <InputContainer>
-        <Title>ISBN 코드 직접 입력</Title>
+        <Title>
+          ISBN 코드 직접 입력
+          <ExitButton type="button" onClick={onClose}>
+            <ExitIcon width={22} height={22} />
+          </ExitButton>
+        </Title>
 
         <Input
           type="text"
@@ -88,21 +92,26 @@ const PanelWrap = styled.div`
   flex-direction: column;
   align-items: center;
   border-radius: 10px 10px 0 0;
-`;
-
-const TopBar = styled.div`
-  width: 80px;
-  height: 4px;
-  background-color: #11b55f;
-  border-radius: 4px;
-  margin: 20px 125px;
+  padding-top: 20px;
 `;
 
 const Title = styled.div`
+  width: 100%;
+  position: relative;
   text-align: center;
   font-weight: 500;
   font-size: 20px;
   margin-bottom: 40px;
+`;
+
+const ExitButton = styled.button`
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: 0;
+  cursor: pointer;
 `;
 
 const InputContainer = styled.div`
@@ -124,9 +133,15 @@ const Input = styled.input`
   font-size: 14px;
   font-weight: 500;
   padding: 0 16px;
+  transition: border-color 0.2 ease;
 
   &::placeholder {
     color: #dedede;
+  }
+  
+  &:focus {
+  outline: none;
+  border: 1px solid #11B55F;
   }
 `;
 

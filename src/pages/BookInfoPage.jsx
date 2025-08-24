@@ -11,13 +11,14 @@ export default function BookInfoPage() {
   const { isbn } = useParams();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(false);
-  const { location, isLocationLoading } = useUserStore();
+  const { location, isLocationLoading, fetchLocation } = useUserStore();
 
   const onBack = () => {
     navigate(-1);
   };
 
   const fetchBookInfo = async (bookIsbn, lat, lng) => {
+    console.log("fetchBookInfo 시작:", { bookIsbn, lat, lng });
     setLoading(true);
     try {
       const data = await bookAPI.getBookInfoByISBN(bookIsbn, lat, lng);
@@ -35,14 +36,48 @@ export default function BookInfoPage() {
     }
   };
 
+  // useEffect(() => {
+  //   fetchLocation();
+  // }, [fetchLocation]);
+
   useEffect(() => {
+    console.log("useEffect 실행:", {
+      isbn,
+      location: location?.latitude,
+      longitude: location?.longitude,
+      isLocationLoading,
+    });
+
     if (isbn && location?.latitude != null && location?.longitude != null) {
       fetchBookInfo(isbn, location.latitude, location.longitude);
+    } else {
+      console.log("API 요청 조건이 충족되지 않았습니다.");
     }
   }, [isbn, location?.latitude, location?.longitude]);
 
-  if (isLocationLoading) {
+  if (isLocationLoading || loading) {
     return <LoadingPage />;
+  }
+
+  console.log("렌더링 상태:", {
+    book,
+    loading,
+    isLocationLoading,
+    location,
+  });
+
+  // ✅ 로딩 완료 후, book 데이터가 없는 경우를 처리합니다.
+  if (!book && !loading && !isLocationLoading) {
+    return (
+      <PageWrap>
+        <Header>
+          <BackButton type="button" onClick={onBack}>
+            <BackIcon width={24} height={24} />
+          </BackButton>
+        </Header>
+        <p>책 정보를 불러오는 데 실패했습니다. 잠시 후 다시 시도해주세요.</p>
+      </PageWrap>
+    );
   }
 
   return (

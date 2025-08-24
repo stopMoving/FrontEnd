@@ -3,13 +3,13 @@ import StepHeader from "../StepHeader";
 import CustomSelect from "../CustomSelect";
 
 export default function LibrarySelectPanel({
-  title, // "나눔하기" | "데려가기"
-  branches = [], // [{ id, name }]
-  value, // 선택된 id
-  onChange, // (id) => void
-  onNext, // 다음 버튼 클릭
-  loading = false, // 목록 로딩 중이면 true
-  onBack, // 뒤로가기 콜백
+  title,
+  branches = [],
+  value,
+  onChange,
+  onNext,
+  loading = false,
+  onBack,
 }) {
   const disabled = !value || loading;
 

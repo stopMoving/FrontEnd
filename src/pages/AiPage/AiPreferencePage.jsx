@@ -218,7 +218,6 @@ const ImageWrapper = styled.div`
 
 const Image = styled.img`
   width: 100%;
-  border-radius: 8px;
   aspect-ratio: 3 / 4; // 이미지가 들어갈 틀을 3:4 비율로 고정
   object-fit: cover; // 이미지가 틀을 가득 채우도록 설정
   display: block;

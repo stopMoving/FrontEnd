@@ -5,6 +5,7 @@ import { ReactComponent as SearchIcon } from "../assets/icons/search.svg";
 import useBookStore from "../store/useBookStore";
 import { useNavigate } from "react-router-dom";
 import { bookAPI } from "../lib/api";
+import LoadingPage from "./LoadingPage";
 
 export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -69,9 +70,7 @@ export default function SearchPage() {
 
       <BookListWrap>
         {loading ? (
-          <MessageWrap>
-            <Notification>검색 중입니다...</Notification>
-          </MessageWrap>
+          <LoadingPage />
         ) : books.length > 0 ? (
           books.map((book) => (
             <BookWrap

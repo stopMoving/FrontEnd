@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { userAPI } from "../../lib/api";
+import LoadingPage from "../../pages/LoadingPage";
 
 export default function DonateHistoryPanel({
   activeTab = 2
@@ -25,9 +26,9 @@ export default function DonateHistoryPanel({
 
   if (isLoading) {
     return (
-    <MessageWrap>
-      <Notification>나눔 내역을 불러오는 중...</Notification>;
-    </MessageWrap>
+      <LoadingWrap>
+        <LoadingPage isCompact={true} />
+      </LoadingWrap>
     )
   }
 
@@ -71,9 +72,17 @@ export default function DonateHistoryPanel({
   );
 }
 
+const LoadingWrap = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Wrap = styled.div`
   width: 100%;
   max-width: 600px;
+  min-height: 100vh;
   background: #ffffff;
   display: flex;
   flex-direction: column;

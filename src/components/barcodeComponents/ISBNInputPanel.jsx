@@ -75,19 +75,6 @@ export default function ISBNInputPanel({
           확인
         </NextButton>
       </BottomBar>
-
-      {/* <ConfirmModal
-        open={modalOpen}
-        step={step}
-        mode={mode}
-        book={book}
-        loading={loading}
-        quantity={quantity}
-        onQuantityChange={handleQuantityChange}
-        onPrimary={handleRetake}
-        onSecondary={handleConfirm}
-        onClose={() => setModalOpen(false)}
-      /> */}
     </PanelWrap>
   );
 }

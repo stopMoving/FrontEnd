@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useUserStore from "../store/useUserStore";
 import { bookAPI } from "../lib/api";
+import LoadingPage from "./LoadingPage";
 
 export default function BookInfoPage() {
     const navigate = useNavigate();
@@ -42,15 +43,7 @@ export default function BookInfoPage() {
 
   if (isLocationLoading) {
     return (
-        <PageWrap>
-          <Header>
-            <BackButton type="button" onClick={onBack}>
-              <BackIcon width={24} height={24} />
-            </BackButton>
-          </Header>
-
-          <p>위치 정보를 불러오는 중...</p>
-        </PageWrap>
+        <LoadingPage />
     );
   }
   

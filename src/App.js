@@ -36,7 +36,7 @@ const PrivateRoutes = () => {
   const { user, isInitialized } = useUserStore();
 
   if (!isInitialized) {
-    return <div>로딩 중...</div>;
+    return <LoadingPage />;
   }
 
   return user ? <Outlet /> : <Navigate to="/landing" />;
@@ -53,7 +53,7 @@ const App = () => {
   }, [initializeAuth, fetchLocation]);
 
   if (!isInitialized) {
-    return <div>로딩 중...</div>;
+    return <LoadingPage />;
   }
 
   return (
@@ -92,7 +92,10 @@ const App = () => {
 
           <Route path="search/book" element={<SearchPage />} />
           <Route path="search/book-detail" element={<BookInfoPage />} />
-          <Route path="barcode/library/select/:mode" element={<LibrarySelectPage />} />
+          <Route
+            path="barcode/library/select/:mode"
+            element={<LibrarySelectPage />}
+          />
           <Route path="barcode/select/:mode" element={<SelectPage />} />
           <Route path="barcode/scan/:mode" element={<ScanPage />} />
           <Route path="barcode/booklist/:mode" element={<BookListPage />} />

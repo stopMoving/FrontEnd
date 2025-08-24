@@ -140,27 +140,6 @@ export default function SearchPage() {
   );
 }
 
-// 두 줄로 나오는 거 수정
-const MessageWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  margin: 100px;
-  gap: 30px;
-`;
-
-const Notification = styled.div`
-  font-size: 18px;
-  font-weight: 500;
-  color: #6f6f6f;
-
-  .highlight {
-    color: #000000;
-  }
-`;
-
 const PageWrap = styled.div`
   width: 100%;
   max-width: 600px;

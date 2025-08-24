@@ -67,9 +67,11 @@ export default function DonateHistoryPanel({ activeTab = 3 }) {
   }, []);
 
   if (isLoading) {
+    return (
     <LoadingWrap>
       <LoadingPage isCompact={true}/>
     </LoadingWrap>
+    )
   }
 
   return (

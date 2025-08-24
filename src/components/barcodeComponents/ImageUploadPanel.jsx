@@ -70,7 +70,7 @@ export default function ImageUploadPanel({
         onConfirm(data); // ✅ onConfirm 콜백으로 책 데이터 전달
       } catch (err) {
         console.error("❌ 이미지 인식 실패:", err);
-        alert(err.message || "이미지에서 바코드 인식 실패");
+        alert("이미지에서 바코드 인식 실패");
         onClose();
       } finally {
         setIsProcessing(false);

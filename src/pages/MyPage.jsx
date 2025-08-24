@@ -25,6 +25,7 @@ export default function MyPage() {
           setUserProfile(profileData);
         } catch (error) {
           console.error("사용자 프로필 로딩 실패: ", error);
+          setUserProfile(null);
         } finally {
           setIsLoading(false);
         }
@@ -46,11 +47,11 @@ export default function MyPage() {
     };
 
     if (isLoading) {
-      <LoadingPage />
+      return <LoadingPage />;
     }
 
     if (!userProfile) {
-        return <div>사용자 정보를 불러올 수 없습니다.</div>;
+        return <LoadingPage />;
     }
 
     return (
@@ -97,7 +98,7 @@ const Wrap = styled.div`
   max-width: 600px;
   min-height: 100dvh;
   background: #FFFFFF;
-  padding: 40px 0;
+  padding: 30px 0;
   display: flex;
   flex-direction: column;
 `;

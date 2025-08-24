@@ -6,10 +6,6 @@ export default function BottomSheetWrapper({
     isOpen,
     onClose
 }) {
-  const [isDragging, setIsDragging] = useState(false);
-  const [startY, setStartY] = useState(0);
-  const [translateY, setTranslateY] = useState(0);
-
   const sheetRef = useRef(null);
 
   useEffect(() => {
@@ -17,36 +13,8 @@ export default function BottomSheetWrapper({
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
-      setTranslateY(0);
     }
   }, [isOpen]);
-
-  const onTouchStart = (e) => {
-    setIsDragging(true);
-    setStartY(e.touches[0].clientY);
-  }
-
-  const onTouchMove = (e) => {
-    if (!isDragging) return;
-    const currentY = e.touches[0].clientY;
-    const newTranslateY = currentY - startY;
-
-    if (newTranslateY >= 0) {
-      setTranslateY(newTranslateY);
-    }
-  };
-
-  const onTouchEnd = () => {
-    setIsDragging(false);
-    const sheetHeight = sheetRef.current.offsetHeight;
-    const dragThreshold = sheetHeight * 0.3;
-
-    if (translateY > dragThreshold) {
-      onClose();
-    } else {
-      setTranslateY(0);
-    }
-  };
 
   if (!isOpen) return null;
 
@@ -58,12 +26,7 @@ export default function BottomSheetWrapper({
       <Sheet
         ref={sheetRef}
         onClick={(e) => e.stopPropagation()}
-        $isDragging={isDragging}
         $isOpen={isOpen}
-        style={{ transform: `translateY(${translateY}px)` }}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
       >
         {children}
       </Sheet>
@@ -91,7 +54,7 @@ const Sheet = styled.div`
   margin: 0 auto;
   z-index: 1001;
   transform: translateY(100%);
-  transition: ${(p) => (p.$isDragging ? "none" : "transform 0.3s ease-out")};
+  transition: transform 0.3s ease-out;
 
   ${(props) => props.$isOpen && css`
     transform: translateY(0);

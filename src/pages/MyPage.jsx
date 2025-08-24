@@ -6,19 +6,21 @@ import TakeHistoryPanel from "../components/mypageComponents/TakeHistoryPanel";
 import PointPanel from "../components/mypageComponents/PointPanel";
 import { userAPI } from "../lib/api";
 import { ReactComponent as ProfileImage } from "../assets/images/profileImage.svg";
-import { ReactComponent as PointIcon } from "../assets/icons/pointIcon.svg";
+import { ReactComponent as PointIcon } from "../assets/icons/pointIcon.svg"
+import { ReactComponent as LogoImage } from "../assets/images/LogoImage.svg";
 import { useLocation } from "react-router-dom";
 import LoadingPage from "./LoadingPage";
+import useUserStore from "../store/useUserStore";
 import ProfileImageUpload from "../components/mypageComponents/ProfileImageUpload";
 
 export default function MyPage() {
   const location = useLocation();
-  const initialTab = location.state?.initialTab || "donate";
-
+  const initialTab = location.state?.initialTab || 'donate';
+  const logout = useUserStore((state) => state.logout);
   const [activeTab, setActiveTap] = useState(initialTab);
   const [userProfile, setUserProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
+  
   const fetchUserProfile = async () => {
     try {
       const profileData = await userAPI.getUserProfile();
@@ -28,17 +30,17 @@ export default function MyPage() {
       setUserProfile(null);
     } finally {
       setIsLoading(false);
+
+    useEffect(() => {
+      fetchUserProfile();
+    }, []);
+
+    const handleUploadSuccess = () => {
+      console.log("업로드 성공! 프로필 정보를 다시 불러옵니다.");
+      fetchUserProfile();
+    };
     }
-  };
-
-  useEffect(() => {
-    fetchUserProfile();
-  }, []);
-
-  const handleUploadSuccess = () => {
-    console.log("업로드 성공! 프로필 정보를 다시 불러옵니다.");
-    fetchUserProfile();
-  };
+  }
 
   const renderPanel = () => {
     if (activeTab === "donate") {
@@ -114,16 +116,83 @@ export default function MyPage() {
       <BottomNavBar />
     </Wrap>
   );
+
+    return (
+      <Wrap>
+        <Header>
+          <LogoImage width={41} height={17}/>
+          <LogoutBtn onClick={() => logout()}>로그아웃</LogoutBtn>
+        </Header>
+
+        <MyInfoWrap>
+          <ProfileContainer>
+            <LeftWrap>
+              <ProfileImage
+              // API 응답에 profile_image_url이 있다고 가정
+              currentImageUrl={userProfile.user_image_url}
+              userId={userProfile.id} // API 응답에 id가 있다고 가정
+              onUploadSuccess={handleUploadSuccess}
+              />
+              <Name>{userProfile.nickname}님</Name>
+            </LeftWrap>
+
+            <Reward>{userProfile.points} P</Reward>
+          </ProfileContainer>
+
+          <HashTagContainer>
+            {userProfile.keywords.map((tag, index) => (
+                <HashTag key={index}>#{tag}</HashTag>
+            ))}
+          </HashTagContainer>
+        </MyInfoWrap>
+        
+        <ReportWrap>
+          <TabContainer>
+              <TabButton onClick={() => setActiveTap('donate')} $active={activeTab === 'donate'}>나눔 내역</TabButton>
+              <TabButton onClick={() => setActiveTap('take')} $active={activeTab === 'take'}>데려간 내역</TabButton>
+              <TabButton onClick={() => setActiveTap('point')} $active={activeTab === 'point'}>
+                <PointIcon width={25} height={25} />
+                포인트
+              </TabButton>
+          </TabContainer>
+
+          <ContentWrap>
+            {renderPanel()}
+          </ContentWrap>
+        </ReportWrap>
+        
+        <BottomNavBar />
+        </Wrap>
+    )
 }
 
 const Wrap = styled.div`
   width: 100%;
   max-width: 600px;
   min-height: 100dvh;
-  background: #ffffff;
-  padding: 30px 0;
+  background: #FFFFFF;
+  padding: 16px 0;
   display: flex;
   flex-direction: column;
+`;
+
+const Header = styled.div`
+  width: 100%;
+  height: 50px;
+  padding: 4px 20px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #DEDEDE;
+`;
+
+const LogoutBtn = styled.button`
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+  background-color: #FFFFFF;
+  border: none;
+  cursor: pointer;
 `;
 
 const MyInfoWrap = styled.div`

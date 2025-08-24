@@ -31,9 +31,9 @@ export default function SearchPage() {
         params: { mode: "combined" },
       });
 
-      const recommendedBookData = response.data.results;
+      const recommendedBookData = response.data?.results;
 
-      if (recommendedBookData && recommendedBookData.length > 0) {
+      if (recommendedBookData && Array.isArray(recommendedBookData) && recommendedBookData.length > 0) {
         const randomIndex = Math.floor(Math.random() * recommendedBookData.length);
         setRecommendBook(recommendedBookData[randomIndex]);
       } else {
@@ -46,15 +46,17 @@ export default function SearchPage() {
   }
 
   useEffect(() => {
-    if (searchQuery && searchQuery.length > 0) {
+    if (searchQuery && searchQuery.trim().length > 0) {
       setLoading(true);
       const timer = setTimeout(async () => {
         try {
           const data = await bookAPI.searchBooks(searchQuery);
-          setBooks(data?.results ?? []);
+
+          const results = data?.results || [];
+          setBooks(results);
           setIsSearched(true);
 
-          if (data?.results.length === 0) {
+          if (Array.isArray(results) && results.length === 0) {
             fetchRecommendBook();
           } else {
             setRecommendBook(null);
@@ -367,4 +369,5 @@ const BookTitle = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 80%;
+  text-align: center;
 `;

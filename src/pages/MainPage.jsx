@@ -27,7 +27,7 @@ const bannerData = [
   {
     id: 1,
     title: "집에서 잠든 책,\n우리 동네 도서관으로!",
-    description: "상태 좋은 책 기증하고, \n포인트와 리워드까지 받아가세요",
+    description: "상태 좋은 책 나눔하고, \n포인트와 리워드까지 받아가세요.",
     icon: Library1,
   },
   {
@@ -49,7 +49,7 @@ const bannerData = [
     step: "Step3",
     title: "나눔하기 / 데려가기 완료",
     description:
-      "나눔하기 | 책을 나눔하고 포인트를 받아요\n데려가기 | 선택한 책을 데려가요",
+      "나눔하기 | 책을 나눔하고 포인트를 받아요.\n데려가기 | 선택한 책을 데려가요.",
     icon: Library4,
   },
 ];

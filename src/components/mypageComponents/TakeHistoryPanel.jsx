@@ -13,6 +13,7 @@ export default function DonateHistoryPanel({
     const fetchPurchasedBooks = async () => {
       try {
         const books = await userAPI.getPurchasedBooks();
+        console.log("API로부터 받은 데이터:", books);
         setPurchasedBooks(books);
       } catch (error) {
         console.error("나눔 내역 로딩 실패: ", error);
@@ -63,7 +64,7 @@ export default function DonateHistoryPanel({
                 <span>{book?.quantity}권</span>
               </Sub>
               <Sub>{book?.created_at.split("T")[0]}</Sub>
-              <Sub>{book?.quantity * book?.sale_price}원</Sub>
+              <Sub>{book.quantity * book?.sale_price}원</Sub>
             </Meta>
           </Info>
         </BookWrap>

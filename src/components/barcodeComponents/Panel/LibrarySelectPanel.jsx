@@ -47,7 +47,7 @@ const Wrap = styled.div`
   position: relative;
 
   /* 고정 헤더 공간 확보 + 하단 버튼 여유 */
-  padding-top: 180px;
+  padding-top: 158px;
 `;
 
 const Inner = styled.div`

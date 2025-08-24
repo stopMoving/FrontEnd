@@ -18,7 +18,7 @@ const GOODS = [
     },
     {
       id: 2,
-      point: "5500P",
+      point: "55000P",
       title: "그레이프랩 친환경 휴대용 거치대 set",
       img: setImg
     },
@@ -112,7 +112,7 @@ const GoodsWrap = styled.div`
   transition: opacity 0.3s ease;
 
   ${(props) => props.$disabled && `
-    opacity: 0.5;
+    opacity: 0.8;
     pointer-events: none;
     filter: grayscale(100%);
     `}

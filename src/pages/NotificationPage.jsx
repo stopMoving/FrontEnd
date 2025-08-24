@@ -17,7 +17,7 @@ const getNotificationIcon = (type) => {
       return PointIcon;
     case "book_pickup":
       return BookHandChatIcon;
-    case "여기에 놓치기전에 데려가세요 아이콘":
+    case "book_recommendation":
       return BookChatIcon;
     default:
       return BellIcon;

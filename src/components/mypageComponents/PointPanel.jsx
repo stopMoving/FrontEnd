@@ -1,59 +1,57 @@
 import styled from "styled-components";
-import couponImg from "../../assets/images/더북스.svg";
-import setImg from "../../assets/images/거치대 set.svg";
-import bouquetBookImg from "../../assets/images/부케북.svg";
-import standImg from "../../assets/images/거치대.svg";
-import paperBagImg from "../../assets/images/페이퍼백.svg";
-import bookStoreImg from "../../assets/images/맑음책방.svg";
+import couponImg from "../../assets/images/더북스.svg";
+import setImg from "../../assets/images/거치대 set.svg";
+import bouquetBookImg from "../../assets/images/부케북.svg";
+import standImg from "../../assets/images/거치대.svg";
+import paperBagImg from "../../assets/images/페이퍼백.svg";
+import bookStoreImg from "../../assets/images/맑음책방.svg";
 import { useEffect, useState } from "react";
 import { userAPI } from "../../lib/api";
 import LoadingPage from "../../pages/LoadingPage";
 
 const GOODS = [
-    {
-      id: 1,
-      point: "3000P",
-      title: "더북스 신대방점 5% 할인 쿠폰",
-      img: couponImg
-    },
-    {
-      id: 2,
-      point: "5500P",
-      title: "그레이프랩 친환경 휴대용 거치대 set",
-      img: setImg
-    },
-    {
-      id: 3,
-      point: "1500P",
-      title: "몰리해치 부케북",
-      img: bouquetBookImg
-    },
-    {
-      id: 4,
-      point: "2000P",
-      title: "그레이프랩 친환경 휴대용 거치대",
-      img: standImg
-    },
-    {
-      id: 5,
-      point: "2500P",
-      title: "컬러풀 친환경 페이퍼백",
-      img: paperBagImg
-    },
-    {
-      id: 6,
-      point: "1500P",
-      title: "맑음책방 어린이서점...",
-      img: bookStoreImg
-    }
-  ]
+  {
+    id: 1,
+    point: "3000P",
+    title: "더북스 신대방점 5% 할인 쿠폰",
+    img: couponImg,
+  },
+  {
+    id: 2,
+    point: "5500P",
+    title: "그레이프랩 친환경 휴대용 거치대 set",
+    img: setImg,
+  },
+  {
+    id: 3,
+    point: "1500P",
+    title: "몰리해치 부케북",
+    img: bouquetBookImg,
+  },
+  {
+    id: 4,
+    point: "2000P",
+    title: "그레이프랩 친환경 휴대용 거치대",
+    img: standImg,
+  },
+  {
+    id: 5,
+    point: "2500P",
+    title: "컬러풀 친환경 페이퍼백",
+    img: paperBagImg,
+  },
+  {
+    id: 6,
+    point: "1500P",
+    title: "맑음책방 어린이서점...",
+    img: bookStoreImg,
+  },
+];
 
-export default function DonateHistoryPanel({
-    activeTab = 3
-}) {
+export default function DonateHistoryPanel({ activeTab = 3 }) {
   const [userPoints, setUserPoints] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -69,9 +67,9 @@ export default function DonateHistoryPanel({
   }, []);
 
   if (isLoading) {
-    <LoadingPage />
+    <LoadingPage />;
   }
-  
+
   return (
     <Wrap>
       {GOODS.map((item) => {
@@ -81,24 +79,28 @@ export default function DonateHistoryPanel({
         return (
           <GoodsWrap key={item.id} $disabled={isDisabled}>
             <ImageWrap>
-              <GoodsImage src={item.img} alt={item.title} $disabled={isDisabled}/>
+              <GoodsImage
+                src={item.img}
+                alt={item.title}
+                $disabled={isDisabled}
+              />
             </ImageWrap>
 
             <InfoWrap>
               <Point>{item.point}</Point>
-              <Title>{item.title}</Title>    
-            </InfoWrap>  
+              <Title>{item.title}</Title>
+            </InfoWrap>
           </GoodsWrap>
         );
       })}
-      </Wrap>
-    );
+    </Wrap>
+  );
 }
 
 const Wrap = styled.div`
   width: 100%;
   max-width: 600px;
-  background: #FFFFFF;
+  background: #ffffff;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   padding: 32px;
@@ -108,10 +110,12 @@ const Wrap = styled.div`
 const GoodsWrap = styled.div`
   height: 195px;
   border-radius: 5px;
-  border: 1px solid #DEDEDE;
+  border: 1px solid #dedede;
   transition: opacity 0.3s ease;
 
-  ${(props) => props.$disabled && `
+  ${(props) =>
+    props.$disabled &&
+    `
     opacity: 0.5;
     pointer-events: none;
     filter: grayscale(100%);
@@ -129,7 +133,9 @@ const GoodsImage = styled.img`
   object-fit: cover;
   transition: opacity 0.3 ease;
 
-  ${(props) => props.$disabled && `
+  ${(props) =>
+    props.$disabled &&
+    `
     opacity: 0.5;
     `}
 `;
@@ -143,7 +149,7 @@ const InfoWrap = styled.div`
 const Point = styled.div`
   font-size: 14px;
   font-weight: 500;
-  color: #0D8847;
+  color: #0d8847;
 `;
 
 const Title = styled.div`

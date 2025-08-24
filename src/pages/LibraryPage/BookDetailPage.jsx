@@ -196,7 +196,7 @@ const Title = styled.h1`
   font-size: 24px;
   font-weight: bold;
   flex: 1;
-  min-width: 0; /* flex 아이템의 크기가 줄어들 수 있도록 설정 */
+  min-width: 0; //flex 아이템의 크기가 줄어들 수 있도록 설정
 `;
 
 const InfoList = styled.div`
@@ -260,6 +260,7 @@ const SummaryText = styled.p`
   font-size: 12px;
   line-height: 1.6;
   color: black;
+  font-weight: 500;
   text-indent: 0.6em;
   overflow: hidden;
 `;

@@ -67,7 +67,9 @@ export default function DonateHistoryPanel({ activeTab = 3 }) {
   }, []);
 
   if (isLoading) {
-    <LoadingPage />;
+    <LoadingWrap>
+      <LoadingPage isCompact={true}/>
+    </LoadingWrap>
   }
 
   return (
@@ -97,10 +99,18 @@ export default function DonateHistoryPanel({ activeTab = 3 }) {
   );
 }
 
+const LoadingWrap = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Wrap = styled.div`
   width: 100%;
   max-width: 600px;
-  background: #ffffff;
+  min-height: 100vh;
+  background: #FFFFFF;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   padding: 32px;
@@ -108,17 +118,26 @@ const Wrap = styled.div`
 `;
 
 const GoodsWrap = styled.div`
+  position: relative;
   height: 195px;
   border-radius: 5px;
   border: 1px solid #dedede;
   transition: opacity 0.3s ease;
+  overflow: hidden;
 
-  ${(props) =>
-    props.$disabled &&
-    `
-    opacity: 0.5;
+  ${(props) => props.$disabled && `
     pointer-events: none;
-    filter: grayscale(100%);
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height : 100%;
+      background-color: #343434;
+      opacity: 0.8;
+      z-index: 1;
+      }
     `}
 `;
 
@@ -132,12 +151,6 @@ const GoodsImage = styled.img`
   height: 100%;
   object-fit: cover;
   transition: opacity 0.3 ease;
-
-  ${(props) =>
-    props.$disabled &&
-    `
-    opacity: 0.5;
-    `}
 `;
 
 const InfoWrap = styled.div`

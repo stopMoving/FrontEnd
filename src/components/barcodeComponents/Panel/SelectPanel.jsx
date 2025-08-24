@@ -74,7 +74,7 @@ export default function SelectPanel({
     setModalOpen(false); // 모달 닫힘 → 카메라 재개
     setBook(null);
     setQuantity(1);
-    navigate(`/barcode/select/${mode}`); // 다시 스캔 방법 선택 페이지로 이동
+    navigate(`/barcode/select/${mode}?branchId=${encodeURIComponent(libraryId)}`); // 다시 스캔 방법 선택 페이지로 이동
   };
 
   // 두 번째 버튼(확인): 등록 API 호출 후 BookListPage로 이동
@@ -180,7 +180,7 @@ const Wrap = styled.div`
   position: relative;
 
   /* 고정 StepHeader 높이만큼 여백 확보 */
-  padding-top: 180px;
+  padding-top: 158px;
 `;
 
 const Inner = styled.div`

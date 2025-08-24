@@ -8,6 +8,7 @@ import { userAPI } from "../lib/api";
 import { ReactComponent as ProfileImage } from "../assets/images/profileImage.svg";
 import { ReactComponent as PointIcon } from "../assets/icons/pointIcon.svg"
 import { useLocation } from "react-router-dom";
+import LoadingPage from "./LoadingPage";
 
 export default function MyPage() {
     const location = useLocation();
@@ -45,7 +46,7 @@ export default function MyPage() {
     };
 
     if (isLoading) {
-        return <div>로딩 중...</div>;
+      <LoadingPage />
     }
 
     if (!userProfile) {

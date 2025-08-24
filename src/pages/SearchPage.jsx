@@ -103,8 +103,7 @@ export default function SearchPage() {
               북작북작에 나눔되지 않았습니다.
             </Notification>
           </MessageWrap>
-        ) : null
-        }
+        ) : null}
       </BookListWrap>
     </PageWrap>
   );
@@ -136,7 +135,7 @@ const PageWrap = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #FFFFFF;
+  background: #ffffff;
   padding: 20px 20px 12px;
 `;
 

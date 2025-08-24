@@ -280,7 +280,7 @@ const ActiveBookImage = styled.img`
   border-radius: 8px;
   background-color: #d9d9d9;
   margin-bottom: 8px;
-  // box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border: 1px solid #dedede;
 `;
 

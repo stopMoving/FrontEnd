@@ -24,7 +24,7 @@ const StaticKakaoMap = ({ lat, lng, libraryName }) => {
       console.log("4: 지도 생성 로직 진입");
       const mapOption = {
         center: new kakao.maps.LatLng(lat, lng),
-        level: 3,
+        level: 4,
         draggable: false,
         scrollwheel: false,
         disableDoubleClickZoom: true,

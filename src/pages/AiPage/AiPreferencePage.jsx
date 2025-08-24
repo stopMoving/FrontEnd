@@ -6,6 +6,7 @@ import axios from "../../lib/axios";
 
 import { ReactComponent as SpinnerIcon } from "../../assets/icons/spinner.svg";
 import { useNavigate } from "react-router-dom";
+import LoadingPage from "../LoadingPage";
 
 const CategoryCard = ({ item, isSelected, onClick }) => {
   return (
@@ -84,11 +85,11 @@ const AiPreferencePage = () => {
     return (
       <PageWrapper>
         <LoadingContainer>
-          <Spinner>
-            <SpinnerIcon width={80} height={80} />
-          </Spinner>
           {isSubmitting ? (
             <>
+              <Spinner>
+                <SpinnerIcon width={80} height={80} />
+              </Spinner>
               <LoadingText>
                 {userNickName}님을 위한
                 <br />
@@ -97,7 +98,7 @@ const AiPreferencePage = () => {
               <LoadingSubText>좋아하실 만한 책을 찾는 중이에요.</LoadingSubText>
             </>
           ) : (
-            <LoadingText>데이터를 불러오는 중...</LoadingText>
+            <LoadingPage />
           )}
         </LoadingContainer>
       </PageWrapper>
@@ -286,5 +287,5 @@ const ButtonWrapper = styled.div`
   width: 100%;
   max-width: 600px;
   padding: 0 20px 20px;
-  background-color: #fff;
+  background-color: transparent;
 `;

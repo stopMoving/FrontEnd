@@ -46,6 +46,28 @@ const LoginPage = () => {
     }
   };
 
+  // 테스트용 버튼
+  const handleTest = async (e) => {
+    e.preventDefault();
+    try {
+      const loggedInUser = await login({
+        username: "admin",
+        password: "testuser",
+      });
+
+      // is_survey 값 확인
+      if (loggedInUser && !loggedInUser.is_survey) {
+        navigate("/ai/preference");
+      } else {
+        // is_survey가 true이거나 user 정보가 없으면 메인 페이지로 이동
+        navigate("/");
+      }
+    } catch (error) {
+      toast("warn", "아이디 또는 비밀번호가 올바르지 않습니다.");
+      console.error("로그인 실패:", error);
+    }
+  };
+
   return (
     <>
       <LoginContainer>
@@ -82,6 +104,7 @@ const LoginPage = () => {
         <BottomContainer style={{ textAlign: "center" }}>
           [북작북작] 계정이 아직 없으신가요?{" "}
           <Link to="/register">회원가입</Link>
+          <Button onClick={handleTest}>테스트하기</Button>
         </BottomContainer>
       </LoginContainer>
     </>

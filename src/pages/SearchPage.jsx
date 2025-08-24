@@ -28,7 +28,7 @@ export default function SearchPage() {
       const timer = setTimeout(async () => {
         try {
           const data = await bookAPI.searchBooks(searchQuery);
-          setBooks(data.results);
+          setBooks(data?.results || []);
           setIsSearched(true);
         } catch (error) {
           console.error("검색 오류: ", error);

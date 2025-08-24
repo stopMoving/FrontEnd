@@ -51,7 +51,10 @@ export default function BottomSheetWrapper({
   if (!isOpen) return null;
 
   return (
-    <Overlay onClick={onClose}>
+    <Overlay
+      onClick={onClose}
+      onTouchMove={(e) => e.preventDefault()}
+    >
       <Sheet
         ref={sheetRef}
         onClick={(e) => e.stopPropagation()}

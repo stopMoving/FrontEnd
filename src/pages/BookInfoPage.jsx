@@ -122,7 +122,7 @@ const Header = styled.div`
   display: grid;
   grid-template-columns: 56px 1fr 56px;
   align-items: center;
-  margin: 38px 20px 0;
+  margin: 20px 20px 0;
 `;
 
 const BackButton = styled.button`

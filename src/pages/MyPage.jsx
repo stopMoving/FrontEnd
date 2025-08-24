@@ -7,13 +7,15 @@ import PointPanel from "../components/mypageComponents/PointPanel";
 import { userAPI } from "../lib/api";
 import { ReactComponent as ProfileImage } from "../assets/images/profileImage.svg";
 import { ReactComponent as PointIcon } from "../assets/icons/pointIcon.svg"
+import { ReactComponent as LogoImage } from "../assets/images/LogoImage.svg";
 import { useLocation } from "react-router-dom";
 import LoadingPage from "./LoadingPage";
+import useUserStore from "../store/useUserStore";
 
 export default function MyPage() {
     const location = useLocation();
     const initialTab = location.state?.initialTab || 'donate';
-
+    const logout = useUserStore((state) => state.logout);
     const [activeTab, setActiveTap] = useState(initialTab);
     const [userProfile, setUserProfile] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -56,6 +58,11 @@ export default function MyPage() {
 
     return (
       <Wrap>
+        <Header>
+          <LogoImage width={41} height={17}/>
+          <LogoutBtn onClick={() => logout()}>로그아웃</LogoutBtn>
+        </Header>
+
         <MyInfoWrap>
           <ProfileContainer>
             <LeftWrap>
@@ -98,9 +105,28 @@ const Wrap = styled.div`
   max-width: 600px;
   min-height: 100dvh;
   background: #FFFFFF;
-  padding: 30px 0;
+  padding: 16px 0;
   display: flex;
   flex-direction: column;
+`;
+
+const Header = styled.div`
+  width: 100%;
+  height: 50px;
+  padding: 4px 20px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #DEDEDE;
+`;
+
+const LogoutBtn = styled.button`
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+  background-color: #FFFFFF;
+  border: none;
+  cursor: pointer;
 `;
 
 const MyInfoWrap = styled.div`

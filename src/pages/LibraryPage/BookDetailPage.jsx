@@ -70,7 +70,7 @@ const BookDetailPage = () => {
     <PageWrapper>
       <TopNavBar>
         <BackButton onClick={() => navigate(-1)}>
-          <BackIcon />
+          <BackIcon width={24} height={24} />
         </BackButton>
       </TopNavBar>
 
@@ -128,6 +128,7 @@ const PageWrapper = styled.div`
 
 const TopNavBar = styled.header`
   width: 100%;
+  padding: 0 20px;
   max-width: 600px;
   height: 60px;
   display: flex;
@@ -142,7 +143,6 @@ const TopNavBar = styled.header`
 `;
 
 const BackButton = styled.button`
-  margin-left: 16px;
   background: none;
   border: none;
   cursor: pointer;
@@ -150,7 +150,7 @@ const BackButton = styled.button`
 
 const ContentContainer = styled.main`
   width: 100%;
-  padding-top: 40px;
+  padding-top: 32px;
   padding-bottom: 40px;
   box-sizing: border-box;
   flex: 1;
@@ -164,7 +164,7 @@ const ContentContainer = styled.main`
 const BookImageSection = styled.div`
   width: 100%;
   background-color: #e6f4f0;
-  padding: 24px 0;
+  padding: 16px 0 0 16px;
   display: flex;
   justify-content: center;
   margin-bottom: 8px;

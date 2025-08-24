@@ -3,7 +3,7 @@ import { BrowserMultiFormatReader } from "@zxing/library";
 import styled from "styled-components";
 import useUserStore from "../../store/useUserStore";
 import { bookAPI, utils } from "../../lib/api";
-
+import { ReactComponent as ExitIcon } from "../../assets/icons/ExitIcon.svg";
 export default function ImageUploadPanel({
   onClose,
   onConfirm,
@@ -85,10 +85,14 @@ export default function ImageUploadPanel({
 
   return (
     <PanelWrap>
-      <TopBar />
-
       <InputContainer>
-        <Title>바코드 사진 업로드</Title>
+        <Title>
+          바코드 사진 업로드
+          <ExitButton type="button" onClick={onClose}>
+            <ExitIcon width={22} height={22} />
+          </ExitButton>
+        </Title>
+
         <Description>
           바코드가 선명하게 보이는 사진을 업로드해주세요.
         </Description>
@@ -125,23 +129,26 @@ const PanelWrap = styled.div`
   flex-direction: column;
   align-items: center;
   border-radius: 10px 10px 0 0;
-  padding-bottom: 20px;
-`;
-
-const TopBar = styled.div`
-  width: 80px;
-  height: 4px;
-  background-color: #11b55f;
-  border-radius: 2px;
-  margin-top: 16px;
-  margin-bottom: 24px;
+  padding-top: 20px;
 `;
 
 const Title = styled.div`
+  width: 100%;
+  position: relative;
   text-align: center;
   font-weight: 500;
   font-size: 20px;
   margin-bottom: 40px;
+`;
+
+const ExitButton = styled.button`
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: 0;
+  cursor: pointer;
 `;
 
 const Description = styled.p`

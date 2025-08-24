@@ -158,7 +158,6 @@ const Title = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  // max-width: 75%;
   width: 100%;
 `;
 
@@ -167,6 +166,10 @@ const Author = styled.div`
   font-weight: 400;
   color: #868686;
   margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 `;
 
 const Isbn = styled.div`

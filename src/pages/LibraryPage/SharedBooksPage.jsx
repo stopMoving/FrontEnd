@@ -147,7 +147,7 @@ const TopNavBar = styled.header`
 const BackButton = styled.button`
   position: absolute;
   left: 16px;
-  top: 50%;
+  top: 57%;
   transform: translateY(-50%);
   background: none;
   border: none;

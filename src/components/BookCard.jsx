@@ -2,19 +2,17 @@ import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-const BookCard = ({ book, onClick }) => {
-  const navigate = useNavigate();
-
-  const handleClick = onClick
-    ? onClick
-    : () => {
-        if (book.isbn) {
-          navigate(`/book/${book.isbn}`);
-        }
-      };
+const BookCard = ({ book }) => {
+  // const handleClick = onClick
+  //   ? onClick
+  //   : () => {
+  //       if (book.isbn) {
+  //         navigate(`/search/book/info/${book.isbn}`);
+  //       }
+  //     };
 
   return (
-    <CardContainer onClick={handleClick}>
+    <CardContainer>
       <ImageContainer>
         {book.imageUrl ? <img src={book.imageUrl} alt={book.title} /> : "책"}
       </ImageContainer>

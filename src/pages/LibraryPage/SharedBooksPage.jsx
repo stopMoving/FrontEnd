@@ -92,7 +92,9 @@ const SharedBooksPage = () => {
               // key와 onClick 이벤트에 isbn 사용
               <BookListItem
                 key={book.isbn}
-                onClick={() => navigate(`/book/${book.isbn}`)}
+                onClick={() =>
+                  navigate(`/library/${libraryId}/book/${book.isbn}`)
+                }
               >
                 <BookImage src={book.cover} alt={book.title} />
                 <BookInfo>

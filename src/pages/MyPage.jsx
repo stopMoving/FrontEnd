@@ -30,18 +30,18 @@ export default function MyPage() {
       setUserProfile(null);
     } finally {
       setIsLoading(false);
-
-    useEffect(() => {
-      fetchUserProfile();
-    }, []);
-
-    const handleUploadSuccess = () => {
-      console.log("업로드 성공! 프로필 정보를 다시 불러옵니다.");
-      fetchUserProfile();
-    };
     }
-  }
+  };
+  
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
 
+  const handleUploadSuccess = () => {
+    console.log("업로드 성공! 프로필 정보를 다시 불러옵니다.");
+    fetchUserProfile();
+  };
+ 
   const renderPanel = () => {
     if (activeTab === "donate") {
       return <DonateHistoryPanel />;

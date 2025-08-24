@@ -366,4 +366,5 @@ const BookTitle = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  width: 80%;
 `;

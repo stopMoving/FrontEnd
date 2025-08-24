@@ -36,7 +36,7 @@ export default function DonateHistoryPanel({
   if (purchasedBooks.length === 0) {
     return (
     <MessageWrap>
-      <Notification>나눔한 책이 없습니다.</Notification>;
+      <Notification>데려간 책이 없습니다.</Notification>
     </MessageWrap>
     )
   }

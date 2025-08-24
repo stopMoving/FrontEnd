@@ -133,9 +133,10 @@ export const bookAPI = {
       const response = await instance.post(`/books/pickup/`, payload);
       return response.data;
     } catch (error) {
-      throw new Error(
-        error.response?.data?.message || "픽업 처리에 실패했습니다."
-      );
+      // throw new Error(
+      //   error.response?.data?.message || "픽업 처리에 실패했습니다."
+      // );
+      throw error;
     }
   },
 };

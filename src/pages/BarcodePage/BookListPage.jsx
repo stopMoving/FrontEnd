@@ -131,6 +131,12 @@ export default function BookListPage() {
         } else if (error.response?.status === 409) {
           // 충돌/실패
           alert("책을 가져올 수 없습니다. 이미 다른 사람이 가져갔을 수 있어요.");
+        } else if (error.response?.status === 404) {
+          alert(error.response?.data?.error || "해당 도서관에 재고가 없습니다.");
+        } else if (error.response?.status === 400) {
+          alert(error.response?.data?.error || "요청 권 수가 재고보다 많습니다.");
+        } else if (error.response?.data?.error) {
+          alert(error.response.data.error);
         } else {
           alert(error.message || "처리 중 오류가 발생했습니다.");
         }

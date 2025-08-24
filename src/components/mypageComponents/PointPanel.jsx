@@ -86,7 +86,7 @@ export default function DonateHistoryPanel({
 
             <InfoWrap>
               <Point>{item.point}</Point>
-              <Title>{item.title}</Title>    
+              <Title $disabled={isDisabled}>{item.title}</Title>    
             </InfoWrap>  
           </GoodsWrap>
         );
@@ -150,4 +150,8 @@ const Title = styled.div`
   font-size: 16px;
   font-weight: 500;
   color: #000000;
+
+  ${(props) => props.$disabled && `
+      color: #868686;
+    `}
 `;

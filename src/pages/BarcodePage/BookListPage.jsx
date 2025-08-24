@@ -103,14 +103,14 @@ export default function BookListPage() {
         const response = await bookAPI.pickupBooks(libraryId, pickupList);
 
         if (response.count_success === response.count_total) {
-          alert("모든 책을 성공적으로 픽업했습니다.");
+          console.log("모든 책을 성공적으로 픽업했습니다.");
         }
         else if (response.count_success > 0 && response.count_success < response.count_total) {
           const failedCount = response.count_total - response.count_success;
-          alert(`${response.count_success}권은 성공했지만, ${failedCount}권은 처리되지 않았습니다.`);
+          console.log(`${response.count_success}권은 성공했지만, ${failedCount}권은 처리되지 않았습니다.`);
         }
         else if (response.count_success === 0) {
-          alert("요청한 책을 모두 픽업할 수 없습니다.");
+          console.log("요청한 책을 모두 픽업할 수 없습니다.");
         }
 
         setCompleteData({

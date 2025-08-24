@@ -69,7 +69,9 @@ export default function DonateHistoryPanel({
   }, []);
 
   if (isLoading) {
-    <LoadingPage />
+    <LoadingWrap>
+      <LoadingPage isCompact={true}/>
+    </LoadingWrap>
   }
   
   return (
@@ -95,9 +97,17 @@ export default function DonateHistoryPanel({
     );
 }
 
+const LoadingWrap = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Wrap = styled.div`
   width: 100%;
   max-width: 600px;
+  min-height: 100vh;
   background: #FFFFFF;
   display: grid;
   grid-template-columns: repeat(2, 1fr);

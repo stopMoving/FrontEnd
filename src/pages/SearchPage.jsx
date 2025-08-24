@@ -33,6 +33,7 @@ export default function SearchPage() {
 
       const recommendedBookData = response.data?.results;
 
+
       if (
         recommendedBookData &&
         Array.isArray(recommendedBookData) &&
@@ -50,6 +51,7 @@ export default function SearchPage() {
       setRecommendBook(null);
     }
   };
+
 
   useEffect(() => {
     if (searchQuery && searchQuery.trim().length > 0) {
@@ -343,6 +345,7 @@ const RecommendWrap = styled.div`
   width: 335px;
   min-height: 193px;
   background-color: #f4f4f4;
+
   border-radius: 5px;
   padding: 16px 0;
 `;
@@ -351,6 +354,7 @@ const Description = styled.div`
   font-size: 16px;
   font-weight: 600;
   color: #6f6f6f;
+
   margin-bottom: 8px;
 `;
 

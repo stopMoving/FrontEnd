@@ -6,8 +6,8 @@ export default function ConfirmPanel({
   loading = false,
   quantity,
   onQuantityChange,
-  onPrimary,   // step1: 다시 찍기
-  onSecondary, // step1: 확인 → step2로
+  onPrimary,
+  onSecondary,
 }) {
   return (
     <Wrap>

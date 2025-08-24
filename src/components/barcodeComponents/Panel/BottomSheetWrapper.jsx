@@ -55,7 +55,8 @@ export default function BottomSheetWrapper({
       <Sheet
         ref={sheetRef}
         onClick={(e) => e.stopPropagation()}
-        isDragging={isDragging}
+        $isDragging={isDragging}
+        $isOpen={isOpen}
         style={{ transform: `translateY(${translateY}px)` }}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}

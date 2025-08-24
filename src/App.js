@@ -77,7 +77,10 @@ const App = () => {
           <Route path="/notifications" element={<NotificationPage />} />
           <Route path="/ai/recommand" element={<AiRecommendPage />} />
           <Route path="/ai/preference" element={<AiPreferencePage />} />
-          <Route path="/book/:isbn" element={<BookDetailPage />} />
+          <Route
+            path="/library/:libraryId/book/:isbn"
+            element={<BookDetailPage />}
+          />
           <Route
             path="/library/:libraryId/shared"
             element={<SharedBooksPage />}

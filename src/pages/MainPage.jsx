@@ -58,7 +58,7 @@ const MainPage = () => {
   const navigate = useNavigate();
   const toggleSidebar = useLibrarySidebarStore((state) => state.toggleSidebar);
   const user = useUserStore((state) => state.user);
-  // const logout = useUserStore((state) => state.logout);
+  const logout = useUserStore((state) => state.logout);
   const userNickName = user?.nickname;
 
   const [recommendedBooks, setRecommendedBooks] = useState([]);
@@ -70,6 +70,8 @@ const MainPage = () => {
   const handleSearchClick = () => navigate("/search/book");
   const handle나눔Button = () => navigate("/barcode/library/select/give");
   const handle데려가기Button = () => navigate("/barcode/library/select/take");
+
+  const handleLogout = () => {};
 
   useEffect(() => {
     const fetchRecommendations = async () => {
@@ -191,6 +193,13 @@ const MainPage = () => {
           </HorizontalScroll>
         </BookListSection>
         <Outlet />
+        <button
+          onClick={() => {
+            logout();
+          }}
+        >
+          임시 로그아웃
+        </button>
       </MainContainer>
 
       <BottomNavBar />

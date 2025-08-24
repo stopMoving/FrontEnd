@@ -133,9 +133,15 @@ const Input = styled.input`
   font-size: 14px;
   font-weight: 500;
   padding: 0 16px;
+  transition: border-color 0.2 ease;
 
   &::placeholder {
     color: #dedede;
+  }
+  
+  &:focus {
+  outline: none;
+  border: 1px solid #11B55F;
   }
 `;
 

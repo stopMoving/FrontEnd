@@ -58,7 +58,7 @@ const MainPage = () => {
   const navigate = useNavigate();
   const toggleSidebar = useLibrarySidebarStore((state) => state.toggleSidebar);
   const user = useUserStore((state) => state.user);
-  const logout = useUserStore((state) => state.logout);
+  // const logout = useUserStore((state) => state.logout);
   const userNickName = user?.nickname;
 
   const [recommendedBooks, setRecommendedBooks] = useState([]);
@@ -190,14 +190,6 @@ const MainPage = () => {
             )}
           </HorizontalScroll>
         </BookListSection>
-
-        <button
-          onClick={() => {
-            logout();
-          }}
-        >
-          임시 로그아웃 버튼입니당
-        </button>
         <Outlet />
       </MainContainer>
 

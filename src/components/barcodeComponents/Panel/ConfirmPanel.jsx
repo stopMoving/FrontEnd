@@ -120,6 +120,10 @@ const Meta = styled.div`
   text-align: center;
   gap: 4px;
   margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 `;
 
 const Sub = styled.div`

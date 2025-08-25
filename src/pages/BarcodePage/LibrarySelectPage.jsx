@@ -3,13 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import LibrarySelectPanel from "../../components/barcodeComponents/Panel/LibrarySelectPanel";
 
 export default function LibrarySelectPage() {
-  const { mode } = useParams(); // 'give' | 'take'
+  const { mode } = useParams();
   const navigate = useNavigate();
 
-  // 모드별 상단 타이틀만 다름
   const title = mode === "take" ? "데려가기" : "나눔하기";
 
-  // 실제로는 API로 불러오세요.
   const [branches] = useState([
     { libraryId: "1", name: "김영삼도서관" },
     { libraryId: "2", name: "사당솔밭도서관" },
@@ -33,7 +31,6 @@ export default function LibrarySelectPage() {
 
   const handleNext = () => {
     if (!selected) return;
-    // 선택값을 들고 다음 스텝으로
     navigate(`/barcode/select/${mode}?branchId=${encodeURIComponent(selected)}`);
   };
 

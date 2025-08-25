@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
 export default function CompletePanel({
-  title,         // 상단 굵은 제목
-  description,      // 작은 부제
-  Icon,          // 가운데 아이콘 컴포넌트(선택)
-  highlight,     // 가운데 굵은 텍스트(포인트 or 메시지)
-  buttonText,    // 하단 버튼 문구
-  onPrimary,     // 버튼 클릭
+  title,
+  description,
+  Icon,
+  highlight,
+  buttonText,
+  onPrimary,
 }) {
   return (
     <Card role="dialog" aria-modal="true">

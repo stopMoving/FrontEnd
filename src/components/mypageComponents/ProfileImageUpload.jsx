@@ -10,14 +10,12 @@ const ProfileImageUpload = ({ currentImageUrl, userId, onUploadSuccess }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // 이미지를 클릭하면 숨겨진 file input이 클릭되도록 함
   const handleImageClick = () => {
     if (!isLoading) {
       fileInputRef.current.click();
     }
   };
 
-  // 사용자가 파일을 선택하면 실행될 함수
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     console.log(file);
@@ -26,9 +24,7 @@ const ProfileImageUpload = ({ currentImageUrl, userId, onUploadSuccess }) => {
     setIsLoading(true);
     setError(null);
     try {
-      // API 함수를 호출하여 이미지 업로드
       await userAPI.uploadProfileImage(userId, file);
-      // 성공 시, 부모 컴포넌트에 알림
       onUploadSuccess();
     } catch (err) {
       setError("업로드에 실패했습니다.");
@@ -52,12 +48,11 @@ const ProfileImageUpload = ({ currentImageUrl, userId, onUploadSuccess }) => {
         </LoadingOverlay>
       )}
 
-      {/* 실제 파일 입력을 위한 숨겨진 input */}
       <HiddenFileInput
         type="file"
         ref={fileInputRef}
         onChange={handleFileChange}
-        accept="image/*" // 이미지 파일만 선택 가능하도록 제한
+        accept="image/*"
       />
     </Container>
   );

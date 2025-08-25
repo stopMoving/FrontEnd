@@ -38,6 +38,7 @@ export default function ScanPage() {
     try {
       let data;
 
+      // 나눔하기
       if (mode === "give") {
         data = await bookAPI.getBookByISBN(digits);
 
@@ -51,6 +52,7 @@ export default function ScanPage() {
         });
       }
       
+      // 데려가기
       else if (mode === "take") {
         const res = await bookAPI.getPickupBookDetail(digits, libraryId);
         
@@ -70,13 +72,11 @@ export default function ScanPage() {
         throw new Error("잘못된 모드입니다.");
       }
 
-      // 모달 열면 CameraScan에서 paused={modalOpen}으로 일시정지됨
       setQuantity(1);
       setModalOpen(true);
     } catch (e) {
-      // 여기서 조회 실패라고 ui를 띄워줘야 하지 않을까?
       console.error("조회 실패", e);
-      alert("인식에 실패했어요. 잠시 후 다시 시도해 주세요."); // alert 말고 다르게 표시하자
+      alert("인식에 실패했어요. 잠시 후 다시 시도해 주세요.");
     } finally {
       setLoading(false);
     }
@@ -84,10 +84,10 @@ export default function ScanPage() {
 
   // 첫 번째 버튼(다시 스캔): SelectPage로 이동
   const handleRetake = () => {
-    setModalOpen(false); // 모달 닫힘 → 카메라 재개
+    setModalOpen(false);
     setBook(null);
     setRetakeCount((v) => v + 1); // 콜백 리셋(같은 코드 재스캔 대비)
-    navigate(`/barcode/select/${mode}`); // 다시 스캔 방법 선택 페이지로 이동
+    navigate(`/barcode/select/${mode}`);
   };
 
   // 두 번째 버튼(확인): 등록 API 호출 후 BookListPage로 이동

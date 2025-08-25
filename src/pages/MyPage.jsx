@@ -74,9 +74,8 @@ export default function MyPage() {
         <ProfileContainer>
           <LeftWrap>
             <ProfileImageUpload
-              // API 응답에 profile_image_url이 있다고 가정
               currentImageUrl={userProfile.user_image_url}
-              userId={userProfile.id} // API 응답에 id가 있다고 가정
+              userId={userProfile.id}
               onUploadSuccess={handleUploadSuccess}
             />
             <Name>{userProfile.nickname}님</Name>

@@ -62,7 +62,6 @@ export default function BookInfoPage() {
     location,
   });
 
-  // ✅ 로딩 완료 후, book 데이터가 없는 경우를 처리합니다.
   if (!book && !loading && !isLocationLoading) {
     return (
       <PageWrap>

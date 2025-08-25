@@ -96,7 +96,7 @@ export default function SearchPage() {
         <SectionTitle>나눔된 책 검색</SectionTitle>
       </Header>
 
-      <SearchContainer>
+      <SearchWrapper>
         <SearchIcon fill={"#6F6F6F"} width={21} height={21} />
         <SearchInput
           type="text"
@@ -105,7 +105,7 @@ export default function SearchPage() {
           onChange={(e) => setSearchQuery(e.target.value)}
           autoFocus
         />
-      </SearchContainer>
+      </SearchWrapper>
 
       {loading ? (
         <LoadingWrap>
@@ -207,9 +207,9 @@ const SectionTitle = styled.div`
   text-align: center;
 `;
 
-const SearchContainer = styled.div`
+const SearchWrapper = styled.div`
   display: flex;
-  justify-content: center;
+  gap: 8px;
   align-items: center;
   width: 100%;
   height: 42px;
@@ -226,14 +226,20 @@ const SearchInput = styled.input`
   height: 42px;
   font-size: 16px;
   font-weight: 600;
-  background-color: #e6f4f0;
+  background-color: transparent;
   border: none;
   color: #6f6f6f;
   cursor: pointer;
-  padding: 8px;
+  padding: 0px;
 
   &:focus {
     outline: none;
+  }
+
+  &::placeholder {
+  color: #6f6f6f;
+  font-size: 16px;
+  font-weight: 600;
   }
 `;
 

@@ -152,7 +152,8 @@ export const bookAPI = {
       });
       return response.data;
     } catch (error) {
-      throw new Error("해당 책은 재고가 없습니다.");
+      // throw new Error("해당 책은 재고가 없습니다.");
+      throw error;
     }
   },
 

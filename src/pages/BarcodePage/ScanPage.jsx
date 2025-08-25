@@ -76,7 +76,18 @@ export default function ScanPage() {
       setModalOpen(true);
     } catch (e) {
       console.error("조회 실패", e);
-      alert(e.message);
+
+      if (e.response) {
+        if (e.response.status === 409) {
+          alert(e.response.data.message || "해당 책은 재고가 없습니다.");;
+        } else {
+          alert(e.response.data.message || "서버 요청 중 오류가 발생했습니다.");
+        }
+      } else if (e.message.includes("유효한 ISBN")) {
+        alert(e.message);
+      } else {
+        alert("바코드 인식을 실패했습니다.");
+      }
       navigate(-1);
     } finally {
       setLoading(false);

@@ -9,7 +9,7 @@ import LibrarySidebar from "../components/mapComponents/LibrarySidebar";
 import useLibrarySidebarStore from "../store/useLibrarySidebarStore";
 import axios from "../../src/lib/axios";
 
-// --- 아이콘 임포트 ---
+// 아이콘 임포트
 import { ReactComponent as LibraryIcon } from "../assets/icons/library.svg";
 import { ReactComponent as BellIcon } from "../assets/icons/bell.svg";
 import { ReactComponent as SearchIcon } from "../assets/icons/search.svg";
@@ -21,8 +21,11 @@ import { ReactComponent as MainLogo } from "../assets/icons/logo.svg";
 import { ReactComponent as BellIconActive } from "../assets/icons/bellNoti.svg";
 
 import { useEffect, useState } from "react";
+
+//로딩 컴포넌트 삽입
 import LoadingPage from "./LoadingPage";
 
+// banner에 들어갈 데이터
 const bannerData = [
   {
     id: 1,
@@ -56,6 +59,7 @@ const bannerData = [
 
 const MainPage = () => {
   const navigate = useNavigate();
+  // 사이드바 전역 상태 변경
   const toggleSidebar = useLibrarySidebarStore((state) => state.toggleSidebar);
   const user = useUserStore((state) => state.user);
   const logout = useUserStore((state) => state.logout);
@@ -72,6 +76,7 @@ const MainPage = () => {
   const handle데려가기Button = () => navigate("/barcode/library/select/take");
 
   useEffect(() => {
+    // ai 추천 목록 불러오기
     const fetchRecommendations = async () => {
       try {
         setIsLoading(true);

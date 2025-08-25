@@ -44,6 +44,20 @@ export default function ISBNInputPanel({
       onConfirm(data);
     } catch (error) {
       console.error("조회 실패:", error);
+
+      if (error.response) {
+        if (error.response.status === 409) {
+          alert(error.response.data.message || "해당 책은 재고가 없습니다.");;
+        } else {
+          alert(error.response.data.message || "서버 요청 중 오류가 발생했습니다.");
+        }
+      }
+      else if (error.message.includes("유효한 ISBN")) {
+        alert(error.message);
+      }
+      else {
+        alert("ISBN 번호 인식을 실패했습니다.");
+      }
       alert(error.message);
       onClose();
     } finally {

@@ -31,12 +31,17 @@ import DonateHistoryPanel from "./components/mypageComponents/DonateHistoryPanel
 import LoadingPage from "./pages/LoadingPage.jsx";
 import LandingPage from "./pages/RegisterPage/LandingPage";
 import AiPreferencePage from "./pages/AiPage/AiPreferencePage";
+import styled from "styled-components";
 
 const PrivateRoutes = () => {
   const { user, isInitialized } = useUserStore();
 
   if (!isInitialized) {
-    return <LoadingPage />;
+    return (
+      <LodaingWrapper>
+        <LoadingPage />
+      </LodaingWrapper>
+    );
   }
 
   return user ? <Outlet /> : <Navigate to="/landing" />;
@@ -50,7 +55,11 @@ const App = () => {
   }, [initializeAuth, fetchLocation]);
 
   if (!isInitialized) {
-    return <LoadingPage />;
+    return (
+      <LodaingWrapper>
+        <LoadingPage />
+      </LodaingWrapper>
+    );
   }
 
   return (
@@ -110,3 +119,15 @@ const App = () => {
 };
 
 export default App;
+
+const LodaingWrapper = styled.div`
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  max-width: 600px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  background-color: white;
+`;

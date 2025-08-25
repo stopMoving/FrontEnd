@@ -58,7 +58,6 @@ export default function ISBNInputPanel({
       else {
         alert("ISBN 번호 인식을 실패했습니다.");
       }
-      alert(error.message);
       onClose();
     } finally {
       setLoading(false);

@@ -104,7 +104,7 @@ export default function BookListPage() {
 
         const response = await bookAPI.pickupBooks(libraryId, pickupList);
         
-        alert(response.message || "모든 책을 성공적으로 픽업했습니다.");
+        console.log(response.message || "모든 책을 성공적으로 픽업했습니다.");
         setCompleteData({ count: response.count_success });
         clearScannedBooks();
         setCompleteOpen(true);

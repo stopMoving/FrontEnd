@@ -50,10 +50,18 @@ const useUserStore = create((set, get) => ({
   },
 
   //로그아웃 리퀘스트
-  logout: () => {
-    delete axios.defaults.headers.common["Authorization"];
-    localStorage.removeItem("authToken");
-    set({ user: null, token: null });
+  logout: async () => {
+    try {
+      await axios.post("accounts/logout/");
+      console.log("서버 로그아웃 성공");
+    } catch (error) {
+      console.error("서버 로그아웃 요청 실패:", error);
+    } finally {
+      // API 요청 성공 여부와 관계없이 항상 인증정보 제거
+      delete axios.defaults.headers.common["Authorization"];
+      localStorage.removeItem("authToken");
+      set({ user: null, token: null });
+    }
   },
 
   initializeAuth: async () => {

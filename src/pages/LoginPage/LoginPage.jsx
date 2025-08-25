@@ -51,8 +51,8 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const loggedInUser = await login({
-        username: "admin",
-        password: "testuser",
+        username: "stopmoving",
+        password: "stopmoving",
       });
 
       // is_survey 값 확인
@@ -87,7 +87,6 @@ const LoginPage = () => {
             value={values.username}
             onChange={handleChange}
           />
-          {/* <Label htmlFor="password">비밀번호</Label> */}
           <Input
             id="password"
             name="password"

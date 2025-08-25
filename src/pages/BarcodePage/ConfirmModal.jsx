@@ -3,7 +3,7 @@ import ConfirmPanel from "../../components/barcodeComponents/Panel/ConfirmPanel"
 
 export default function ConfirmModal({
   open,
-  mode= "give",       // ← give/take
+  mode= "give",
   book,
   loading,
   quantity,

@@ -31,9 +31,7 @@ export default function SelectPanel({
     setActiveSheet(sheetType);
   };
 
-  // ✅ ISBNInputPanel, ImageUploadPanel에서 호출될 콜백
   const handleBookData = (data) => {
-    // ✅ 바텀 시트를 닫고, ConfirmModal을 띄우기 위한 상태를 설정합니다.
     setActiveSheet(null);
 
     if (mode === "give") {
@@ -69,15 +67,13 @@ export default function SelectPanel({
     setModalOpen(true);
   };
 
-  // 첫 번째 버튼(다시 스캔): SelectPage로 이동
   const handleRetake = () => {
-    setModalOpen(false); // 모달 닫힘 → 카메라 재개
+    setModalOpen(false);
     setBook(null);
     setQuantity(1);
     navigate(`/barcode/select/${mode}?branchId=${encodeURIComponent(libraryId)}`); // 다시 스캔 방법 선택 페이지로 이동
   };
 
-  // 두 번째 버튼(확인): 등록 API 호출 후 BookListPage로 이동
   const handleConfirm = () => {
     if (!book?.isbn) return;
 
@@ -99,8 +95,8 @@ export default function SelectPanel({
   return (
     <Wrap>
       <StepHeader
-        title={title} // 예: "책을 나눔할게요." / "책을 데려갈게요."
-        activeStep={2} // ← STEP 2 화면
+        title={title}
+        activeStep={2}
         onBack={onBack}
       />
 

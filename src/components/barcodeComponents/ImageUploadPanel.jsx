@@ -13,7 +13,6 @@ export default function ImageUploadPanel({
   const inputRef = useRef(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const token = useUserStore((state) => state.token);
-  // const [opened, setOpened] = useState(false); // 자동 오픈 상태는 불필요
 
   const openPicker = () => {
     if (!inputRef.current) return;
@@ -47,7 +46,7 @@ export default function ImageUploadPanel({
       const codeReader = new BrowserMultiFormatReader();
       try {
         const res = await codeReader.decodeFromImageElement(img);
-        // ✅ 바코드에서 숫자만 추출
+        // 바코드에서 숫자만 추출
         const digits = utils.extractDigits(res.text);
 
         if (!utils.validateISBN(digits)) {
@@ -66,11 +65,25 @@ export default function ImageUploadPanel({
           }
         }
 
-        onClose(); // ✅ API 호출 성공 시 바텀 시트 닫기
-        onConfirm(data); // ✅ onConfirm 콜백으로 책 데이터 전달
+        onClose();
+        onConfirm(data);
       } catch (err) {
-        console.error("❌ 이미지 인식 실패:", err);
-        alert("이미지에서 바코드 인식 실패");
+        console.error("조회 실패:", err);
+
+        if (err.response) {
+          if (err.response.status === 409) {
+            alert(err.response.data.message || "해당 책은 재고가 없습니다.");;
+          } else {
+            alert(err.response.data.message || "서버 요청 중 오류가 발생했습니다.");
+          }
+        }
+        else if (err.message.includes("유효한 ISBN")) {
+          alert(err.message);
+        }
+        else {
+          alert("이미지에서 바코드 인식을 실패했습니다.");
+        }
+      
         onClose();
       } finally {
         setIsProcessing(false);

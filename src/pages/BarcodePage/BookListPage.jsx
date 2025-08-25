@@ -54,13 +54,12 @@ export default function BookListPage() {
 
   // 추가(+) 버튼
   const handleAddClick = () => {
-    // SelectPage로 이동하면서 mode와 libraryId 값을 다시 전달
     navigate(
       `/barcode/select/${mode}?branchId=${encodeURIComponent(libraryId)}`
     );
   };
 
-  // 나눔하기 버튼
+  // 최종 나눔하기, 결제하기 버튼
   const handleFinish = async () => {
     if (!libraryId) {
       alert("도서관이 선택되지 않았어요.");
@@ -117,10 +116,11 @@ export default function BookListPage() {
         const responseData = error.response.data;
         const failedBooks = responseData.result || [];
 
+        // 1. 실패한 책이 한 권일 경우
         if (failedBooks.length === 1) {
           const failedBook = failedBooks[0];
           const bookTitle = failedBook.title;
-          // 백엔드에서 받은 error 메시지("2권 부족합니다.")에서 수량 부분만 추출
+          // 백엔드에서 받은 error 메시지에서 수량 부분만 추출
           const shortAmount = failedBook.error.replace(' 부족합니다.', '');
 
           alert(`'${bookTitle}' 책이 ${shortAmount} 부족하여 데려갈 수 없습니다.\n수량을 다시 확인해주세요.`);
@@ -132,13 +132,10 @@ export default function BookListPage() {
             ).join('\n');
         
             alert(`일부 책의 재고가 부족합니다.\n\n${errorDetails}\n\n수량을 다시 확인해주세요.`);
-
-          // 3. 예외적인 경우
           } else {
             alert(responseData.message || "재고가 부족하여 요청을 처리할 수 없습니다.");
           }
         } else {
-          // 그 외 다른 에러들 (404, 500 등)
           const message = error.response?.data?.message || error.message;
           alert(message || "처리 중 알 수 없는 오류가 발생했습니다.");
         }
@@ -156,7 +153,7 @@ export default function BookListPage() {
       onBack={onBack}
       onNext={handleFinish}
       disabled={loading}
-      onQuantityChange={updateBookQuantity} // 스토어에서 가져온 함수를 핸들러로 전달
+      onQuantityChange={updateBookQuantity}
       onAddClick={handleAddClick}
     />
 

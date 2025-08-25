@@ -97,7 +97,7 @@ export default function SearchPage() {
       </Header>
 
       <SearchWrapper>
-        <SearchIcon fill={"#6F6F6F"} width={21} height={21} />
+        <SearchIcon fill={"#6F6F6F"} width={22} height={22} />
         <SearchInput
           type="text"
           placeholder="책 제목을 검색하세요."

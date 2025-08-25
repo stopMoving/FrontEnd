@@ -86,6 +86,8 @@ export default function BookListPage() {
           count: totalCount,
           points: totalPoints,
         });
+        clearScannedBooks();
+        setCompleteOpen(true);  
       }
       
       else if (mode === "take") {
@@ -101,46 +103,46 @@ export default function BookListPage() {
         console.log('전송할 book_id 리스트: ', pickupList);
 
         const response = await bookAPI.pickupBooks(libraryId, pickupList);
-
-        if (response.count_success === response.count_total) {
-          console.log("모든 책을 성공적으로 픽업했습니다.");
-        }
-        else if (response.count_success > 0 && response.count_success < response.count_total) {
-          const failedCount = response.count_total - response.count_success;
-          console.log(`${response.count_success}권은 성공했지만, ${failedCount}권은 처리되지 않았습니다.`);
-        }
-        else if (response.count_success === 0) {
-          console.log("요청한 책을 모두 픽업할 수 없습니다.");
-        }
-
-        setCompleteData({
-          count: totalCount,
-        });
-      }
+        
+        alert(response.message || "모든 책을 성공적으로 픽업했습니다.");
+        setCompleteData({ count: response.count_success });
         clearScannedBooks();
-        setCompleteOpen(true);  
-
+        setCompleteOpen(true);
+      }
     } catch (error) {
-        console.error("처리 실패", error);
+      console.error("처리 실패", error);
+      const status = error.response?.status;
 
-        // 에러 상태에 따른 메시지 처리
-        if (error.response?.status === 207) {
-          // 부분 성공
-          const data = error.response.data;
-          alert(`일부만 처리됨: ${data.count_success}/${data.count_total}`);
-        } else if (error.response?.status === 409) {
-          // 충돌/실패
-          alert("책을 가져올 수 없습니다. 이미 다른 사람이 가져갔을 수 있어요.");
-        } else if (error.response?.status === 404) {
-          alert(error.response?.data?.error || "해당 도서관에 재고가 없습니다.");
-        } else if (error.response?.status === 400) {
-          alert(error.response?.data?.error || "요청 권 수가 재고보다 많습니다.");
-        } else if (error.response?.data?.error) {
-          alert(error.response.data.error);
+      if (status === 409) {
+        const responseData = error.response.data;
+        const failedBooks = responseData.result || [];
+
+        if (failedBooks.length === 1) {
+          const failedBook = failedBooks[0];
+          const bookTitle = failedBook.title;
+          // 백엔드에서 받은 error 메시지("2권 부족합니다.")에서 수량 부분만 추출
+          const shortAmount = failedBook.error.replace(' 부족합니다.', '');
+
+          alert(`'${bookTitle}' 책이 ${shortAmount} 부족하여 데려갈 수 없습니다.\n수량을 다시 확인해주세요.`);
+     
+          // 2. 실패한 책이 여러 권일 경우 (목록으로 보여주기)
+          } else if (failedBooks.length > 1) {
+            const errorDetails = failedBooks.map(
+              item => `- ${item.title}: ${item.error}`
+            ).join('\n');
+        
+            alert(`일부 책의 재고가 부족합니다.\n\n${errorDetails}\n\n수량을 다시 확인해주세요.`);
+
+          // 3. 예외적인 경우
+          } else {
+            alert(responseData.message || "재고가 부족하여 요청을 처리할 수 없습니다.");
+          }
         } else {
-          alert(error.message || "처리 중 오류가 발생했습니다.");
+          // 그 외 다른 에러들 (404, 500 등)
+          const message = error.response?.data?.message || error.message;
+          alert(message || "처리 중 알 수 없는 오류가 발생했습니다.");
         }
-    } finally {
+      } finally {
       setLoading(false);
     }
   };

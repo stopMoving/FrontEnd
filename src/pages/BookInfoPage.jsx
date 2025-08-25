@@ -36,10 +36,6 @@ export default function BookInfoPage() {
     }
   };
 
-  // useEffect(() => {
-  //   fetchLocation();
-  // }, [fetchLocation]);
-
   useEffect(() => {
     console.log("useEffect 실행:", {
       isbn,

@@ -43,7 +43,7 @@ const GOODS = [
   {
     id: 6,
     point: "1500P",
-    title: "맑음책방 어린이서점...",
+    title: "맑음책방 어린이서점 5% 할인 쿠폰",
     img: bookStoreImg,
   },
 ];
@@ -171,4 +171,10 @@ const Title = styled.div`
   font-size: 16px;
   font-weight: 500;
   color: #000000;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  white-space: normal;
 `;

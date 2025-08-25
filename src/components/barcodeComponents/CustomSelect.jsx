@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { ReactComponent as DownIcon } from "../../assets/icons/downIcon.svg";
 
 export default function CustomSelect({
-  options = [],           // [{value, label}]
+  options = [],
   value = "",
   onChange,
   placeholder = "선택하세요",

@@ -22,7 +22,7 @@ export default function BookListPanel({
     <Wrap>
       <StepHeader
         title={title}
-        activeStep={3}    // ← STEP 3 화면
+        activeStep={3}
         onBack={onBack}
       />
 

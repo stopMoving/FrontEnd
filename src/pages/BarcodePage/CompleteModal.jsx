@@ -6,10 +6,10 @@ import { ReactComponent as BookHeartIcon } from "../../assets/icons/bookheartIco
 export default function CompleteModal({
   open,
   mode = "give",
-  count = 1,        // 처리한 권 수
-  points = 0,       // 적립 포인트 (give일 때만 의미)
-  onPrimary,        // 버튼 클릭 핸들러
-  onClose,          // 오버레이 클릭 등으로 닫기
+  count = 1,
+  points = 0,
+  onPrimary,
+  onClose,
 }) {
   if (!open) return null;
 
@@ -46,7 +46,6 @@ export default function CompleteModal({
   );
 }
 
-// 모달 뒤 반투명한 검은 배경
 const Overlay = styled.div`
   position: fixed;
   inset: 0;
@@ -56,7 +55,6 @@ const Overlay = styled.div`
   z-index: 999;
 `;
 
-// 모달 본체
 const Sheet = styled.div`
   animation: pop 0.3s ease-out;
   @keyframes pop {

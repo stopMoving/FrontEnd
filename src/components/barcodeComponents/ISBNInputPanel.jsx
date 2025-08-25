@@ -40,11 +40,12 @@ export default function ISBNInputPanel({
         };
       }
 
-      onClose(); // ✅ 바텀 시트를 먼저 닫음
-      onConfirm(data); // ✅ onConfirm 콜백으로 책 데이터 전달
+      onClose();
+      onConfirm(data);
     } catch (error) {
       console.error("조회 실패:", error);
       alert(error.message);
+      onClose();
     } finally {
       setLoading(false);
     }

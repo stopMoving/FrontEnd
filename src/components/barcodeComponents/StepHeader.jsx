@@ -3,7 +3,7 @@ import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
 
 export default function StepHeader({
   title = "",
-  activeStep = 1,     // 1 | 2 | 3
+  activeStep = 1,
   onBack, 
 }) {
   return (

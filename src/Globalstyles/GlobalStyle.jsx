@@ -1,5 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 
+// 본 서비스가 웹앱임을 고려하여 반응형 글로벌 스타일 구성
 const GlobalStyle = createGlobalStyle`
 
 *{

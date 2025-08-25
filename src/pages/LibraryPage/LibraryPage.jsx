@@ -4,6 +4,7 @@ import styled from "styled-components";
 import axios from "../../lib/axios";
 import Button from "../../components/style/Button";
 
+// Swiper 라이브러리 호출
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay, Mousewheel } from "swiper/modules";
 import "swiper/css";
@@ -91,7 +92,7 @@ const LibraryPage = () => {
     loadData();
   }, [libraryId, libraryName]);
 
-  //즐겨찾기 함수
+  //즐겨찾기 리퀘스트
   const handleToggleFavorite = async () => {
     setIsTogglingFavorite(true);
     try {

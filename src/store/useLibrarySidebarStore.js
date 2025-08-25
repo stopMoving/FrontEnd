@@ -15,12 +15,14 @@ const useLibrarySidebarStore = create((set) => ({
   isAllLibrariesLoading: false,
   allLibrariesError: null,
 
+  // isOpen state를 조작하여 페이지를 조작
   toggleSidebar: () => set((state) => ({ isOpen: !state.isOpen })),
 
   // 내 도서관 API
   fetchMyLibraries: async () => {
     set({ isMyLibrariesLoading: true, myLibrariesError: null });
 
+    // 토큰 받기
     const { token } = useUserStore.getState();
 
     if (!token || !token.access_token) {
@@ -32,12 +34,7 @@ const useLibrarySidebarStore = create((set) => ({
     }
 
     try {
-      const response = await axios.get("users/my-libraries/list/", {
-        headers: {
-          Authorization: `Bearer ${token.access_token}`,
-        },
-      });
-
+      const response = await axios.get("users/my-libraries/list/");
       set({
         myLibraries: response.data.libraries,
         isMyLibrariesLoading: false,

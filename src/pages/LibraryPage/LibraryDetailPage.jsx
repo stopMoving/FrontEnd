@@ -57,6 +57,7 @@ const LibraryDetailPage = () => {
     );
   }
 
+  // 카카오맵 URL 데려오기
   const kakaoMapUrl = `https://map.kakao.com/link/map/${library.name},${library.lat},${library.long}`;
 
   return (

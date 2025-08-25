@@ -45,6 +45,7 @@ const StaticKakaoMap = ({ lat, lng, libraryName }) => {
       kakao.maps.load(() => {
         if (!mapContainer.current) return;
 
+        // 맵 옵션 설정
         const mapOption = {
           center: new kakao.maps.LatLng(lat, lng),
           level: 4,
@@ -54,11 +55,13 @@ const StaticKakaoMap = ({ lat, lng, libraryName }) => {
         };
         const map = new kakao.maps.Map(mapContainer.current, mapOption);
 
+        // 맵 마커 설정
         const imageSrc = markerIcon;
         const imageSize = new kakao.maps.Size(36, 36);
         const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
         const markerPosition = new kakao.maps.LatLng(lat, lng);
 
+        // 마커 만들기
         new kakao.maps.Marker({
           position: markerPosition,
           image: markerImage,

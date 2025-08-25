@@ -124,7 +124,7 @@ export default function BookInfoPage() {
                 <LibraryWrap key={library.library_id}>
                   <LibraryName>{library.name}</LibraryName>
                   <LibraryInfo>
-                    <span>{library.distance_m}m</span>
+                    <span>{library.distance_m}</span>
                     <span>수량: {library.available_books}권</span>
                   </LibraryInfo>
                 </LibraryWrap>

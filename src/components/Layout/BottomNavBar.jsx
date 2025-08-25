@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import NavButton from "./NavButton";
 
-// SVG 파일을 React 컴포넌트로 불러옵니다.
+// SVGR로 SVG 파일 호출
 import { ReactComponent as BookShareIcon } from "../../assets/icons/shareIcon.svg";
 import { ReactComponent as BookTakeIcon } from "../../assets/icons/takeIcon.svg";
 import { ReactComponent as HomeIcon } from "../../assets/icons/homeIcon.svg";

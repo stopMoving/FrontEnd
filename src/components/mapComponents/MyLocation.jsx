@@ -4,7 +4,9 @@ import useUserStore from "../store/useUserStore";
 function MyLocationComponent() {
   const { location, isLocationLoading, locationError, fetchLocation } =
     useUserStore();
+
   useEffect(() => {
+    // 위치정보 리퀘스트
     fetchLocation();
   }, [fetchLocation]);
 

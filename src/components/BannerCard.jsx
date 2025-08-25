@@ -59,7 +59,7 @@ const IconWrapper = styled.div`
   position: absolute;
   bottom: 20px;
   right: 20px;
-  color: #4f614a; /* 아이콘 색상 */
+  color: #4f614a;
 `;
 
 const StepLabel = styled.div`
@@ -69,9 +69,9 @@ const StepLabel = styled.div`
 
   background-color: transparent;
   border: 1px solid #11b55f;
-  color: #11b55f; /* 짙은 녹색 글씨 */
+  color: #11b55f;
 
-  border-radius: 50px; /* 알약 모양 */
+  border-radius: 50px;
   font-size: 14px;
   font-weight: bold;
 `;

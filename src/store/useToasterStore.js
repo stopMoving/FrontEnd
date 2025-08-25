@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import { create } from "zustand";
 import checkImage from "../../src/assets/icons/check.svg";
 
+// Toast 알림 띄우기
 const useToasterStore = create((set, get) => ({
   toasts: [],
 

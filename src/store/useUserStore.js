@@ -2,8 +2,8 @@ import { create } from "zustand";
 import axios from "../lib/axios"; // 프로젝트의 axios 인스턴스 경로
 
 const useUserStore = create((set, get) => ({
-  user: null, // 로그인된 사용자 정보 (예: { id, name })
-  token: null, // 인증 토큰 (JWT)
+  user: null, // 로그인된 사용자 정보
+  token: null, // 인증 토큰
   isInitialized: false, // 로컬 스토리지에서 토큰을 확인했는지 여부
 
   // 사용자 위치정보
@@ -12,15 +12,16 @@ const useUserStore = create((set, get) => ({
   locationError: null,
 
   setUserAndToken: (user, token) => {
-    // axios의 모든 요청 헤더에 인증 토큰을 기본으로 포함시킵니다.
+    // axios의 모든 요청 헤더에 인증 토큰을 default로 설정
     axios.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${token.access_token}`;
-    // 로컬 스토리지에 토큰을 저장하여 페이지를 새로고침해도 로그인 유지
+    // 로컬 스토리지에 토큰을 저장하여 페이지를 새로고침해도 로그인 유지!
     localStorage.setItem("authToken", JSON.stringify(token));
     set({ user, token });
   },
 
+  // 로그인 리퀘스트
   login: async (credentials) => {
     try {
       const response = await axios.post("accounts/login/", credentials);
@@ -33,7 +34,7 @@ const useUserStore = create((set, get) => ({
     }
   },
 
-  // 회원가입 함수
+  // 회원가입 리퀘스트
   register: async (userData) => {
     try {
       await axios.post("accounts/join/", userData);
@@ -48,7 +49,7 @@ const useUserStore = create((set, get) => ({
     }
   },
 
-  //로그인 함수
+  //로그아웃 리퀘스트
   logout: () => {
     delete axios.defaults.headers.common["Authorization"];
     localStorage.removeItem("authToken");
@@ -72,6 +73,8 @@ const useUserStore = create((set, get) => ({
     }
     set({ isInitialized: true });
   },
+
+  // 사용자 위치정보 받기
   fetchLocation: () => {
     set({ isLocationLoading: true, locationError: null });
 
@@ -82,7 +85,7 @@ const useUserStore = create((set, get) => ({
       });
       return;
     }
-    //위치 정보 가져오기 성공 시 실행되는 콜백 함수
+    //위치 정보 가져오기 성공 시 실행되는 함수
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
@@ -93,7 +96,7 @@ const useUserStore = create((set, get) => ({
         });
       },
 
-      //위치 정보 가져오기 실패 시 실행되는 콜백 함수
+      //위치 정보 가져오기 실패 시 실행되는 함수
       (error) => {
         set({
           locationError: error.message,

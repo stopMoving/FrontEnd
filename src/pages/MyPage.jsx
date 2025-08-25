@@ -6,7 +6,7 @@ import TakeHistoryPanel from "../components/mypageComponents/TakeHistoryPanel";
 import PointPanel from "../components/mypageComponents/PointPanel";
 import { userAPI } from "../lib/api";
 import { ReactComponent as ProfileImage } from "../assets/images/profileImage.svg";
-import { ReactComponent as PointIcon } from "../assets/icons/pointIcon.svg"
+import { ReactComponent as PointIcon } from "../assets/icons/pointIcon.svg";
 import { ReactComponent as LogoImage } from "../assets/images/LogoImage.svg";
 import { useLocation } from "react-router-dom";
 import LoadingPage from "./LoadingPage";
@@ -15,12 +15,12 @@ import ProfileImageUpload from "../components/mypageComponents/ProfileImageUploa
 
 export default function MyPage() {
   const location = useLocation();
-  const initialTab = location.state?.initialTab || 'donate';
+  const initialTab = location.state?.initialTab || "donate";
   const logout = useUserStore((state) => state.logout);
   const [activeTab, setActiveTap] = useState(initialTab);
   const [userProfile, setUserProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   const fetchUserProfile = async () => {
     try {
       const profileData = await userAPI.getUserProfile();
@@ -32,7 +32,7 @@ export default function MyPage() {
       setIsLoading(false);
     }
   };
-  
+
   useEffect(() => {
     fetchUserProfile();
   }, []);
@@ -41,7 +41,7 @@ export default function MyPage() {
     console.log("업로드 성공! 프로필 정보를 다시 불러옵니다.");
     fetchUserProfile();
   };
- 
+
   const renderPanel = () => {
     if (activeTab === "donate") {
       return <DonateHistoryPanel />;
@@ -66,7 +66,7 @@ export default function MyPage() {
   return (
     <Wrap>
       <Header>
-        <LogoImage width={41} height={17}/>
+        <LogoImage width={41} height={17} />
         <LogoutBtn onClick={() => logout()}>로그아웃</LogoutBtn>
       </Header>
 
@@ -127,7 +127,7 @@ const Wrap = styled.div`
   width: 100%;
   max-width: 600px;
   min-height: 100dvh;
-  background: #FFFFFF;
+  background: #ffffff;
   padding: 16px 0;
   display: flex;
   flex-direction: column;
@@ -140,14 +140,14 @@ const Header = styled.div`
   margin-bottom: 16px;
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #DEDEDE;
+  border-bottom: 1px solid #dedede;
 `;
 
 const LogoutBtn = styled.button`
   font-size: 14px;
   font-weight: 500;
   color: #000000;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border: none;
   cursor: pointer;
 `;

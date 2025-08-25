@@ -37,6 +37,7 @@ const LibrarySidebar = () => {
     }
   }, [isOpen, fetchMyLibraries, fetchAllLibraries]);
 
+  //isOpen으로 페이지 컨트롤
   return (
     <>
       <Backdrop $isOpen={isOpen} onClick={toggleSidebar} />

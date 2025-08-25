@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-// --- 스타일 정의 ---
 const NavContainer = styled.header`
   position: fixed;
   top: 0px;
@@ -14,7 +13,7 @@ const NavContainer = styled.header`
 
   width: 100%;
   max-width: 600px;
-  height: 50px; /* 상단 바 높이 */
+  height: 50px; // 상단 바 높이
   padding: 30px 16px 30px 16px;
   background-color: #ffffff;
   border-bottom: 1px solid #dedede;
@@ -48,11 +47,6 @@ const IconButton = styled.button`
   align-items: center;
 `;
 
-const PageContainer = styled.div`
-  padding-top: 56px;
-`;
-
-// --- 컴포넌트 본체 ---
 function TopNavBar({ leftControls, title, rightControls }) {
   return (
     <>

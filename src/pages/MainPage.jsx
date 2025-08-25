@@ -178,7 +178,7 @@ const MainPage = () => {
             ) : recommendedBooks.length > 0 ? (
               recommendedBooks.map((book) => (
                 <BookCardWrapper
-                  key={book.isbn} // key를 isbn으로 변경
+                  key={book.isbn} // key를 isbn으로 설정
                   onClick={() => navigate(`/search/book/info/${book.isbn}`)}
                 >
                   <BookCard

@@ -43,10 +43,7 @@ const PrivateRoutes = () => {
 };
 
 const App = () => {
-  const { initializeAuth, isInitialized, fetchLocation, user } = useUserStore();
-  // const navigate = useNavigate();
-  // const location = useLocation();
-
+  const { initializeAuth, isInitialized, fetchLocation } = useUserStore();
   useEffect(() => {
     initializeAuth();
     fetchLocation();
@@ -65,6 +62,7 @@ const App = () => {
         <Route path="/welcome" element={<WelcomePage />} />
         <Route path="/landing" element={<LandingPage />} />
 
+        {/* 사용자 정보가 없으면 랜딩페이지로 이동 */}
         <Route element={<PrivateRoutes />}>
           <Route path="/" element={<MainPage />} />
           <Route path="/mypage" element={<MyPage />} />
@@ -105,6 +103,7 @@ const App = () => {
           <Route path="loading" element={<LoadingPage />} />
         </Route>
       </Routes>
+      {/* Toaster 호출 */}
       <Toaster />
     </>
   );

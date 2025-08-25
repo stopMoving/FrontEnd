@@ -6,7 +6,9 @@ import { ReactComponent as SearchIcon } from "../../assets/icons/search.svg";
 import axios from "../../lib/axios";
 import LoadingPage from "../../pages/LoadingPage";
 
+// 도서관 내 책 검색 페이지
 const SharedBooksPage = () => {
+  //useParams로 도서관 id값 가져오기
   const { libraryId } = useParams();
   const navigate = useNavigate();
 
@@ -40,6 +42,7 @@ const SharedBooksPage = () => {
     fetchBooks();
   }, [libraryId]);
 
+  // 책 검색 로직
   const filteredBooks = books.filter(
     (book) =>
       book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||

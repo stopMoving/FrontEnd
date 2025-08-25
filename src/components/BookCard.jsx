@@ -1,16 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 
 const BookCard = ({ book }) => {
-  // const handleClick = onClick
-  //   ? onClick
-  //   : () => {
-  //       if (book.isbn) {
-  //         navigate(`/search/book/info/${book.isbn}`);
-  //       }
-  //     };
-
   return (
     <CardContainer>
       <ImageContainer>
@@ -31,11 +22,11 @@ const CardContainer = styled.div`
   flex-direction: column;
   cursor: pointer;
 
-  /* 고정 크기 설정 */
+  //고정 크기 설정
   width: 106px;
   height: 170px;
 
-  flex-shrink: 0; /* 크기 축소 방지 */
+  flex-shrink: 0; // 크기 축소 방지
 `;
 
 const ImageContainer = styled.div`
@@ -46,7 +37,7 @@ const ImageContainer = styled.div`
   border-radius: 8px;
   margin-bottom: 8px;
   overflow: hidden;
-  flex-shrink: 0; /* 크기 축소 방지 */
+  flex-shrink: 0; // 크기 축소 방지
   border: 1px solid #dedede;
 
   img {
@@ -76,12 +67,12 @@ const BookTitle = styled.h3`
   color: #000000;
   margin: 0 0 4px 0;
 
-  /* 텍스트 오버플로우 처리 */
+  // 텍스트 오버플로우 처리
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 
-  /* 최대 너비 설정 */
+  // 최대 너비 설정해주기
   max-width: 106px;
   line-height: 1.2;
 `;

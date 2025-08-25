@@ -3,7 +3,7 @@ import { ReactComponent as BackIcon } from "../assets/icons/backIcon.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useUserStore from "../store/useUserStore";
-import { bookAPI } from "../lib/api";
+import { bookAPI, utils } from "../lib/api";
 import LoadingPage from "./LoadingPage";
 
 export default function BookInfoPage() {
@@ -35,10 +35,6 @@ export default function BookInfoPage() {
       setLoading(false);
     }
   };
-
-  // useEffect(() => {
-  //   fetchLocation();
-  // }, [fetchLocation]);
 
   useEffect(() => {
     console.log("useEffect 실행:", {
@@ -112,7 +108,7 @@ export default function BookInfoPage() {
 
             <Highlight>
               <Info>{book?.sale_price || "-"} 원</Info>
-              <Info>ISBN 코드 : {book?.isbn || "-"}</Info>
+              <Info>ISBN 코드 : {utils.formatIsbn(book?.isbn) || "-"}</Info>
             </Highlight>
           </BookInfoWrap>
 
@@ -124,7 +120,7 @@ export default function BookInfoPage() {
                 <LibraryWrap key={library.library_id}>
                   <LibraryName>{library.name}</LibraryName>
                   <LibraryInfo>
-                    <span>{library.distance_m}m</span>
+                    <span>{library.distance_m}</span>
                     <span>수량: {library.available_books}권</span>
                   </LibraryInfo>
                 </LibraryWrap>

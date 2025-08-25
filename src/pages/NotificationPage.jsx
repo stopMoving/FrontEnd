@@ -66,11 +66,7 @@ const NotificationPage = () => {
       try {
         setIsLoading(true);
         setError(null);
-        const response = await axios.get("notification/", {
-          headers: {
-            Authorization: `Bearer ${token.access_token}`,
-          },
-        });
+        const response = await axios.get("notification/");
         // 리스폰스 데이터 확인
         console.log(response.data);
         if (Array.isArray(response.data.results)) {

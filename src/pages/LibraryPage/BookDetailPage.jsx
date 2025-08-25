@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { ReactComponent as BackIcon } from "../../assets/icons/backIcon.svg";
 import axios from "../../lib/axios";
 import LoadingPage from "../LoadingPage";
+import { utils } from "../../lib/api";
 
 const BookDetailPage = () => {
   const { libraryId, isbn } = useParams();
@@ -104,7 +105,7 @@ const BookDetailPage = () => {
           </InfoList>
 
           <PriceInfo>{bookData.sale_price.toLocaleString()}원</PriceInfo>
-          <IsbnInfo>ISBN 코드 : {bookData.isbn}</IsbnInfo>
+          <IsbnInfo>ISBN 코드 : {utils.formatIsbn(bookData.isbn)}</IsbnInfo>
           <Divider />
 
           <SummarySection>

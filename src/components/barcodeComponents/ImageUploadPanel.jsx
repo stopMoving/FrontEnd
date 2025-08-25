@@ -68,8 +68,8 @@ export default function ImageUploadPanel({
         onClose();
         onConfirm(data);
       } catch (err) {
-        console.error("❌ 이미지 인식 실패:", err);
-        alert("이미지에서 바코드 인식 실패");
+        console.error("조회 실패:", err);
+        alert(err.message);
         onClose();
       } finally {
         setIsProcessing(false);

@@ -76,7 +76,8 @@ export default function ScanPage() {
       setModalOpen(true);
     } catch (e) {
       console.error("조회 실패", e);
-      alert("인식에 실패했어요. 잠시 후 다시 시도해 주세요.");
+      alert(e.message);
+      navigate(-1);
     } finally {
       setLoading(false);
     }

@@ -45,6 +45,7 @@ export default function ISBNInputPanel({
     } catch (error) {
       console.error("조회 실패:", error);
       alert(error.message);
+      onClose();
     } finally {
       setLoading(false);
     }

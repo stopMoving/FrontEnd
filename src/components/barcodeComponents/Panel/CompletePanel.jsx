@@ -42,7 +42,7 @@ export default function CompletePanel({
 
 const Card = styled.div`
   width: 335px;
-  height: 352px;
+  min-height: 352px;
   display: flex;
   flex-direction: column;
   justify-content: center;

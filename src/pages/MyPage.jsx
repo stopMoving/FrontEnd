@@ -65,6 +65,11 @@ export default function MyPage() {
 
   return (
     <Wrap>
+      <Header>
+        <LogoImage width={41} height={17}/>
+        <LogoutBtn onClick={() => logout()}>로그아웃</LogoutBtn>
+      </Header>
+
       <MyInfoWrap>
         <ProfileContainer>
           <LeftWrap>
@@ -116,54 +121,6 @@ export default function MyPage() {
       <BottomNavBar />
     </Wrap>
   );
-
-    return (
-      <Wrap>
-        <Header>
-          <LogoImage width={41} height={17}/>
-          <LogoutBtn onClick={() => logout()}>로그아웃</LogoutBtn>
-        </Header>
-
-        <MyInfoWrap>
-          <ProfileContainer>
-            <LeftWrap>
-              <ProfileImage
-              // API 응답에 profile_image_url이 있다고 가정
-              currentImageUrl={userProfile.user_image_url}
-              userId={userProfile.id} // API 응답에 id가 있다고 가정
-              onUploadSuccess={handleUploadSuccess}
-              />
-              <Name>{userProfile.nickname}님</Name>
-            </LeftWrap>
-
-            <Reward>{userProfile.points} P</Reward>
-          </ProfileContainer>
-
-          <HashTagContainer>
-            {userProfile.keywords.map((tag, index) => (
-                <HashTag key={index}>#{tag}</HashTag>
-            ))}
-          </HashTagContainer>
-        </MyInfoWrap>
-        
-        <ReportWrap>
-          <TabContainer>
-              <TabButton onClick={() => setActiveTap('donate')} $active={activeTab === 'donate'}>나눔 내역</TabButton>
-              <TabButton onClick={() => setActiveTap('take')} $active={activeTab === 'take'}>데려간 내역</TabButton>
-              <TabButton onClick={() => setActiveTap('point')} $active={activeTab === 'point'}>
-                <PointIcon width={25} height={25} />
-                포인트
-              </TabButton>
-          </TabContainer>
-
-          <ContentWrap>
-            {renderPanel()}
-          </ContentWrap>
-        </ReportWrap>
-        
-        <BottomNavBar />
-        </Wrap>
-    )
 }
 
 const Wrap = styled.div`
